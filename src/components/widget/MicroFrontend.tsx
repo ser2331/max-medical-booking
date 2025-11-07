@@ -11,10 +11,6 @@ const Container = styled.main`
     height: 100%;
 `;
 
-interface MicroFrontendProps {
-  name: string;
-  host: string;
-}
 
 interface WindowWithWidget {
   [key: string]: ((containerId: string) => void) | undefined;
@@ -24,13 +20,16 @@ interface WindowWithWidget {
   unmountTMWidget?: (containerId: string) => void;
 }
 
-function MicroFrontend({ name, host }: MicroFrontendProps) {
+const name = 'TMWidget';
+
+function MicroFrontend() {
   const [widgetLoaded, setWidgetLoaded] = useState(false);
   const isInitializedRef = useRef(false);
   const dataSentRef = useRef(false);
   const fetchInterceptedRef = useRef(false);
   const containerId = `${name}-container`;
   const { sessionId } = useSelector((state: RootState) => state.auth);
+  const { host, url } = getUrl();
 
   // Сбрасываем состояния при размонтировании
   useEffect(() => {
@@ -50,9 +49,9 @@ function MicroFrontend({ name, host }: MicroFrontendProps) {
     fetchInterceptedRef.current = true;
 
     window.fetch = function(...args) {
-      const url = args[0];
+      const requestUrl = args[0];
 
-      if (typeof url === 'string' && url.includes('/tm-widgets/api/registerUser')) {
+      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api/registerUser')) {
         console.log('🚫 Intercepted widget register request');
         return Promise.resolve({
           ok: true,
@@ -61,6 +60,11 @@ function MicroFrontend({ name, host }: MicroFrontendProps) {
             result: { sessionId },
           }),
         } as Response);
+      }
+
+      // Перехват authorize и других API запросов - делаем абсолютными URL
+      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api/authorize')) {
+        args[0] = `${url}${requestUrl}`;
       }
 
       return originalFetch.apply(this, args);
@@ -112,7 +116,6 @@ function MicroFrontend({ name, host }: MicroFrontendProps) {
     if (document.getElementById(scriptId)) {
       const renderFunction = windowWithWidget[`render${name}`];
       if (renderFunction) {
-        console.log('🔄 Re-rendering existing widget');
         renderFunction(containerId);
         setWidgetLoaded(true);
       }
@@ -130,6 +133,7 @@ function MicroFrontend({ name, host }: MicroFrontendProps) {
         files?: { 'main.js'?: string; 'main.css'?: string };
         'main.js'?: string;
         'main.css'?: string;
+        entrypoints?: string[];
       }) => {
         const fixedHost = getUrl().url;
         const mainJs = manifest.files?.['main.js'] || manifest['main.js'];

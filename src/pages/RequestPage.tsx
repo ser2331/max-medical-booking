@@ -11,7 +11,6 @@ import {
   ErrorMessage,
   LoadingSpinner,
 } from '@/components/ui/StyledComponents.tsx';
-import { getUrl } from '@/config/env';
 
 // Styled Components
 const WidgetContainer = styled.div`
@@ -54,10 +53,7 @@ export const RequestPage: React.FC = () => {
   return (
     <PageLayout title={t('widget.title')} onBack={handleBack}>
       <WidgetContainer>
-        <MicroFrontend
-          name="TMWidget"
-          host={getUrl().host}
-        />
+        <MicroFrontend />
       </WidgetContainer>
     </PageLayout>
   );

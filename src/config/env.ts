@@ -12,10 +12,18 @@ export const envConfig: EnvConfig = {
   ipId: import.meta.env.VITE_IP_ID || '',
 };
 
-export const getUrl = () => {
+interface UrlConfig {
+  url: string;        // Базовый URL виджета
+  host: string;       // Хост для виджетов
+  api: string;        // API endpoint
+  isProd: boolean;    // Флаг production
+}
+
+export const getUrl = (): UrlConfig => {
   return {
     url: import.meta.env.VITE_NETRIKA_WIDGET_URL,
     host: import.meta.env.VITE_NETRIKA_WIDGET_HOST,
     api: import.meta.env.VITE_NETRIKA_WIDGET_API,
+    isProd: false,
   };
 };
