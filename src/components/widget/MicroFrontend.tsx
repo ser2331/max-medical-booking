@@ -63,7 +63,7 @@ function MicroFrontend() {
       }
 
       // Перехват authorize и других API запросов - делаем абсолютными URL
-      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api/authorize')) {
+      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
         args[0] = `${url}${requestUrl}`;
       }
 
