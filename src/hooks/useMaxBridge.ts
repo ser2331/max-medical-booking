@@ -2,9 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import type { WebAppInitData, WebAppUser } from '../types/max-bridge';
 import { MaxDataValidator } from '../utils/validation';
 
-// Токен бота (должен храниться в env переменных)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN || 'your-bot-token-here';
 
 export const useMaxBridge = () => {

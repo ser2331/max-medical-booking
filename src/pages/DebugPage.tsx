@@ -3,8 +3,6 @@ import { useMaxBridgeContext } from '../providers/MaxBridgeProvider';
 import { PageLayout } from '../components/layout/PageLayout';
 import { useNavigate } from 'react-router-dom';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 const botName = import.meta.env.VITE_MAX_BOT_NAME;
 
 console.log('botName', botName);
