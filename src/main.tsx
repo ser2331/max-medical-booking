@@ -43,17 +43,15 @@ if (!rootElement) {
 }
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <MaxBridgeProvider>
-        <I18nextProvider i18n={i18n}>
-          <MaxUI colorScheme="light">
-            <AppThemeProvider>
-              <ThemedApp />
-            </AppThemeProvider>
-          </MaxUI>
-        </I18nextProvider>
-      </MaxBridgeProvider>
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <MaxBridgeProvider>
+      <I18nextProvider i18n={i18n}>
+        <MaxUI colorScheme="light">
+          <AppThemeProvider>
+            <ThemedApp />
+          </AppThemeProvider>
+        </MaxUI>
+      </I18nextProvider>
+    </MaxBridgeProvider>
+  </Provider>,
 );

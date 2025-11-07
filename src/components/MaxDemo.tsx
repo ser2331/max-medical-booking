@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useMaxBridgeContext } from '../providers/MaxBridgeProvider';
+import { LoadingSpinner } from '../components/ui/StyledComponents.tsx';
 
 export const MaxDemo: React.FC = () => {
   const {
@@ -42,7 +43,12 @@ export const MaxDemo: React.FC = () => {
   }
 
   if (!isReady) {
-    return <div>Загрузка...</div>;
+    return (
+      <LoadingSpinner
+        appearance="primary"
+        size={20}
+      />
+    );
   }
 
   return (

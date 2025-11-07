@@ -87,32 +87,6 @@ export const HomePage: React.FC = () => {
             </Panel>
           </Link>
 
-          <Panel mode="secondary">
-            <Flex style={{ gap: '16px', alignItems: 'center' }}>
-              <div style={{ fontSize: '24px' }}>🔍</div>
-              <Flex direction="column" style={{ gap: '4px' }}>
-                <Typography.Label>Запись в любую клинику</Typography.Label>
-                <Typography.Body
-                  style={{ color: 'var(--color-text-secondary)' }}>
-                  Выберите любую медицинскую организацию
-                </Typography.Body>
-              </Flex>
-            </Flex>
-          </Panel>
-
-          <Panel mode="secondary">
-            <Flex style={{ gap: '16px', alignItems: 'center' }}>
-              <div style={{ fontSize: '24px' }}>📋</div>
-              <Flex direction="column" style={{ gap: '4px' }}>
-                <Typography.Label>Мои записи</Typography.Label>
-                <Typography.Body
-                  style={{ color: 'var(--color-text-secondary)' }}>
-                  Просмотр и управление записями
-                </Typography.Body>
-              </Flex>
-            </Flex>
-          </Panel>
-
           <Link
             to="/debug"
             onClick={() => hapticFeedback('impact', { style: 'light' })}
@@ -126,6 +100,24 @@ export const HomePage: React.FC = () => {
                   <Typography.Body
                     style={{ color: 'var(--color-text-secondary)' }}>
                     DEBUG
+                  </Typography.Body>
+                </Flex>
+              </Flex>
+            </Panel>
+          </Link>
+          <Link
+            to="/maxDemo"
+            onClick={() => hapticFeedback('impact', { style: 'light' })}
+            style={{ textDecoration: 'none' }}
+          >
+            <Panel mode="secondary">
+              <Flex style={{ gap: '16px', alignItems: 'center' }}>
+                <div style={{ fontSize: '24px' }}>📋</div>
+                <Flex direction="column" style={{ gap: '4px' }}>
+                  <Typography.Label>maxDemo</Typography.Label>
+                  <Typography.Body
+                    style={{ color: 'var(--color-text-secondary)' }}>
+                    maxDemo
                   </Typography.Body>
                 </Flex>
               </Flex>
