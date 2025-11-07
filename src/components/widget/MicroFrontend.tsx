@@ -52,7 +52,6 @@ function MicroFrontend() {
       const requestUrl = args[0];
 
       if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api/registerUser')) {
-        console.log('🚫 Intercepted widget register request');
         return Promise.resolve({
           ok: true,
           json: async () => ({
@@ -89,7 +88,6 @@ function MicroFrontend() {
       },
     };
 
-    console.log('📤 Sending data to widget, attempt:', dataSentRef.current ? 'RETRY' : 'FIRST');
     dataSentRef.current = true;
     window.postMessage(widgetData, '*');
   }, [sessionId]);
@@ -121,8 +119,6 @@ function MicroFrontend() {
       }
       return;
     }
-
-    console.log('🚀 Loading widget from:', host);
 
     fetch(`${host}/asset-manifest.json`)
       .then((response) => {
@@ -157,14 +153,12 @@ function MicroFrontend() {
         script.src = jsUrl;
 
         script.onload = () => {
-          console.log('✅ Script loaded, initializing widget');
           isInitializedRef.current = true;
           const renderFunction = windowWithWidget.renderTMWidget || windowWithWidget.renderWidget;
 
           if (renderFunction) {
             renderFunction(containerId);
             setWidgetLoaded(true);
-            console.log('🎨 Widget rendered successfully');
           } else {
             console.error('❌ No render function found');
           }
@@ -179,7 +173,6 @@ function MicroFrontend() {
       .catch(console.error);
 
     return () => {
-      console.log('🧹 Cleaning up widget');
       if (process.env.NODE_ENV === 'production') {
         const unmountFunction = windowWithWidget.unmountTMWidget;
         if (unmountFunction) {
@@ -194,7 +187,7 @@ function MicroFrontend() {
         dataSentRef.current = false;
       }
     };
-  }, [name, host, containerId]);
+  }, [host, containerId]);
 
   return <Container id={containerId} />;
 }
