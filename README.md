@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# 🏥 MAX Medical Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Медицинское приложение для записи к врачу, разработанное для мессенджера МАКС. Позволяет пользователям легко
+записываться на прием к врачам через удобный интерфейс.
 
-Currently, two official plugins are available:
+## ✨ Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **👥 Выбор пациента** - запись себя или членов семьи
+- **🏥 Выбор медучреждения** - поиск и выбор клиник
+- **🎯 Выбор специализации** - фильтрация по врачебным специальностям
+- **👨‍⚕️ Выбор врача** - просмотр рейтинга и опыта врачей
+- **🕒 Выбор времени** - удобное расписание с фильтрацией
+- **🌐 Мультиязычность** - поддержка русского и английского языков
+- **🌓 Темная тема** - адаптивный дизайн под разные темы
+- **📱 Адаптивный интерфейс** - оптимизация для мобильных устройств
 
-## React Compiler
+## 🚀 Быстрый старт
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Предварительные требования
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- npm или yarn
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📦 Установка
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Предварительные требования
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Node.js** 18.0 или выше
+- **npm** 9.0 или выше
+- **Git**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### Клонирование и установка
+
+```bash
+# Клонирование репозитория
+git clone https://github.com/yourusername/max-medical-booking.git
+
+# Переход в директорию проекта
+cd max-medical-booking
+
+# Установка зависимостей
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏗️ Архитектура
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+| Технология            | Назначение              |
+|-----------------------|-------------------------|
+| **React 18**          | UI библиотека           |
+| **TypeScript**        | Статическая типизация   |
+| **Vite**              | Сборка и разработка     |
+| **Styled Components** | Стилизация              |
+| **React Router DOM**  | Маршрутизация           |
+| **Redux Toolkit**     | Управление состоянием   |
+| **i18next**           | Интернационализация     |
+| **MAX UI**            | Компонентная библиотека |
+| **GitHub Pages**      | Хостинг                 |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Структура проекта
+
+```
+max-medical-booking/
+├── public/                 # Статические файлы
+├── src/
+│   ├── components/         # React компоненты
+│   │   ├── ui/            # Базовые UI компоненты
+│   │   ├── layout/        # Компоненты layout
+│   │   └── booking/       # Компоненты записи
+│   ├── pages/             # Страницы приложения
+│   │   └── booking/       # Страницы процесса записи
+│   ├── providers/         # Провайдеры контекста
+│   ├── store/             # Redux store
+│   ├── styles/            # Стили и темы
+│   ├── types/             # TypeScript типы
+│   ├── i18n/              # Локализация
+│   └── utils/             # Вспомогательные функции
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
 ```
