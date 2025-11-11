@@ -750,45 +750,45 @@ Please change the parent <Route path="${b}"> to <Route path="${b==="/"?"*":`${b}
   color: #721c24;
   text-align: left;
 `,FC=()=>{const n=ii();return g.jsx(Gr,{title:"MaxDemoPage Information",onBack:()=>n(-1),children:g.jsx($C,{})})},UC=()=>g.jsxs(c0,{children:[g.jsx($n,{path:"/",element:g.jsx(TS,{})}),g.jsx($n,{path:"/debug",element:g.jsx(eC,{})}),g.jsx($n,{path:"/maxDemo",element:g.jsx(aC,{})}),g.jsx($n,{path:"/booking",element:g.jsx(kC,{})}),"//ЕСИА",g.jsx($n,{path:"/auth",element:g.jsx(FC,{})}),g.jsx($n,{path:"/404",element:g.jsx(OS,{})}),g.jsx($n,{path:"*",element:g.jsx(l0,{to:"/",replace:!0})})]}),HC=()=>{const n=yx(),r=bc(u=>u.auth),o=x.useCallback((u,d)=>n(Ka({authData:u,roleContext:d})),[n]),a=x.useCallback(()=>{n(PS())},[n]),s=x.useCallback(()=>{n(bS())},[n]);return{sessionId:r.sessionId,isLoading:r.isLoading,error:r.error,authenticate:o,logout:a,resetError:s}};function WC(){const{initData:n}=oi(),{sessionId:r,isLoading:o,error:a,authenticate:s}=HC();return x.useEffect(()=>{!r&&!o&&!a&&s(sC,Hg.roleContext)},[r,o,a,s]),x.useEffect(()=>{n?.user?.language_code&&Ye.changeLanguage(n.user.language_code)},[n]),o&&!r?g.jsx(be,{align:"center",justify:"center",style:{height:"100dvh"},children:g.jsx(js,{size:50,appearance:"themed"})}):g.jsx(HS,{className:"PANEL",children:g.jsx(UC,{})})}const VC=K1`
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-    html, body, #root {
-        height: 100%;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    }
+  html, body, #root {
+    height: 100dvh !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
 
-    body {
-      height: 100dvh !important;
-        background: var(--color-background-primary);
-        color: var(--color-text-primary);
-        line-height: 1.4;
+  body {
+    height: 100dvh !important;
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    line-height: 1.4;
 
-        /* Улучшаем рендеринг на мобильных */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeSpeed;
-    }
+    /* Улучшаем рендеринг на мобильных */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+  }
 
-    /* Совместимость с MAX UI */
-    .max-ui-component {
-        /* Сброс стилей которые могут конфликтовать */
-    }
+  /* Совместимость с MAX UI */
+  .max-ui-component {
+    /* Сброс стилей которые могут конфликтовать */
+  }
 
-    /* Адаптивные улучшения */
-    @media (max-width: 30em) {
-        html {
-            font-size: 14px;
-        }
+  /* Адаптивные улучшения */
+  @media (max-width: 30em) {
+    html {
+      font-size: 14px;
     }
+  }
 
-    @media (max-width: 20em) {
-        html {
-            font-size: 13px;
-        }
+  @media (max-width: 20em) {
+    html {
+      font-size: 13px;
     }
+  }
 `,{slice:KC,forEach:QC}=[];function GC(n){return QC.call(KC.call(arguments,1),r=>{if(r)for(const o in r)n[o]===void 0&&(n[o]=r[o])}),n}function YC(n){return typeof n!="string"?!1:[/<\s*script.*?>/i,/<\s*\/\s*script\s*>/i,/<\s*img.*?on\w+\s*=/i,/<\s*\w+\s*on\w+\s*=.*?>/i,/javascript\s*:/i,/vbscript\s*:/i,/expression\s*\(/i,/eval\s*\(/i,/alert\s*\(/i,/document\.cookie/i,/document\.write\s*\(/i,/window\.location/i,/innerHTML/i].some(o=>o.test(n))}const lm=/^[\u0009\u0020-\u007e\u0080-\u00ff]+$/,JC=function(n,r){const a=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{path:"/"},s=encodeURIComponent(r);let u=`${n}=${s}`;if(a.maxAge>0){const d=a.maxAge-0;if(Number.isNaN(d))throw new Error("maxAge should be a Number");u+=`; Max-Age=${Math.floor(d)}`}if(a.domain){if(!lm.test(a.domain))throw new TypeError("option domain is invalid");u+=`; Domain=${a.domain}`}if(a.path){if(!lm.test(a.path))throw new TypeError("option path is invalid");u+=`; Path=${a.path}`}if(a.expires){if(typeof a.expires.toUTCString!="function")throw new TypeError("option expires is invalid");u+=`; Expires=${a.expires.toUTCString()}`}if(a.httpOnly&&(u+="; HttpOnly"),a.secure&&(u+="; Secure"),a.sameSite)switch(typeof a.sameSite=="string"?a.sameSite.toLowerCase():a.sameSite){case!0:u+="; SameSite=Strict";break;case"lax":u+="; SameSite=Lax";break;case"strict":u+="; SameSite=Strict";break;case"none":u+="; SameSite=None";break;default:throw new TypeError("option sameSite is invalid")}return a.partitioned&&(u+="; Partitioned"),u},um={create(n,r,o,a){let s=arguments.length>4&&arguments[4]!==void 0?arguments[4]:{path:"/",sameSite:"strict"};o&&(s.expires=new Date,s.expires.setTime(s.expires.getTime()+o*60*1e3)),a&&(s.domain=a),document.cookie=JC(n,r,s)},read(n){const r=`${n}=`,o=document.cookie.split(";");for(let a=0;a<o.length;a++){let s=o[a];for(;s.charAt(0)===" ";)s=s.substring(1,s.length);if(s.indexOf(r)===0)return s.substring(r.length,s.length)}return null},remove(n,r){this.create(n,"",-1,r)}};var XC={name:"cookie",lookup(n){let{lookupCookie:r}=n;if(r&&typeof document<"u")return um.read(r)||void 0},cacheUserLanguage(n,r){let{lookupCookie:o,cookieMinutes:a,cookieDomain:s,cookieOptions:u}=r;o&&typeof document<"u"&&um.create(o,n,a,s,u)}},qC={name:"querystring",lookup(n){let{lookupQuerystring:r}=n,o;if(typeof window<"u"){let{search:a}=window.location;!window.location.search&&window.location.hash?.indexOf("?")>-1&&(a=window.location.hash.substring(window.location.hash.indexOf("?")));const u=a.substring(1).split("&");for(let d=0;d<u.length;d++){const h=u[d].indexOf("=");h>0&&u[d].substring(0,h)===r&&(o=u[d].substring(h+1))}}return o}},ZC={name:"hash",lookup(n){let{lookupHash:r,lookupFromHashIndex:o}=n,a;if(typeof window<"u"){const{hash:s}=window.location;if(s&&s.length>2){const u=s.substring(1);if(r){const d=u.split("&");for(let h=0;h<d.length;h++){const p=d[h].indexOf("=");p>0&&d[h].substring(0,p)===r&&(a=d[h].substring(p+1))}}if(a)return a;if(!a&&o>-1){const d=s.match(/\/([a-zA-Z-]*)/g);return Array.isArray(d)?d[typeof o=="number"?o:0]?.replace("/",""):void 0}}}return a}};let Vr=null;const cm=()=>{if(Vr!==null)return Vr;try{if(Vr=typeof window<"u"&&window.localStorage!==null,!Vr)return!1;const n="i18next.translate.boo";window.localStorage.setItem(n,"foo"),window.localStorage.removeItem(n)}catch{Vr=!1}return Vr};var ek={name:"localStorage",lookup(n){let{lookupLocalStorage:r}=n;if(r&&cm())return window.localStorage.getItem(r)||void 0},cacheUserLanguage(n,r){let{lookupLocalStorage:o}=r;o&&cm()&&window.localStorage.setItem(o,n)}};let Kr=null;const dm=()=>{if(Kr!==null)return Kr;try{if(Kr=typeof window<"u"&&window.sessionStorage!==null,!Kr)return!1;const n="i18next.translate.boo";window.sessionStorage.setItem(n,"foo"),window.sessionStorage.removeItem(n)}catch{Kr=!1}return Kr};var tk={name:"sessionStorage",lookup(n){let{lookupSessionStorage:r}=n;if(r&&dm())return window.sessionStorage.getItem(r)||void 0},cacheUserLanguage(n,r){let{lookupSessionStorage:o}=r;o&&dm()&&window.sessionStorage.setItem(o,n)}},nk={name:"navigator",lookup(n){const r=[];if(typeof navigator<"u"){const{languages:o,userLanguage:a,language:s}=navigator;if(o)for(let u=0;u<o.length;u++)r.push(o[u]);a&&r.push(a),s&&r.push(s)}return r.length>0?r:void 0}},rk={name:"htmlTag",lookup(n){let{htmlTag:r}=n,o;const a=r||(typeof document<"u"?document.documentElement:null);return a&&typeof a.getAttribute=="function"&&(o=a.getAttribute("lang")),o}},ik={name:"path",lookup(n){let{lookupFromPathIndex:r}=n;if(typeof window>"u")return;const o=window.location.pathname.match(/\/([a-zA-Z-]*)/g);return Array.isArray(o)?o[typeof r=="number"?r:0]?.replace("/",""):void 0}},ok={name:"subdomain",lookup(n){let{lookupFromSubdomainIndex:r}=n;const o=typeof r=="number"?r+1:1,a=typeof window<"u"&&window.location?.hostname?.match(/^(\w{2,5})\.(([a-z0-9-]{1,63}\.[a-z]{2,6})|localhost)/i);if(a)return a[o]}};let Wg=!1;try{document.cookie,Wg=!0}catch{}const Vg=["querystring","cookie","localStorage","sessionStorage","navigator","htmlTag"];Wg||Vg.splice(1,1);const ak=()=>({order:Vg,lookupQuerystring:"lng",lookupCookie:"i18next",lookupLocalStorage:"i18nextLng",lookupSessionStorage:"i18nextLng",caches:["localStorage"],excludeCacheFor:["cimode"],convertDetectedLanguage:n=>n});class Kg{constructor(r){let o=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};this.type="languageDetector",this.detectors={},this.init(r,o)}init(){let r=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{languageUtils:{}},o=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},a=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{};this.services=r,this.options=GC(o,this.options||{},ak()),typeof this.options.convertDetectedLanguage=="string"&&this.options.convertDetectedLanguage.indexOf("15897")>-1&&(this.options.convertDetectedLanguage=s=>s.replace("-","_")),this.options.lookupFromUrlIndex&&(this.options.lookupFromPathIndex=this.options.lookupFromUrlIndex),this.i18nOptions=a,this.addDetector(XC),this.addDetector(qC),this.addDetector(ek),this.addDetector(tk),this.addDetector(nk),this.addDetector(rk),this.addDetector(ik),this.addDetector(ok),this.addDetector(ZC)}addDetector(r){return this.detectors[r.name]=r,this}detect(){let r=arguments.length>0&&arguments[0]!==void 0?arguments[0]:this.options.order,o=[];return r.forEach(a=>{if(this.detectors[a]){let s=this.detectors[a].lookup(this.options);s&&typeof s=="string"&&(s=[s]),s&&(o=o.concat(s))}}),o=o.filter(a=>a!=null&&!YC(a)).map(a=>this.options.convertDetectedLanguage(a)),this.services&&this.services.languageUtils&&this.services.languageUtils.getBestMatchFromCodes?o:o.length>0?o[0]:null}cacheUserLanguage(r){let o=arguments.length>1&&arguments[1]!==void 0?arguments[1]:this.options.caches;o&&(this.options.excludeCacheFor&&this.options.excludeCacheFor.indexOf(r)>-1||o.forEach(a=>{this.detectors[a]&&this.detectors[a].cacheUserLanguage(r,this.options)}))}}Kg.type="languageDetector";const sk={ru:{translation:{continue:"Продолжить",back:"Назад",select:"Выбрать",search:"Поиск",cancel:"Отмена",loading:"Загрузка",error:"Ошибка",booking:{title:"Запись к врачу"},validation:{required:"Обязательное поле",consentRequired:"Необходимо согласие на обработку данных",invalidEmail:"Неверный формат email",invalidPhone:"Неверный формат телефона",invalidSnils:"Неверный формат СНИЛС"},widget:{title:"Медицинские заявки",initializing:"Инициализация виджета...",authError:"Ошибка авторизации виджета",loadError:"Ошибка загрузки виджета"},errors:{network:"Проблемы с соединением",auth:"Ошибка авторизации",unknown:"Неизвестная ошибка"}}},en:{translation:{continue:"Continue",back:"Back",select:"Select",search:"Search",cancel:"Cancel",error:"Error",loading:"Loading",booking:{title:"Doctor Appointment"},validation:{required:"Required field",consentRequired:"Consent to data processing is required",invalidEmail:"Invalid email format",invalidPhone:"Invalid phone format",invalidSnils:"Invalid SNILS format"},widget:{title:"Medical Requests",initializing:"Initializing widget...",authError:"Widget authentication error",loadError:"Widget loading error"},errors:{network:"Connection issues",auth:"Authentication error",unknown:"Unknown error"}}}};Ye.use(Kg).use(Ew).init({resources:sk,fallbackLng:"ru",debug:!1,interpolation:{escapeValue:!1}});const lk=()=>{const{colorScheme:n}=Cg();return g.jsx(Rc,{colorScheme:n,children:g.jsxs(xg,{theme:et,children:[g.jsx(VC,{}),g.jsx(T0,{children:g.jsx(WC,{})})]})})},Qg=document.getElementById("root");if(!Qg)throw new Error("Failed to find the root element");Zv.createRoot(Qg).render(g.jsx(hx,{store:LS,children:g.jsx(V0,{children:g.jsx(Tw,{i18n:Ye,children:g.jsx(Rc,{colorScheme:"light",children:g.jsx(Q1,{children:g.jsx(lk,{})})})})})}));
-//# sourceMappingURL=index-CpZEyoMf.js.map
+//# sourceMappingURL=index-C_uYiAG6.js.map
