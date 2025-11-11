@@ -4,17 +4,17 @@ import styled from 'styled-components';
 import { RootState } from '@/store';
 import { WIDGET_CONFIG } from '@/constants.ts';
 import { getUrl } from '@/config/env';
+import { LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
+import { useDebug } from '@/hooks/useDebug';
+import { DebugPanel } from '@/components/debug/DebugPanel';
 
-// Styled Components
 const Container = styled.main`
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 `;
-
 
 interface WindowWithWidget {
   [key: string]: ((containerId: string) => void) | undefined;
-
   renderTMWidget?: (containerId: string) => void;
   renderWidget?: (containerId: string) => void;
   unmountTMWidget?: (containerId: string) => void;
@@ -22,14 +22,22 @@ interface WindowWithWidget {
 
 const name = 'TMWidget';
 
-function MicroFrontend() {
-  const [widgetLoaded, setWidgetLoaded] = useState(false);
+export const MicroFrontend = () => {
+  const [widgetRendered, setWidgetRendered] = useState(false);
+  const [loadPhase, setLoadPhase] = useState<
+    'idle' | 'fetching' | 'loading' | 'rendering' | 'complete' | 'error'
+  >('idle');
+
   const isInitializedRef = useRef(false);
   const dataSentRef = useRef(false);
   const fetchInterceptedRef = useRef(false);
+  const renderAttemptsRef = useRef(0);
   const containerId = `${name}-container`;
+
   const { sessionId } = useSelector((state: RootState) => state.auth);
   const { host, url } = getUrl();
+
+  const { debugInfo, addDebugInfo, clearDebugInfo } = useDebug();
 
   // Сбрасываем состояния при размонтировании
   useEffect(() => {
@@ -37,7 +45,10 @@ function MicroFrontend() {
       isInitializedRef.current = false;
       dataSentRef.current = false;
       fetchInterceptedRef.current = false;
-      setWidgetLoaded(false);
+      renderAttemptsRef.current = 0;
+      setWidgetRendered(false);
+      setLoadPhase('idle');
+      clearDebugInfo();
     };
   }, []);
 
@@ -47,11 +58,13 @@ function MicroFrontend() {
 
     const originalFetch = window.fetch;
     fetchInterceptedRef.current = true;
+    addDebugInfo('fetchInterceptor', 'installed');
 
-    window.fetch = function(...args) {
+    window.fetch = function (...args) {
       const requestUrl = args[0];
 
       if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api/registerUser')) {
+        addDebugInfo('fetchIntercepted', 'registerUser');
         return Promise.resolve({
           ok: true,
           json: async () => ({
@@ -63,7 +76,9 @@ function MicroFrontend() {
 
       // Перехват authorize и других API запросов - делаем абсолютными URL
       if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
-        args[0] = `${url}${requestUrl}`;
+        const newUrl = `${url}${requestUrl}`;
+        addDebugInfo('fetchUrlRewritten', JSON.stringify({ from: requestUrl, to: newUrl }));
+        args[0] = newUrl;
       }
 
       return originalFetch.apply(this, args);
@@ -73,7 +88,7 @@ function MicroFrontend() {
       window.fetch = originalFetch;
       fetchInterceptedRef.current = false;
     };
-  }, [sessionId]);
+  }, [sessionId, url]);
 
   // Функция отправки данных в виджет
   const sendDataToWidget = useCallback(() => {
@@ -89,107 +104,254 @@ function MicroFrontend() {
     };
 
     dataSentRef.current = true;
+    addDebugInfo('dataSent', 'true');
+    addDebugInfo('widgetData', JSON.stringify(widgetData));
+
     window.postMessage(widgetData, '*');
   }, [sessionId]);
 
   // Отправка данных после загрузки виджета
   useEffect(() => {
-    if (sessionId && widgetLoaded) {
+    if (sessionId && widgetRendered) {
+      addDebugInfo('sendingDataToWidget', JSON.stringify({ sessionId, widgetRendered }));
       sendDataToWidget();
     }
-  }, [sessionId, widgetLoaded, sendDataToWidget]);
+  }, [sessionId, widgetRendered, sendDataToWidget]);
+
+  // Попытка рендера виджета с ретраями
+  const attemptRender = useCallback(
+    (windowWithWidget: WindowWithWidget, attempt = 1): Promise<boolean> => {
+      return new Promise(resolve => {
+        const renderFunction = windowWithWidget.renderTMWidget || windowWithWidget.renderWidget;
+
+        if (!renderFunction) {
+          addDebugInfo('renderAttemptFailed', `No render function (attempt ${attempt})`);
+          resolve(false);
+          return;
+        }
+
+        addDebugInfo('renderAttempt', JSON.stringify(attempt));
+
+        try {
+          renderFunction(containerId);
+          addDebugInfo('renderCalled', 'true');
+
+          // Даем время на рендер и проверяем результат
+          setTimeout(() => {
+            const container = document.getElementById(containerId);
+            const hasContent = (container?.children?.length || 0) > 0;
+
+            addDebugInfo(
+              'renderCheck',
+              JSON.stringify({
+                hasContent,
+                childrenCount: container?.children?.length || 0,
+                attempt,
+              }),
+            );
+
+            if (hasContent) {
+              setWidgetRendered(true);
+              setLoadPhase('complete');
+              addDebugInfo('renderSuccess', JSON.stringify(true));
+              resolve(true);
+            } else if (attempt < 3) {
+              // Ретрай через 500мс
+              setTimeout(() => {
+                attemptRender(windowWithWidget, attempt + 1).then(resolve);
+              }, 500);
+            } else {
+              addDebugInfo('renderFailed', `After ${attempt} attempts`);
+              resolve(false);
+            }
+          }, 300);
+        } catch (err) {
+          addDebugInfo('renderError', JSON.stringify(err));
+          resolve(false);
+        }
+      });
+    },
+    [containerId],
+  );
 
   // Загрузка и инициализация виджета
   useEffect(() => {
-    if (isInitializedRef.current) return;
+    if (isInitializedRef.current) {
+      addDebugInfo('skipLoad', 'Already initialized');
+      return;
+    }
+
+    setLoadPhase('fetching');
+    addDebugInfo('loadStarted', 'true');
+    addDebugInfo('host', host);
 
     const scriptId = `micro-frontend-script-${name}`;
     const windowWithWidget = window as unknown as WindowWithWidget;
 
     // Очистка предыдущего виджета если он существует
     if (windowWithWidget.unmountTMWidget) {
+      addDebugInfo('unmountPrevious', 'true');
       windowWithWidget.unmountTMWidget(containerId);
     }
 
+    // Проверяем, не загружен ли уже скрипт
     if (document.getElementById(scriptId)) {
-      const renderFunction = windowWithWidget[`render${name}`];
-      if (renderFunction) {
-        renderFunction(containerId);
-        setWidgetLoaded(true);
-      }
+      addDebugInfo('scriptAlreadyExists', 'true');
+      attemptRender(windowWithWidget).then(success => {
+        addDebugInfo('existingScriptRender', JSON.stringify(success));
+      });
       return;
     }
 
+    // Загрузка asset-manifest
     fetch(`${host}/asset-manifest.json`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        setLoadPhase('loading');
+        addDebugInfo('manifestFetched', 'true');
         return response.json();
       })
-      .then((manifest: {
-        files?: { 'main.js'?: string; 'main.css'?: string };
-        'main.js'?: string;
-        'main.css'?: string;
-        entrypoints?: string[];
-      }) => {
-        const fixedHost = getUrl().url;
-        const mainJs = manifest.files?.['main.js'] || manifest['main.js'];
-        const mainCss = manifest.files?.['main.css'] || manifest['main.css'];
+      .then(
+        (manifest: {
+          files?: { 'main.js'?: string; 'main.css'?: string };
+          'main.js'?: string;
+          'main.css'?: string;
+          entrypoints?: string[];
+        }) => {
+          addDebugInfo('manifest', JSON.stringify(manifest));
 
-        if (!mainJs) throw new Error('Main JS file not found');
+          const fixedHost = getUrl().url;
+          const mainJs = manifest.files?.['main.js'] || manifest['main.js'];
+          const mainCss = manifest.files?.['main.css'] || manifest['main.css'];
 
-        // Загрузка CSS
-        if (mainCss) {
-          const cssUrl = mainCss.startsWith('http') ? mainCss : `${fixedHost}${mainCss.startsWith('/') ? '' : '/'}${mainCss}`;
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = cssUrl;
-          document.head.appendChild(link);
-        }
-
-        // Загрузка JS
-        const jsUrl = mainJs.startsWith('http') ? mainJs : `${fixedHost}${mainJs.startsWith('/') ? '' : '/'}${mainJs}`;
-        const script = document.createElement('script');
-        script.id = scriptId;
-        script.src = jsUrl;
-
-        script.onload = () => {
-          isInitializedRef.current = true;
-          const renderFunction = windowWithWidget.renderTMWidget || windowWithWidget.renderWidget;
-
-          if (renderFunction) {
-            renderFunction(containerId);
-            setWidgetLoaded(true);
-          } else {
-            console.error('❌ No render function found');
+          if (!mainJs) {
+            throw new Error('Main JS file not found in manifest');
           }
-        };
 
-        script.onerror = (error) => {
-          console.error('❌ Script loading failed:', error);
-        };
+          addDebugInfo('assets', JSON.stringify({ mainJs, mainCss }));
 
-        document.head.appendChild(script);
-      })
-      .catch(console.error);
+          // Загрузка CSS
+          if (mainCss) {
+            const cssUrl = mainCss.startsWith('http')
+              ? mainCss
+              : `${fixedHost}${mainCss.startsWith('/') ? '' : '/'}${mainCss}`;
+
+            addDebugInfo('loadingCSS', cssUrl);
+
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = cssUrl;
+            link.onload = () => addDebugInfo('cssLoaded', 'true');
+            link.onerror = () => addDebugInfo('cssError', 'true');
+            document.head.appendChild(link);
+          }
+
+          // Загрузка JS
+          const jsUrl = mainJs.startsWith('http')
+            ? mainJs
+            : `${fixedHost}${mainJs.startsWith('/') ? '' : '/'}${mainJs}`;
+
+          addDebugInfo('loadingJS', jsUrl);
+
+          const script = document.createElement('script');
+          script.id = scriptId;
+          script.src = jsUrl;
+
+          script.onload = () => {
+            addDebugInfo('scriptLoaded', 'true');
+            isInitializedRef.current = true;
+            setLoadPhase('rendering');
+
+            // Даем время скрипту на инициализацию
+            setTimeout(() => {
+              attemptRender(windowWithWidget).then(success => {
+                addDebugInfo('finalRenderResult', JSON.stringify(success));
+              });
+            }, 100);
+          };
+
+          script.onerror = error => {
+            setLoadPhase('error');
+            addDebugInfo('scriptError', JSON.stringify(error));
+          };
+
+          document.head.appendChild(script);
+          addDebugInfo('scriptAddedToDOM', 'true');
+        },
+      )
+      .catch(error => {
+        setLoadPhase('error');
+        addDebugInfo('loadError', error.message);
+        console.error('Widget loading error:', error);
+      });
 
     return () => {
       if (process.env.NODE_ENV === 'production') {
+        addDebugInfo('cleanup', 'true');
+
         const unmountFunction = windowWithWidget.unmountTMWidget;
         if (unmountFunction) {
           unmountFunction(containerId);
         }
 
         const script = document.getElementById(scriptId);
-        if (script) script.remove();
+        if (script) {
+          script.remove();
+          addDebugInfo('scriptRemoved', 'true');
+        }
 
         // Сбрасываем ref'ы при очистке
         isInitializedRef.current = false;
         dataSentRef.current = false;
       }
     };
-  }, [host, containerId]);
+  }, [host, containerId, attemptRender]);
 
-  return <Container id={containerId} />;
-}
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Логируем все сообщения от виджета
+      if (event.data && typeof event.data === 'object') {
+        addDebugInfo('widgetMessage', event.data);
+      }
+    };
 
-export default MicroFrontend;
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {/* Дебаг панель */}
+      <DebugPanel
+        debugInfo={debugInfo}
+        clearDebugInfo={clearDebugInfo}
+        title="MicroFrontend Debug"
+      />
+
+      {/* Лоадер или контент */}
+      {!widgetRendered && loadPhase !== 'complete' && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '200px',
+          }}
+        >
+          <LoadingSpinner />
+          <div style={{ marginTop: '10px', color: '#666' }}>
+            {loadPhase === 'fetching' && 'Загрузка манифеста...'}
+            {loadPhase === 'loading' && 'Загрузка виджета...'}
+            {loadPhase === 'rendering' && 'Рендеринг...'}
+            {loadPhase === 'error' && 'Ошибка загрузки'}
+          </div>
+        </div>
+      )}
+
+      <Container id={containerId} />
+    </div>
+  );
+};

@@ -6,110 +6,109 @@ import { useTheme } from '../../providers/ThemeContext.tsx';
 
 // Styled Components для PageHeader
 const HeaderContainer = styled.header`
-    flex-shrink: 0;
-    padding: ${(props) => props.theme.spacing.md};
-    background: var(--color-background-primary);
-    border-bottom: 1px solid ${(props) => props.theme.colors.border.secondary};
-    position: relative;
+  flex-shrink: 0;
+  padding: ${props => props.theme.spacing.md};
+  background: var(--color-background-primary);
+  border-bottom: 1px solid ${props => props.theme.colors.border.secondary};
+  position: relative;
 
-    @media (max-width: ${(props) => props.theme.breakpoints.md}) {
-        padding: ${(props) => props.theme.spacing.sm};
-    }
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    padding: ${props => props.theme.spacing.sm};
+  }
 
-    @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-        padding: 12px ${(props) => props.theme.spacing.xs};
-    }
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    padding: 12px ${props => props.theme.spacing.xs};
+  }
 `;
 
 const HeaderFlex = styled(Flex)`
-    gap: ${(props) => props.theme.spacing.sm};
+  gap: ${props => props.theme.spacing.sm};
 
-    @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-        gap: 8px;
-    }
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    gap: 8px;
+  }
 `;
 
 const HeaderTitle = styled(Typography.Headline)`
-    flex: 1;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin: 0;
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
 
-    @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-        font-size: 18px;
-    }
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    font-size: 18px;
+  }
 `;
 
 const HeaderButton = styled(Button)`
-    min-width: auto;
-    padding: 8px 12px;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
+  min-width: auto;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
 
-    &:hover {
-        transform: scale(1.05);
-    }
+  &:hover {
+    transform: scale(1.05);
+  }
 
-    &:active {
-        transform: scale(0.95);
-    }
+  &:active {
+    transform: scale(0.95);
+  }
 
-    @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-        padding: 6px 10px;
-        font-size: 14px;
-    }
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
 `;
 
 const HeaderActions = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 `;
 
 const Spacer = styled.div<{ $width?: string }>`
-    width: ${(props) => props.$width || '48px'};
-    flex-shrink: 0;
+  width: ${props => props.$width || '48px'};
+  flex-shrink: 0;
 
-    @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-        width: ${(props) => (props.$width ? '40px' : '40px')};
-    }
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    width: ${props => (props.$width ? '40px' : '40px')};
+  }
 `;
 
-
 const ThemeToggleButton = styled.button`
-    background: transparent;
-    border: 1px solid ${(props) => props.theme.colors.border.secondary};
-    border-radius: ${(props) => props.theme.borderRadius.small};
-    padding: ${(props) => props.theme.spacing.xs};
-    color: ${(props) => props.theme.colors.text.secondary};
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
+  background: transparent;
+  border: 1px solid ${props => props.theme.colors.border.secondary};
+  border-radius: ${props => props.theme.borderRadius.small};
+  padding: ${props => props.theme.spacing.xs};
+  color: ${props => props.theme.colors.text.secondary};
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 
-    &:hover {
-        background: ${(props) => props.theme.colors.secondary};
-        border-color: ${(props) => props.theme.colors.border.primary};
-        transform: scale(1.05);
-    }
+  &:hover {
+    background: ${props => props.theme.colors.secondary};
+    border-color: ${props => props.theme.colors.border.primary};
+    transform: scale(1.05);
+  }
 
-    &:active {
-        transform: scale(0.95);
-    }
+  &:active {
+    transform: scale(0.95);
+  }
 
-    @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
-    }
+  @media (max-width: ${props => props.theme.breakpoints.xs}) {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
 `;
 
 // Интерфейсы
@@ -128,16 +127,16 @@ interface PageHeaderProps {
 
 // Компонент PageHeader
 export const PageHeader: React.FC<PageHeaderProps> = ({
-                                                        title,
-                                                        showBackButton = true,
-                                                        showThemeToggle = true,
-                                                        onBack,
-                                                        languageSwitcher,
-                                                      }) => {
-  const { hapticFeedback/*, closeApp*/ } = useMaxBridgeContext();
+  title,
+  showBackButton = true,
+  showThemeToggle = true,
+  onBack,
+  languageSwitcher,
+}) => {
+  const { hapticFeedback /*, closeApp*/ } = useMaxBridgeContext();
   const { toggleColorScheme } = useTheme();
   const handleBack = () => {
-    hapticFeedback('impact', { style: 'light' });
+    hapticFeedback('impact', 'light');
     if (onBack) {
       onBack();
     } else {
@@ -178,10 +177,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         {/* Правая часть */}
         <HeaderActions>
           {showThemeToggle && (
-            <ThemeToggleButton
-              onClick={handleThemeToggle}
-              title="Сменить тему"
-            >
+            <ThemeToggleButton onClick={handleThemeToggle} title="Сменить тему">
               🌓
             </ThemeToggleButton>
           )}

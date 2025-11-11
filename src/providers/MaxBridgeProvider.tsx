@@ -1,34 +1,6 @@
 import React, { createContext, type ReactNode, useContext } from 'react';
 import { useMaxBridge } from '../hooks/useMaxBridge';
-import type {
-  WebApp,
-  WebAppInitData,
-  WebAppUser,
-} from '../types/max-bridge.ts';
-
-interface MaxBridgeContextType {
-  isMaxApp: boolean;
-  isReady: boolean;
-  isValidated: boolean;
-  initData: WebAppInitData | null;
-  user: WebAppUser | null;
-  closeApp: () => void;
-  requestPhone: () => Promise<string>;
-  showBackButton: (show: boolean) => void;
-  onBackButtonClick: (callback: () => void) => void;
-  hapticFeedback: (type: 'impact' | 'notification' | 'selection', options?: {
-    style: 'soft' | 'light' | 'medium' | 'heavy' | 'rigid',
-    type?: 'error' | 'success' | 'warning'
-  }) => void;
-  openExternalLink: (url: string) => void;
-  shareContent: (text: string, link: string) => void;
-  setScreenCapture: (enabled: boolean) => void;
-  enableClosingConfirmation: () => void;
-  disableClosingConfirmation: () => void;
-  getStartParam: () => string | null;
-  parseStartParam: () => null;
-  webApp: WebApp | undefined;
-}
+import type { MaxBridgeContextType } from '../types/max-bridge.ts';
 
 const MaxBridgeContext = createContext<MaxBridgeContextType | null>(null);
 
@@ -48,8 +20,5 @@ interface MaxBridgeProviderProps {
 export const MaxBridgeProvider: React.FC<MaxBridgeProviderProps> = ({ children }) => {
   const bridge = useMaxBridge();
 
-  return (
-    <MaxBridgeContext.Provider
-      value={bridge}>{children}
-    </MaxBridgeContext.Provider>);
+  return <MaxBridgeContext.Provider value={bridge}>{children}</MaxBridgeContext.Provider>;
 };

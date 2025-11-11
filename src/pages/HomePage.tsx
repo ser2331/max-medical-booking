@@ -1,13 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Avatar,
-  Container,
-  Flex,
-  Grid,
-  Panel,
-  Typography,
-} from '@maxhub/max-ui';
+import { Avatar, Container, Flex, Grid, Panel, Typography } from '@maxhub/max-ui';
 import { useTranslation } from 'react-i18next';
 import { useMaxBridgeContext } from '../providers/MaxBridgeProvider';
 
@@ -57,8 +50,7 @@ export const HomePage: React.FC = () => {
                 <Typography.Headline>
                   {user.first_name} {user.last_name}
                 </Typography.Headline>
-                <Typography.Body
-                  style={{ color: 'var(--color-text-secondary)' }}>
+                <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
                   Готовы к записи к врачу
                 </Typography.Body>
               </Flex>
@@ -70,7 +62,7 @@ export const HomePage: React.FC = () => {
         <Grid style={{ gap: '16px', gridTemplateColumns: '1fr' }}>
           <Link
             to="/booking"
-            onClick={() => hapticFeedback('impact', { style: 'light' })}
+            onClick={() => hapticFeedback('impact', 'light')}
             style={{ textDecoration: 'none' }}
           >
             <Panel style={{ cursor: 'pointer' }}>
@@ -78,8 +70,7 @@ export const HomePage: React.FC = () => {
                 <div style={{ fontSize: '24px' }}>🏥</div>
                 <Flex direction="column" style={{ gap: '4px' }}>
                   <Typography.Label>Запись по прикреплению</Typography.Label>
-                  <Typography.Body
-                    style={{ color: 'var(--color-text-secondary)' }}>
+                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
                     Запись в вашу поликлинику
                   </Typography.Body>
                 </Flex>
@@ -89,7 +80,7 @@ export const HomePage: React.FC = () => {
 
           <Link
             to="/debug"
-            onClick={() => hapticFeedback('impact', { style: 'light' })}
+            onClick={() => hapticFeedback('impact', 'light')}
             style={{ textDecoration: 'none' }}
           >
             <Panel mode="secondary">
@@ -97,8 +88,7 @@ export const HomePage: React.FC = () => {
                 <div style={{ fontSize: '24px' }}>📋</div>
                 <Flex direction="column" style={{ gap: '4px' }}>
                   <Typography.Label>DEBUG</Typography.Label>
-                  <Typography.Body
-                    style={{ color: 'var(--color-text-secondary)' }}>
+                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
                     DEBUG
                   </Typography.Body>
                 </Flex>
@@ -107,7 +97,7 @@ export const HomePage: React.FC = () => {
           </Link>
           <Link
             to="/maxDemo"
-            onClick={() => hapticFeedback('impact', { style: 'light' })}
+            onClick={() => hapticFeedback('impact', 'light')}
             style={{ textDecoration: 'none' }}
           >
             <Panel mode="secondary">
@@ -115,8 +105,7 @@ export const HomePage: React.FC = () => {
                 <div style={{ fontSize: '24px' }}>📋</div>
                 <Flex direction="column" style={{ gap: '4px' }}>
                   <Typography.Label>maxDemo</Typography.Label>
-                  <Typography.Body
-                    style={{ color: 'var(--color-text-secondary)' }}>
+                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
                     maxDemo
                   </Typography.Body>
                 </Flex>

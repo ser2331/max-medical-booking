@@ -7,7 +7,7 @@ export const NotFoundPage: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
 
   React.useEffect(() => {
-    hapticFeedback('notification', { style: 'light', type: 'error' });
+    hapticFeedback('notification', 'light');
   }, [hapticFeedback]);
 
   return (
@@ -30,9 +30,7 @@ export const NotFoundPage: React.FC = () => {
             </Typography.Body>
 
             <Link to="/" style={{ textDecoration: 'none' }}>
-              <Button
-                onClick={() => hapticFeedback('impact', { style: 'medium' })}
-                size="large">
+              <Button onClick={() => hapticFeedback('impact', 'medium')} size="large">
                 На главную
               </Button>
             </Link>

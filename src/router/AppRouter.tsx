@@ -6,8 +6,7 @@ import { NotFoundPage } from '../pages/NotFoundPage';
 import { DebugPage } from '../pages/DebugPage.tsx';
 import { MaxDemoPage } from '../pages/MaxDemoPage.tsx';
 
-
-import { RequestPage } from '../pages/RequestPage.tsx';
+import { BookingPage } from '../pages/BookingPage.tsx';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -19,10 +18,10 @@ export const AppRouter: React.FC = () => {
       <Route path="/maxDemo" element={<MaxDemoPage />} />
 
       {/* Widget записи */}
-      <Route path="/booking" element={<RequestPage />} />
+      <Route path="/booking" element={<BookingPage />} />
 
       <Route path="/404" element={<NotFoundPage />} />
-      <Route path="*" element={<Navigate to="/404" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

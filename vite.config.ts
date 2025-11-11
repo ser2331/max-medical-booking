@@ -11,12 +11,12 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     cors: true,
+    //only dev
     proxy: {
       '/tm-widgets/api': {
         target: 'https://r78-rc.zdrav.netrika.ru',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/tm-widgets\/api/, '/tm-widgets/api'),
       },
     },
   },

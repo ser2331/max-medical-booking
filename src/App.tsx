@@ -25,17 +25,20 @@ function App() {
 
   if (isLoading && !sessionId) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <div>Загрузка приложения...</div>
       </div>
     );
   }
 
+  console.log(window.location);
   return (
     <StyledPanel style={{ minHeight: '100vh' }}>
       <AppRouter />

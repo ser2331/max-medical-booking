@@ -21,9 +21,9 @@ interface UrlConfig {
 
 export const getUrl = (): UrlConfig => {
   return {
-    url: import.meta.env.VITE_NETRIKA_WIDGET_URL,
-    host: import.meta.env.VITE_NETRIKA_WIDGET_HOST,
-    api: import.meta.env.VITE_NETRIKA_WIDGET_API,
+    url: import.meta.env.VITE_NETRIKA_WIDGET_URL || 'https://r78-rc.zdrav.netrika.ru',
+    host: import.meta.env.VITE_NETRIKA_WIDGET_HOST || 'https://r78-rc.zdrav.netrika.ru/tm.widgets',
+    api: import.meta.env.VITE_NETRIKA_WIDGET_API || 'https://r78-rc.zdrav.netrika.ru/tm-widgets/api',
     isProd: false,
   };
 };

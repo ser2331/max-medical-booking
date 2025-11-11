@@ -28,10 +28,16 @@ export interface WebApp {
   platform: string;
   version: string;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   onEvent(eventType: string, callback: Function): void;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   offEvent(eventType: string, callback: Function): void;
+
   ready(): void;
+
   close(): void;
+
   requestContact(): Promise<string>;
 
   BackButton: {
@@ -89,12 +95,19 @@ export interface WebApp {
   };
 
   enableClosingConfirmation(): void;
+
   disableClosingConfirmation(): void;
+
   openLink(url: string): void;
+
   openMaxLink(url: string): void;
+
   shareContent(text: string, link: string): void;
+
   shareMaxContent(text: string, link: string): void;
+
   downloadFile(url: string, fileName: string): void;
+
   openCodeReader(fileSelect?: boolean): Promise<string>;
 }
 
@@ -102,4 +115,50 @@ declare global {
   interface Window {
     WebApp?: WebApp;
   }
+}
+
+export interface SupportedFeatures {
+  haptic: boolean;
+  backButton: boolean;
+  openLink: boolean;
+  share: boolean;
+  requestContact: boolean;
+  screenCapture: boolean;
+  closingConfirmation: boolean;
+}
+
+export interface MaxBridgeContextType {
+  // Состояние
+  isMaxApp: boolean;
+  isReady: boolean;
+  initData: WebAppInitData | null;
+  user: WebAppUser | null;
+  supportedFeatures: SupportedFeatures;
+
+  // Методы для работы с параметрами
+  getStartParam: () => string | null;
+  parseStartParam: <T = string>() => T | null;
+
+  // Основные методы Bridge
+  closeApp: () => void;
+  showBackButton: (show: boolean) => void;
+  onBackButtonClick: (callback: () => void) => void;
+  hapticFeedback: (
+    type: 'impact' | 'notification' | 'selection',
+    style?: 'light' | 'medium' | 'heavy',
+  ) => Promise<void>;
+  openExternalLink: (url: string) => void;
+  requestContact: () => Promise<string>;
+
+  // Дополнительные методы
+  enableClosingConfirmation: () => void;
+  disableClosingConfirmation: () => void;
+  enableScreenCapture: () => void;
+  disableScreenCapture: () => void;
+
+  // Утилиты
+  isFeatureSupported: (feature: keyof SupportedFeatures) => boolean;
+
+  // Прямой доступ
+  webApp: WebApp | undefined;
 }
