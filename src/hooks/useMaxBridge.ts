@@ -1,5 +1,28 @@
+// hooks/useMaxBridge.ts
 import { useCallback, useEffect, useState } from 'react';
 import type { SupportedFeatures, WebAppInitData, WebAppUser } from '../types/max-bridge';
+import { MockWebApp } from '../mocks/max-bridge.mock';
+
+// Функция для инициализации WebApp (реального или мока)
+const initializeWebApp = () => {
+  // Если уже есть WebApp (в MAX среде), используем его
+  if (window.WebApp) {
+    return window.WebApp;
+  }
+
+  // Если запущено не в MAX, создаем мок
+  console.log('🚀 MAX environment not detected, using MockWebApp');
+
+  const mockUser: Partial<WebAppUser> = {
+    first_name: 'Демо',
+    last_name: 'Пользователь',
+    language_code: 'ru',
+  };
+
+  const mockWebApp = new MockWebApp(mockUser);
+  window.WebApp = mockWebApp as MockWebApp;
+  return window.WebApp;
+};
 
 // Проверяем поддержку методов в реальном времени (БЕЗ вызова методов)
 const checkFeatureSupport = (): SupportedFeatures => {
@@ -50,33 +73,32 @@ export const useMaxBridge = () => {
     closingConfirmation: false,
   });
 
-  // Проверяем, запущено ли приложение в MAX
+  // Инициализируем WebApp (реальный или мок)
   useEffect(() => {
-    const isMaxEnvironment = !!window.WebApp;
-    setIsMaxApp(isMaxEnvironment);
+    const webApp = initializeWebApp();
+    const isRealMaxEnvironment = !!window.WebApp && !(webApp instanceof MockWebApp);
 
-    if (isMaxEnvironment && window.WebApp) {
-      const webApp = window.WebApp;
+    setIsMaxApp(isRealMaxEnvironment);
 
-      // Сохраняем данные инициализации
-      setInitData(webApp.initDataUnsafe);
-      setUser(webApp.initDataUnsafe?.user || null);
+    // Сохраняем данные инициализации
+    setInitData(webApp.initDataUnsafe);
+    setUser(webApp.initDataUnsafe?.user || null);
 
-      // Проверяем поддерживаемые функции
-      const features = checkFeatureSupport();
-      setSupportedFeatures(features);
+    // Проверяем поддерживаемые функции
+    const features = checkFeatureSupport();
+    setSupportedFeatures(features);
 
-      // Сообщаем MAX, что приложение готово
-      webApp.ready();
-      setIsReady(true);
+    // Сообщаем MAX, что приложение готово
+    webApp.ready();
+    setIsReady(true);
 
-      console.log('✅ MAX Bridge initialized:', {
-        platform: webApp.platform,
-        version: webApp.version,
-        user: webApp.initDataUnsafe?.user,
-        supportedFeatures: features,
-      });
-    }
+    console.log('✅ MAX Bridge initialized:', {
+      environment: isRealMaxEnvironment ? 'REAL MAX' : 'MOCK',
+      platform: webApp.platform,
+      version: webApp.version,
+      user: webApp.initDataUnsafe?.user,
+      supportedFeatures: features,
+    });
   }, []);
 
   // Получение стартовых параметров
@@ -164,20 +186,18 @@ export const useMaxBridge = () => {
       try {
         switch (type) {
           case 'impact':
-            // Используем void вместо await чтобы избежать Unhandled Promise
-            void window.WebApp.HapticFeedback.impactOccurred(style);
+            window.WebApp.HapticFeedback.impactOccurred(style);
             break;
           case 'notification':
-            void window.WebApp.HapticFeedback.notificationOccurred('success');
+            window.WebApp.HapticFeedback.notificationOccurred('success');
             break;
           case 'selection':
-            void window.WebApp.HapticFeedback.selectionChanged();
+            window.WebApp.HapticFeedback.selectionChanged();
             break;
         }
         console.log('✅ Haptic feedback sent:', type, style);
       } catch (error) {
         console.warn('❌ Haptic feedback failed:', error);
-        // Не пробрасываем ошибку, просто логируем
       }
     },
     [supportedFeatures.haptic],

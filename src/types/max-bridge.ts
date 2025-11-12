@@ -1,8 +1,8 @@
-// Типы для MAX Bridge
+// types/max-bridge.types.ts
 export interface WebAppUser {
   id: number;
   first_name: string;
-  last_name?: string;
+  last_name: string;
   username?: string;
   language_code: string;
   photo_url?: string;
@@ -15,100 +15,94 @@ export interface WebAppChat {
 
 export interface WebAppInitData {
   query_id?: string;
-  auth_date: number;
-  hash: string;
+  auth_date?: number;
+  hash?: string;
   start_param?: string;
   user?: WebAppUser;
   chat?: WebAppChat;
 }
 
+export interface HapticFeedback {
+  impactOccurred: (
+    style: 'soft' | 'light' | 'medium' | 'heavy' | 'rigid',
+    disableVibrationFallback?: boolean,
+  ) => void;
+  notificationOccurred: (
+    type: 'error' | 'success' | 'warning',
+    disableVibrationFallback?: boolean,
+  ) => void;
+  selectionChanged: () => void;
+}
+
+export interface BackButton {
+  isVisible: boolean;
+  onClick: (callback: () => void) => void;
+  offClick: (callback: () => void) => void;
+  show: () => void;
+  hide: () => void;
+}
+
+export interface ScreenCapture {
+  isScreenCaptureEnabled: boolean;
+  enableScreenCapture: () => void;
+  disableScreenCapture: () => void;
+}
+
+export interface DeviceStorage {
+  setItem: (key: string, value: string) => void;
+  getItem: (key: string) => string | null;
+  removeItem: (key: string) => void;
+  clear: () => void;
+}
+
+export interface SecureStorage {
+  setItem: (key: string, value: string) => void;
+  getItem: (key: string) => string | null;
+  removeItem: (key: string) => void;
+}
+
+export interface BiometricManager {
+  isInited: boolean;
+  isBiometricAvailable: boolean;
+  biometricType: string[];
+  deviceId: string | null;
+  isAccessRequested: boolean;
+  isAccessGranted: boolean;
+  isBiometricTokenSaved: boolean;
+  init: () => Promise<void>;
+  requestAccess: () => Promise<boolean>;
+  authenticate: () => Promise<boolean>;
+  updateBiometricToken: (token: string) => Promise<void>;
+  openSettings: () => void;
+}
+
 export interface WebApp {
   initData: string;
   initDataUnsafe: WebAppInitData;
-  platform: string;
+  platform: 'ios' | 'android' | 'desktop' | 'web';
   version: string;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  onEvent(eventType: string, callback: Function): void;
+  onEvent: (eventName: string, callback: () => unknown) => void;
+  offEvent: (eventName: string, callback: () => unknown) => void;
+  ready: () => void;
+  close: () => void;
+  requestContact: () => Promise<string>;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  offEvent(eventType: string, callback: Function): void;
+  BackButton: BackButton;
+  ScreenCapture: ScreenCapture;
+  HapticFeedback: HapticFeedback;
+  DeviceStorage: DeviceStorage;
+  SecureStorage: SecureStorage;
+  BiometricManager: BiometricManager;
 
-  ready(): void;
-
-  close(): void;
-
-  requestContact(): Promise<string>;
-
-  BackButton: {
-    isVisible: boolean;
-    onClick(callback: () => void): void;
-    offClick(callback: () => void): void;
-    show(): void;
-    hide(): void;
-  };
-
-  ScreenCapture: {
-    isScreenCaptureEnabled: boolean;
-    enableScreenCapture(): void;
-    disableScreenCapture(): void;
-  };
-
-  HapticFeedback: {
-    impactOccurred(
-      style: 'soft' | 'light' | 'medium' | 'heavy' | 'rigid',
-      disableVibrationFallback?: boolean,
-    ): void;
-    notificationOccurred(
-      type: 'error' | 'success' | 'warning',
-      disableVibrationFallback?: boolean,
-    ): void;
-    selectionChanged(): void;
-  };
-
-  DeviceStorage: {
-    setItem(key: string, value: string): void;
-    getItem(key: string): string | null;
-    removeItem(key: string): void;
-    clear(): void;
-  };
-
-  SecureStorage: {
-    setItem(key: string, value: string): void;
-    getItem(key: string): string | null;
-    removeItem(key: string): void;
-  };
-
-  BiometricManager: {
-    isInited: boolean;
-    isBiometricAvailable: boolean;
-    biometricType: string[];
-    deviceId: string | null;
-    isAccessRequested: boolean;
-    isAccessGranted: boolean;
-    isBiometricTokenSaved: boolean;
-    init(): Promise<void>;
-    requestAccess(): Promise<void>;
-    authenticate(): Promise<void>;
-    updateBiometricToken(token: string): void;
-    openSettings(): void;
-  };
-
-  enableClosingConfirmation(): void;
-
-  disableClosingConfirmation(): void;
-
-  openLink(url: string): void;
-
-  openMaxLink(url: string): void;
-
-  shareContent(text: string, link: string): void;
-
-  shareMaxContent(text: string, link: string): void;
-
-  downloadFile(url: string, fileName: string): void;
-
-  openCodeReader(fileSelect?: boolean): Promise<string>;
+  enableClosingConfirmation: () => void;
+  disableClosingConfirmation: () => void;
+  openLink: (url: string) => void;
+  openMaxLink: (url: string) => void;
+  shareContent: (text: string, link: string) => void;
+  shareMaxContent: (text: string, link: string) => void;
+  downloadFile: (url: string, fileName: string) => void;
+  openCodeReader: (fileSelect?: boolean) => Promise<string>;
 }
 
 declare global {
