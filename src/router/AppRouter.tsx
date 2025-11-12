@@ -8,6 +8,7 @@ import { MaxDemoPage } from '../pages/MaxDemoPage.tsx';
 
 import { BookingPage } from '../pages/BookingPage.tsx';
 import { EsiaAuthPage } from '@/pages/EsiaAuthPage.tsx';
+import { StepperDemoPage } from '@/pages/StepperDemoPage.tsx';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -20,6 +21,8 @@ export const AppRouter: React.FC = () => {
       <Route path="/booking" element={<BookingPage />} />
       //ЕСИА
       <Route path="/auth" element={<EsiaAuthPage />} />
+      {/*Steps demo*/}
+      <Route path="/stepper" element={<StepperDemoPage />} />
       <Route path="/404" element={<NotFoundPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

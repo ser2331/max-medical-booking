@@ -17,6 +17,13 @@ export const HomePage: React.FC = () => {
       mode: 'primary' as const,
     },
     {
+      name: 'Запись на прием',
+      description: 'Многошаговая форма записи',
+      icon: '📋',
+      path: '/stepper',
+      mode: 'primary' as const,
+    },
+    {
       name: 'DEMO AUTH',
       description: 'AUTH',
       icon: '🔐',
