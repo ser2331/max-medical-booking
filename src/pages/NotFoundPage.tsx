@@ -17,7 +17,7 @@ export const NotFoundPage: React.FC = () => {
         gap={24}
         align="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
+        style={{ minHeight: '100dvh' }}
       >
         <Panel>
           <Flex direction="column" gap={16} align="center">

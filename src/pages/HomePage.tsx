@@ -8,136 +8,106 @@ export const HomePage: React.FC = () => {
   const { user, hapticFeedback } = useMaxBridgeContext();
   const { t } = useTranslation();
 
+  const menuItems = [
+    {
+      name: 'Запись по прикреплению',
+      description: 'Запись в вашу поликлинику',
+      icon: '🏥',
+      path: '/booking',
+      mode: 'primary' as const,
+    },
+    {
+      name: 'DEMO AUTH',
+      description: 'AUTH',
+      icon: '🔐',
+      path: '/auth',
+      mode: 'primary' as const,
+    },
+    {
+      name: 'DEBUG',
+      description: 'DEBUG',
+      icon: '🐛',
+      path: '/debug',
+      mode: 'secondary' as const,
+    },
+    {
+      name: 'maxDemo',
+      description: 'maxDemo',
+      icon: '⚡',
+      path: '/maxDemo',
+      mode: 'secondary' as const,
+    },
+  ];
+
   return (
-    <Container fullWidth style={{ height: '100%', flex: 1 }}>
+    <Container fullWidth style={{ flex: 1, padding: '16px' }}>
       <Flex
         direction="column"
+        gap={24}
         align={'center'}
         justify={'center'}
-        gap={24}
-        style={{ height: '100%', flex: 1 }}
+        style={{ flex: 1, height: '100%' }}
       >
         {/* Заголовок */}
-        <Panel>
-          <Flex direction="column" justify={'center'} gap={8} align={'center'}>
-            <Typography.Display style={{ textAlign: 'center' }}>
-              {t('booking.title')}
-            </Typography.Display>
-            <Typography.Body
-              style={{
-                color: 'var(--color-text-secondary)',
-                textAlign: 'center',
-              }}
-            >
-              Быстрая запись через ЕСИА
-            </Typography.Body>
-          </Flex>
-        </Panel>
+        <Flex direction="column" gap={8} align={'center'}>
+          <Typography.Display style={{ textAlign: 'center' }}>
+            {t('booking.title')}
+          </Typography.Display>
+          <Typography.Body
+            style={{
+              color: 'var(--color-text-secondary)',
+              textAlign: 'center',
+            }}
+          >
+            Быстрая запись через ЕСИА
+          </Typography.Body>
+        </Flex>
 
         {/* Карточка пользователя */}
         {user && (
-          <Panel>
-            <Flex style={{ gap: '16px', alignItems: 'center' }}>
-              <Avatar.Container size={56} form="circle">
-                {user.photo_url ? (
-                  <Avatar.Image src={user.photo_url} alt={user.first_name} />
-                ) : (
-                  <Avatar.Text>{user.first_name[0]}</Avatar.Text>
-                )}
-              </Avatar.Container>
+          <Flex gap={16} align={'center'}>
+            <Avatar.Container size={56} form="circle">
+              {user.photo_url ? (
+                <Avatar.Image src={user.photo_url} alt={user.first_name} />
+              ) : (
+                <Avatar.Text>{user.first_name[0]}</Avatar.Text>
+              )}
+            </Avatar.Container>
 
-              <Flex direction="column">
-                <Typography.Headline>
-                  {user.first_name} {user.last_name}
-                </Typography.Headline>
-                <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
-                  Готовы к записи к врачу
-                </Typography.Body>
-              </Flex>
+            <Flex direction="column">
+              <Typography.Headline>
+                {user.first_name} {user.last_name}
+              </Typography.Headline>
+              <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
+                Готовы к записи к врачу
+              </Typography.Body>
             </Flex>
-          </Panel>
+          </Flex>
         )}
 
         {/* Основные действия */}
-        <Grid style={{ gap: '16px', gridTemplateColumns: '1fr' }}>
-          <Link
-            to="/booking"
-            onClick={() => hapticFeedback('impact', 'light')}
-            style={{ textDecoration: 'none' }}
-          >
-            <Panel style={{ cursor: 'pointer' }}>
-              <Flex style={{ gap: '16px', alignItems: 'center' }}>
-                <div style={{ fontSize: '24px' }}>🏥</div>
-                <Flex direction="column" style={{ gap: '4px' }}>
-                  <Typography.Label>Запись по прикреплению</Typography.Label>
-                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
-                    Запись в вашу поликлинику
-                  </Typography.Body>
+        <Grid style={{ gap: '12px', gridTemplateColumns: '1fr' }}>
+          {menuItems.map(item => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => hapticFeedback('impact', 'light')}
+              style={{ textDecoration: 'none' }}
+            >
+              <Panel mode={item.mode} style={{ cursor: 'pointer' }}>
+                <Flex gap={16} align={'center'}>
+                  <div style={{ fontSize: '24px' }}>{item.icon}</div>
+                  <Flex direction="column" gap={4}>
+                    <Typography.Label>{item.name}</Typography.Label>
+                    <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
+                      {item.description}
+                    </Typography.Body>
+                  </Flex>
                 </Flex>
-              </Flex>
-            </Panel>
-          </Link>
-
-          <Link
-            to="/debug"
-            onClick={() => hapticFeedback('impact', 'light')}
-            style={{ textDecoration: 'none' }}
-          >
-            <Panel mode="secondary">
-              <Flex style={{ gap: '16px', alignItems: 'center' }}>
-                <div style={{ fontSize: '24px' }}>📋</div>
-                <Flex direction="column" style={{ gap: '4px' }}>
-                  <Typography.Label>DEBUG</Typography.Label>
-                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
-                    DEBUG
-                  </Typography.Body>
-                </Flex>
-              </Flex>
-            </Panel>
-          </Link>
-          <Link
-            to="/maxDemo"
-            onClick={() => hapticFeedback('impact', 'light')}
-            style={{ textDecoration: 'none' }}
-          >
-            <Panel mode="secondary">
-              <Flex style={{ gap: '16px', alignItems: 'center' }}>
-                <div style={{ fontSize: '24px' }}>📋</div>
-                <Flex direction="column" style={{ gap: '4px' }}>
-                  <Typography.Label>maxDemo</Typography.Label>
-                  <Typography.Body style={{ color: 'var(--color-text-secondary)' }}>
-                    maxDemo
-                  </Typography.Body>
-                </Flex>
-              </Flex>
-            </Panel>
-          </Link>
+              </Panel>
+            </Link>
+          ))}
         </Grid>
-
-        {/* Информационный блок */}
-        <Panel mode="secondary">
-          <Flex direction="column" style={{ gap: '12px' }}>
-            <Typography.Title>Как это работает?</Typography.Title>
-            <Flex direction="column" style={{ gap: '8px' }}>
-              <Flex style={{ gap: '12px', alignItems: 'center' }}>
-                <div style={{ fontSize: '20px' }}>1️⃣</div>
-                <Typography.Body>Выберите тип записи</Typography.Body>
-              </Flex>
-              <Flex style={{ gap: '12px', alignItems: 'center' }}>
-                <div style={{ fontSize: '20px' }}>2️⃣</div>
-                <Typography.Body>Авторизуйтесь через Госуслуги</Typography.Body>
-              </Flex>
-              <Flex style={{ gap: '12px', alignItems: 'center' }}>
-                <div style={{ fontSize: '20px' }}>3️⃣</div>
-                <Typography.Body>Выберите врача и время</Typography.Body>
-              </Flex>
-              <Flex style={{ gap: '12px', alignItems: 'center' }}>
-                <div style={{ fontSize: '20px' }}>4️⃣</div>
-                <Typography.Body>Получите подтверждение</Typography.Body>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Panel>
       </Flex>
     </Container>
   );

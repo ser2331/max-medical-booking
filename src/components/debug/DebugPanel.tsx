@@ -11,8 +11,8 @@ const Panel = styled.div`
   border-radius: 8px;
   font-size: 12px;
   z-index: 10000;
-  max-width: min(400px, calc(100vw - 40px));
-  max-height: min(400px, calc(100vh - 40px));
+  max-width: min(400px, calc(100dvw - 40px));
+  max-height: min(400px, calc(100dvh - 40px));
   overflow: auto;
   border: 1px solid #333;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;

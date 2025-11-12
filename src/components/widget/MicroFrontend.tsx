@@ -8,9 +8,20 @@ import { LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
 import { useDebug } from '@/hooks/useDebug';
 import { DebugPanel } from '@/components/debug/DebugPanel';
 
-const Container = styled.main`
+const Container = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  main {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 interface WindowWithWidget {

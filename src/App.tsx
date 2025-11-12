@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import i18n from 'i18next';
 import { useMaxBridgeContext } from './providers/MaxBridgeProvider.tsx';
 import { AppRouter } from './router/AppRouter';
-import { StyledPanel } from './components/ui/StyledComponents.tsx';
+import { LoadingSpinner, StyledPanel } from './components/ui/StyledComponents.tsx';
 import { useWidgetSession } from '@/hooks/useWidgetSession.ts';
 import { AUTH_DATA, WIDGET_CONFIG } from '@/constants.ts';
+import { Flex } from '@maxhub/max-ui';
 
 function App() {
   const { initData } = useMaxBridgeContext();
@@ -25,22 +26,20 @@ function App() {
 
   if (isLoading && !sessionId) {
     return (
-      <div
+      <Flex
+        align="center"
+        justify="center"
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
+          height: '100dvh',
         }}
       >
-        <div>Загрузка приложения...</div>
-      </div>
+        <LoadingSpinner size={50} appearance={'themed'} />
+      </Flex>
     );
   }
 
-  console.log(window.location);
   return (
-    <StyledPanel style={{ minHeight: '100vh' }}>
+    <StyledPanel className={'PANEL'}>
       <AppRouter />
     </StyledPanel>
   );

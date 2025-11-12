@@ -75,4 +75,14 @@ export const responsive = {
       }
     `,
   },
+
+  radius: {
+    medium: css`
+      border-radius: 10px;
+
+      ${media.xs} {
+        border-radius: 5px;
+      }
+    `,
+  },
 };

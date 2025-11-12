@@ -2,68 +2,60 @@ import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { PageHeader } from './PageHeader';
 import { PageFooter } from './PageFooter';
-import { theme } from '../../styles/theme';
+import { theme } from '@/styles/theme.ts';
 import { useTranslation } from 'react-i18next';
-
-// Styled components с правильной типизацией
 const LayoutContainer = styled.div`
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-
-    /* Адаптив для очень маленьких экранов */
-    @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
-        height: 100dvh;
-    }
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
-const ContentArea = styled.div`
-    flex: 1;
-    overflow: auto;
-    padding: 0 ${(props) => props.theme.spacing.md};
-
-    @media (max-width: ${(props) => props.theme.breakpoints.md}) {
-        padding: 0 ${(props) => props.theme.spacing.sm};
-    }
-
-    @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
-        padding: 0 ${(props) => props.theme.spacing.xs};
-    }
+const ContentArea = styled.main`
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
 `;
 
 const ContentWrapper = styled.div`
-    height: 100%;
-    padding: ${(props) => props.theme.spacing.md} 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: ${props => props.theme.spacing.md} 0;
 
-    @media (max-width: ${(props) => props.theme.breakpoints.md}) {
-        padding: ${(props) => props.theme.spacing.sm} 0;
-    }
+  /* Убираем bounce эффект на iOS */
+  overscroll-behavior: contain;
+
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    padding: ${props => props.theme.spacing.sm} 0;
+  }
 `;
 
 const LanguageSwitcher = styled.button`
-    background: transparent;
-    border: 1px solid ${(props) => props.theme.colors.border.secondary};
-    border-radius: ${(props) => props.theme.borderRadius.small};
-    padding: ${(props) => props.theme.spacing.xs} ${(props) => props.theme.spacing.sm};
-    color: ${(props) => props.theme.colors.text.secondary};
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background: transparent;
+  border: 1px solid ${props => props.theme.colors.border.secondary};
+  border-radius: ${props => props.theme.borderRadius.small};
+  padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.sm};
+  color: ${props => props.theme.colors.text.secondary};
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-    &:hover {
-        background: ${(props) => props.theme.colors.secondary};
-        border-color: ${(props) => props.theme.colors.border.primary};
-    }
+  &:hover {
+    background: ${props => props.theme.colors.secondary};
+    border-color: ${props => props.theme.colors.border.primary};
+  }
 
-    &:active {
-        transform: scale(0.95);
-    }
+  &:active {
+    transform: scale(0.95);
+  }
 
-    @media (max-width: ${(props) => props.theme.breakpoints.xs}) {
-        font-size: 11px;
-        padding: 6px 8px;
-    }
+  @media (max-width: ${props => props.theme.breakpoints.xs}) {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
 `;
 
 interface PageLayoutProps {
@@ -88,16 +80,16 @@ interface PageLayoutProps {
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
-                                                        children,
-                                                        title,
-                                                        showBackButton = true,
-                                                        showCloseButton = true,
-                                                        showLanguageSwitcher = true,
-                                                        onBack,
-                                                        onClose,
-                                                        submitButton,
-                                                        backButton,
-                                                      }) => {
+  children,
+  title,
+  showBackButton = true,
+  showCloseButton = true,
+  showLanguageSwitcher = true,
+  onBack,
+  onClose,
+  submitButton,
+  backButton,
+}) => {
   const { i18n } = useTranslation();
 
   const currentLanguage = i18n.language;
