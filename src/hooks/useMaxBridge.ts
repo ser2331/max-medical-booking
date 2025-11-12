@@ -1,16 +1,52 @@
-// hooks/useMaxBridge.ts
 import { useCallback, useEffect, useState } from 'react';
 import type { SupportedFeatures, WebAppInitData, WebAppUser } from '../types/max-bridge';
 import { MockWebApp } from '../mocks/max-bridge.mock';
 
-// Функция для инициализации WebApp (реального или мока)
-const initializeWebApp = () => {
-  // Если уже есть WebApp (в MAX среде), используем его
-  if (window.WebApp) {
-    return window.WebApp;
+// Функция для проверки, запущено ли приложение в реальном MAX
+const isRealMaxEnvironment = (): boolean => {
+  // 1. Проверяем наличие объекта WebApp
+  if (!window.WebApp) {
+    return false;
   }
 
-  // Если запущено не в MAX, создаем мок
+  // 2. Проверяем наличие реальных данных пользователя (не моковых)
+  const user = window.WebApp.initDataUnsafe?.user;
+  if (!user || !user.id || !user.first_name) {
+    return false;
+  }
+
+  // 3. Проверяем, что это не наш мок (по структуре данных)
+  const isMockData =
+    user.id === 123456789 ||
+    user.first_name === 'Демо' ||
+    user.last_name === 'Пользователь' ||
+    window.WebApp.platform === 'web'; // В реальном MAX платформа не будет 'web'
+
+  // 4. Дополнительные проверки для реального MAX
+  const hasValidInitData =
+    window.WebApp.initDataUnsafe?.auth_date &&
+    window.WebApp.initDataUnsafe?.hash &&
+    window.WebApp.initDataUnsafe?.query_id;
+
+  return !isMockData && !!hasValidInitData;
+};
+
+// Функция для инициализации WebApp (реального или мока)
+const initializeWebApp = () => {
+  const isRealMax = isRealMaxEnvironment();
+
+  // Если это реальный MAX, используем существующий WebApp
+  if (isRealMax) {
+    console.log('✅ Detected REAL MAX environment');
+    return window.WebApp!;
+  }
+
+  // Если WebApp существует, но данные невалидные - это может быть старый мок, пересоздаем
+  if (window.WebApp) {
+    console.log('🔄 Replacing invalid WebApp with new mock');
+  }
+
+  // Создаем новый мок
   console.log('🚀 MAX environment not detected, using MockWebApp');
 
   const mockUser: Partial<WebAppUser> = {
@@ -76,9 +112,9 @@ export const useMaxBridge = () => {
   // Инициализируем WebApp (реальный или мок)
   useEffect(() => {
     const webApp = initializeWebApp();
-    const isRealMaxEnvironment = !!window.WebApp && !(webApp instanceof MockWebApp);
+    const isRealMax = isRealMaxEnvironment();
 
-    setIsMaxApp(isRealMaxEnvironment);
+    setIsMaxApp(isRealMax);
 
     // Сохраняем данные инициализации
     setInitData(webApp.initDataUnsafe);
@@ -93,12 +129,21 @@ export const useMaxBridge = () => {
     setIsReady(true);
 
     console.log('✅ MAX Bridge initialized:', {
-      environment: isRealMaxEnvironment ? 'REAL MAX' : 'MOCK',
+      environment: isRealMax ? 'REAL MAX' : 'MOCK',
       platform: webApp.platform,
       version: webApp.version,
       user: webApp.initDataUnsafe?.user,
       supportedFeatures: features,
     });
+
+    // Дополнительная проверка для отладки
+    if (!isRealMax) {
+      console.log('🔍 Mock environment details:', {
+        hasWebApp: !!window.WebApp,
+        userData: webApp.initDataUnsafe?.user,
+        isMock: webApp instanceof MockWebApp,
+      });
+    }
   }, []);
 
   // Получение стартовых параметров

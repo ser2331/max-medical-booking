@@ -1,4 +1,3 @@
-// mocks/max-bridge.mock.ts
 import { WebAppInitData, WebAppUser } from '../types/max-bridge';
 
 export class MockWebApp {
