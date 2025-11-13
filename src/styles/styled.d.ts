@@ -1,9 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import 'styled-components';
-import { theme } from './theme';
+import { ThemeConfig } from './themes';
 
-// Расширяем DefaultTheme styled-components
 declare module 'styled-components' {
-  type Theme = typeof theme;
-
-  export interface DefaultTheme extends Theme {}
+  export interface DefaultTheme extends ThemeConfig {}
 }

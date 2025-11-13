@@ -1,12 +1,12 @@
-import React from 'react';
+import { FC } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useStepper } from '@/hooks/useStepper.ts';
 import { Step1 } from './steps/Step1';
 import { Step2 } from './steps/Step2';
 import { Step3 } from './steps/Step3';
 import { Step4 } from './steps/Step4';
-import { StepperNavigation } from './StepperNavigation';
 import styled from 'styled-components';
+import { StepperNavigation } from '@/components/stepper/StepperNavigation.tsx';
 import { Stepper } from '@/components/stepper/Stepper.tsx';
 
 interface FormData {
@@ -30,33 +30,17 @@ const steps = [
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  flex: 1;
-  padding: 0;
-  margin: 0;
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-`;
-
-const FormContainer = styled.form`
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
 `;
 
 const StepContent = styled.div`
-  flex: 1;
   overflow-y: auto;
-  padding: 8px 16px;
+  padding: 16px;
+  height: 100%;
 `;
 
-export const StepperDemo: React.FC = () => {
+export const InsuranceBooking: FC = () => {
   const methods = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
@@ -92,25 +76,26 @@ export const StepperDemo: React.FC = () => {
   return (
     <Container>
       <FormProvider {...methods}>
-        <ContentWrapper>
-          <Stepper
-            steps={steps.map(step => ({ id: step.title, title: step.title }))}
-            currentStep={currentStep}
-          />
-          <FormContainer onSubmit={methods.handleSubmit(handleSubmit)}>
-            <StepContent>
-              <CurrentStepComponent />
-            </StepContent>
+        <Stepper
+          steps={steps.map(step => ({ id: step.title, title: step.title }))}
+          currentStep={currentStep}
+        />
+        <form
+          onSubmit={methods.handleSubmit(handleSubmit)}
+          style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}
+        >
+          <StepContent>
+            <CurrentStepComponent />
+          </StepContent>
 
-            <StepperNavigation
-              currentStep={currentStep}
-              isFirstStep={isFirstStep}
-              isLastStep={isLastStep}
-              onPrev={prev}
-              onNext={onNext}
-            />
-          </FormContainer>
-        </ContentWrapper>
+          <StepperNavigation
+            currentStep={currentStep}
+            isFirstStep={isFirstStep}
+            isLastStep={isLastStep}
+            onPrev={prev}
+            onNext={onNext}
+          />
+        </form>
       </FormProvider>
     </Container>
   );

@@ -3,101 +3,136 @@ import { useMaxBridgeContext } from '../providers/MaxBridgeProvider';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  padding: 20px;
+  padding: ${props => props.theme.spacing.lg};
   max-width: 600px;
   margin: 0 auto;
+  background: ${props => props.theme.colors.background.primary};
+  color: ${props => props.theme.colors.text.primary};
 `;
 
 const UserInfo = styled.div`
-  background: #e8f5e8;
-  border: 1px solid #c3e6cb;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
+  background: ${props => props.theme.colors.background.secondary};
+  border: 1px solid ${props => props.theme.colors.border.primary};
+  border-radius: ${props => props.theme.borderRadius.medium};
+  padding: ${props => props.theme.spacing.lg};
+  margin-bottom: ${props => props.theme.spacing.lg};
 
   h2 {
-    margin: 0 0 8px 0;
-    color: #155724;
+    margin: 0 0 ${props => props.theme.spacing.sm} 0;
+    color: ${props => props.theme.colors.text.primary};
+    font-size: ${props => props.theme.typography.fontSize.xl};
+    font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
 
   p {
-    margin: 4px 0;
-    color: #0f5132;
+    margin: ${props => props.theme.spacing.xs} 0;
+    color: ${props => props.theme.colors.text.secondary};
+    font-size: ${props => props.theme.typography.fontSize.sm};
   }
 `;
 
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  margin-top: 20px;
+  gap: ${props => props.theme.spacing.sm};
+  margin-top: ${props => props.theme.spacing.lg};
 `;
 
 const Button = styled.button<{ $disabled?: boolean }>`
-  background: ${props => (props.$disabled ? '#6c757d' : '#007bff')};
-  color: white;
+  background: ${props =>
+    props.$disabled ? props.theme.colors.text.tertiary : props.theme.colors.primary};
+  color: ${props => props.theme.colors.text.inverted};
   border: none;
-  border-radius: 6px;
-  padding: 12px 16px;
-  font-size: 14px;
+  border-radius: ${props => props.theme.components.button.borderRadius};
+  padding: ${props => props.theme.components.button.padding};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
   cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  min-height: 44px;
 
   &:hover {
-    background: ${props => (props.$disabled ? '#6c757d' : '#0056b3')};
+    background: ${props =>
+      props.$disabled ? props.theme.colors.text.tertiary : props.theme.colors.primaryHover};
+    transform: ${props => (props.$disabled ? 'none' : 'translateY(-1px)')};
+    box-shadow: ${props => (props.$disabled ? 'none' : props.theme.shadows.small)};
   }
 
   &:active {
-    transform: ${props => (props.$disabled ? 'none' : 'translateY(1px)')};
+    transform: ${props => (props.$disabled ? 'none' : 'translateY(0)')};
   }
 `;
 
 const WarningMessage = styled.div`
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 6px;
-  padding: 16px;
+  background: ${props => props.theme.colors.warning}15; // 15% opacity
+  border: 1px solid ${props => props.theme.colors.warning};
+  border-radius: ${props => props.theme.borderRadius.medium};
+  padding: ${props => props.theme.spacing.lg};
   text-align: center;
 
   h1 {
-    margin: 0 0 8px 0;
-    color: #856404;
-    font-size: 18px;
+    margin: 0 0 ${props => props.theme.spacing.sm} 0;
+    color: ${props => props.theme.colors.warning};
+    font-size: ${props => props.theme.typography.fontSize.lg};
+    font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
 
   p {
     margin: 0;
-    color: #856404;
+    color: ${props => props.theme.colors.warning};
+    font-size: ${props => props.theme.typography.fontSize.sm};
   }
 `;
 
 const FeatureStatus = styled.div`
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 16px;
+  background: ${props => props.theme.colors.background.secondary};
+  border: 1px solid ${props => props.theme.colors.border.secondary};
+  border-radius: ${props => props.theme.borderRadius.medium};
+  padding: ${props => props.theme.spacing.lg};
+  margin-bottom: ${props => props.theme.spacing.lg};
 
   h3 {
-    margin: 0 0 8px 0;
-    color: #495057;
+    margin: 0 0 ${props => props.theme.spacing.md} 0;
+    color: ${props => props.theme.colors.text.primary};
+    font-size: ${props => props.theme.typography.fontSize.md};
+    font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
 `;
 
 const FeatureItem = styled.div<{ $supported: boolean }>`
   display: flex;
   justify-content: space-between;
-  margin: 4px 0;
-  padding: 4px 0;
+  align-items: center;
+  margin: ${props => props.theme.spacing.sm} 0;
+  padding: ${props => props.theme.spacing.sm} 0;
+  border-bottom: 1px solid ${props => props.theme.colors.border.secondary};
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   .feature-name {
-    color: #495057;
+    color: ${props => props.theme.colors.text.primary};
+    font-size: ${props => props.theme.typography.fontSize.sm};
   }
 
   .feature-status {
-    font-weight: 600;
-    color: ${props => (props.$supported ? '#28a745' : '#dc3545')};
+    font-weight: ${props => props.theme.typography.fontWeight.semibold};
+    color: ${props => (props.$supported ? props.theme.colors.success : props.theme.colors.error)};
+    font-size: ${props => props.theme.typography.fontSize.sm};
   }
+`;
+
+const Header = styled.h1`
+  color: ${props => props.theme.colors.text.primary};
+  font-size: ${props => props.theme.typography.fontSize.xxl};
+  font-weight: ${props => props.theme.typography.fontWeight.bold};
+  margin-bottom: ${props => props.theme.spacing.lg};
+  text-align: center;
+`;
+
+const Section = styled.section`
+  margin-bottom: ${props => props.theme.spacing.xl};
 `;
 
 export const MaxDemo: React.FC = () => {
@@ -117,6 +152,7 @@ export const MaxDemo: React.FC = () => {
 
       onBackButtonClick(() => {
         console.log('Back button pressed');
+        hapticFeedback('impact', 'light');
       });
     }
 
@@ -125,7 +161,7 @@ export const MaxDemo: React.FC = () => {
         showBackButton(false);
       }
     };
-  }, [isMaxApp, showBackButton, onBackButtonClick]);
+  }, [isMaxApp, showBackButton, onBackButtonClick, hapticFeedback]);
 
   if (!isMaxApp) {
     return (
@@ -140,79 +176,100 @@ export const MaxDemo: React.FC = () => {
 
   return (
     <Container>
-      <h1>Демо MAX Bridge</h1>
+      <Header>Демо MAX Bridge</Header>
 
-      <FeatureStatus>
-        <h3>Поддерживаемые функции:</h3>
-        <FeatureItem $supported={supportedFeatures.backButton}>
-          <span className="feature-name">Кнопка "Назад":</span>
-          <span className="feature-status">
-            {supportedFeatures.backButton ? '✓ Работает' : '✗ Не поддерживается'}
-          </span>
-        </FeatureItem>
-        <FeatureItem $supported={supportedFeatures.openLink}>
-          <span className="feature-name">Открытие ссылок:</span>
-          <span className="feature-status">
-            {supportedFeatures.openLink ? '✓ Работает' : '✗ Не поддерживается'}
-          </span>
-        </FeatureItem>
-        <FeatureItem $supported={supportedFeatures.haptic}>
-          <span className="feature-name">Тактильная обратная связь:</span>
-          <span className="feature-status">
-            {supportedFeatures.haptic ? '✓ Работает' : '✗ Не поддерживается'}
-          </span>
-        </FeatureItem>
-        <FeatureItem $supported={supportedFeatures.requestContact}>
-          <span className="feature-name">Запрос контакта:</span>
-          <span className="feature-status">
-            {supportedFeatures.requestContact ? '✓ Работает' : '✗ Не поддерживается'}
-          </span>
-        </FeatureItem>
-      </FeatureStatus>
+      <Section>
+        <FeatureStatus>
+          <h3>Поддерживаемые функции:</h3>
+          <FeatureItem $supported={supportedFeatures.backButton}>
+            <span className="feature-name">Кнопка "Назад"</span>
+            <span className="feature-status">
+              {supportedFeatures.backButton ? '✓ Работает' : '✗ Не поддерживается'}
+            </span>
+          </FeatureItem>
+          <FeatureItem $supported={supportedFeatures.openLink}>
+            <span className="feature-name">Открытие ссылок</span>
+            <span className="feature-status">
+              {supportedFeatures.openLink ? '✓ Работает' : '✗ Не поддерживается'}
+            </span>
+          </FeatureItem>
+          <FeatureItem $supported={supportedFeatures.haptic}>
+            <span className="feature-name">Тактильная обратная связь</span>
+            <span className="feature-status">
+              {supportedFeatures.haptic ? '✓ Работает' : '✗ Не поддерживается'}
+            </span>
+          </FeatureItem>
+          <FeatureItem $supported={supportedFeatures.requestContact}>
+            <span className="feature-name">Запрос контакта</span>
+            <span className="feature-status">
+              {supportedFeatures.requestContact ? '✓ Работает' : '✗ Не поддерживается'}
+            </span>
+          </FeatureItem>
+        </FeatureStatus>
+      </Section>
 
       {user && (
-        <UserInfo>
-          <h2>Привет, {user.first_name}!</h2>
-          <p>ID: {user.id}</p>
-          <p>Язык: {user.language_code || 'не указан'}</p>
-        </UserInfo>
+        <Section>
+          <UserInfo>
+            <h2>Привет, {user.first_name}!</h2>
+            <p>ID: {user.id}</p>
+            <p>Язык: {user.language_code || 'не указан'}</p>
+            {user.username && <p>Username: @{user.username}</p>}
+          </UserInfo>
+        </Section>
       )}
 
-      <ActionsGrid>
-        <Button
-          $disabled={!supportedFeatures.haptic}
-          onClick={() => hapticFeedback('impact', 'light')}
+      <Section>
+        <h3
+          style={{
+            color: '${props => props.theme.colors.text.primary}',
+            marginBottom: '${props => props.theme.spacing.md}',
+            fontSize: '${props => props.theme.typography.fontSize.lg}',
+          }}
         >
-          Легкая вибрация
-        </Button>
+          Тестирование функций
+        </h3>
+        <ActionsGrid>
+          <Button
+            $disabled={!supportedFeatures.haptic}
+            onClick={() => hapticFeedback('impact', 'light')}
+          >
+            Легкая вибрация
+          </Button>
 
-        <Button
-          $disabled={!supportedFeatures.haptic}
-          onClick={() => hapticFeedback('impact', 'medium')}
-        >
-          Средняя вибрация
-        </Button>
+          <Button
+            $disabled={!supportedFeatures.haptic}
+            onClick={() => hapticFeedback('impact', 'medium')}
+          >
+            Средняя вибрация
+          </Button>
 
-        <Button
-          $disabled={!supportedFeatures.haptic}
-          onClick={() => hapticFeedback('impact', 'heavy')}
-        >
-          Сильная вибрация
-        </Button>
+          <Button
+            $disabled={!supportedFeatures.haptic}
+            onClick={() => hapticFeedback('impact', 'heavy')}
+          >
+            Сильная вибрация
+          </Button>
 
-        <Button
-          $disabled={!supportedFeatures.haptic}
-          onClick={() => hapticFeedback('notification')}
-        >
-          Уведомление
-        </Button>
+          <Button
+            $disabled={!supportedFeatures.haptic}
+            onClick={() => hapticFeedback('notification', 'medium')}
+          >
+            Уведомление
+          </Button>
 
-        <Button onClick={() => openExternalLink('https://example.com')}>Открыть ссылку</Button>
+          <Button
+            $disabled={!supportedFeatures.openLink}
+            onClick={() => openExternalLink('https://max.ru')}
+          >
+            Открыть ссылку
+          </Button>
 
-        <Button $disabled={!supportedFeatures.haptic} onClick={() => hapticFeedback('selection')}>
-          Изменить выбор
-        </Button>
-      </ActionsGrid>
+          <Button $disabled={!supportedFeatures.haptic} onClick={() => hapticFeedback('selection')}>
+            Изменить выбор
+          </Button>
+        </ActionsGrid>
+      </Section>
     </Container>
   );
 };

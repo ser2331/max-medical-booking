@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CompactButton, SecondaryButton } from '../ui/StyledComponents.tsx'; // Импортируем ваши
 
 interface StepperNavigationProps {
   currentStep: number;
@@ -11,54 +12,60 @@ interface StepperNavigationProps {
 
 const NavigationContainer = styled.div`
   display: flex;
-  gap: 12px;
-  margin-top: 32px;
+  gap: ${props => props.theme.spacing.md};
+  padding: ${props => props.theme.spacing.xs} 0;
+  background: ${props => props.theme.colors.background.primary};
+
+  ${props => props.theme.breakpoints.md} {
+    margin-top: ${props => props.theme.spacing.lg};
+    padding: ${props => props.theme.spacing.sm};
+    gap: ${props => props.theme.spacing.sm};
+  }
+
+  ${props => props.theme.breakpoints.xs} {
+    margin-top: ${props => props.theme.spacing.md};
+    padding: ${props => props.theme.spacing.xs};
+    gap: ${props => props.theme.spacing.xs};
+    flex-direction: column;
+  }
 `;
 
-const Button = styled.button`
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
+const StyledSecondaryButton = styled(SecondaryButton)`
   flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  min-height: 44px;
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  ${props => props.theme.breakpoints.md} {
+    min-height: 40px;
   }
 
-  &:active {
-    transform: translateY(0);
+  ${props => props.theme.breakpoints.xs} {
+    min-height: 36px;
   }
 `;
 
-const PrevButton = styled(Button)`
-  border: 1px solid #2d5bff;
-  background-color: transparent;
-  color: #2d5bff;
+const StyledCompactButton = styled(CompactButton)`
+  flex: 1;
+  min-height: 44px;
 
-  &:hover {
-    background-color: #f0f4ff;
+  ${props => props.theme.breakpoints.md} {
+    min-height: 40px;
+  }
+
+  ${props => props.theme.breakpoints.xs} {
+    min-height: 36px;
   }
 `;
 
-const NextButton = styled(Button)`
-  border: none;
-  background-color: #2d5bff;
-  color: white;
+const FinishButton = styled(StyledCompactButton)`
+  && {
+    background: ${props => props.theme.colors.success};
+    border-color: ${props => props.theme.colors.success};
 
-  &:hover {
-    background-color: #1a4ae0;
-  }
-
-  &:disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+    &:hover:not(:disabled) {
+      background: ${props => props.theme.colors.success};
+      border-color: ${props => props.theme.colors.success};
+      filter: brightness(0.9);
+    }
   }
 `;
 
@@ -71,17 +78,27 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
 }) => {
   console.log('StepperNavigation', currentStep);
 
+  const renderNextButton = () => {
+    if (isLastStep) {
+      return <FinishButton type="submit">Завершить</FinishButton>;
+    }
+
+    return (
+      <StyledCompactButton type="button" onClick={onNext}>
+        Далее
+      </StyledCompactButton>
+    );
+  };
+
   return (
     <NavigationContainer>
       {!isFirstStep && (
-        <PrevButton type="button" onClick={onPrev}>
+        <StyledSecondaryButton type="button" onClick={onPrev}>
           Назад
-        </PrevButton>
+        </StyledSecondaryButton>
       )}
 
-      <NextButton type={isLastStep ? 'submit' : 'button'} onClick={isLastStep ? undefined : onNext}>
-        {isLastStep ? 'Завершить' : 'Далее'}
-      </NextButton>
+      {renderNextButton()}
     </NavigationContainer>
   );
 };

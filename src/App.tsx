@@ -33,7 +33,7 @@ function App() {
           height: '100dvh',
         }}
       >
-        <LoadingSpinner size={50} appearance={'themed'} />
+        <LoadingSpinner size={20} appearance={'themed'} />
       </Flex>
     );
   }

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useEsiaDemo } from '@/hooks/useEsiaDemo';
 import { LoadingSpinner } from '@/components/ui/StyledComponents';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -97,6 +98,7 @@ const ErrorMessage = styled.div`
 
 export const EsiaAuthContainer: React.FC = () => {
   const { isLoading, error, userInfo, initiateAuth, logout, restoreSession } = useEsiaDemo();
+  const [data, setData] = useState('');
 
   useEffect(() => {
     restoreSession();
@@ -118,11 +120,29 @@ export const EsiaAuthContainer: React.FC = () => {
     return fields.filter(field => field.value);
   };
 
+  const getApi = () => {
+    fetch('https://r78-dev.zdrav.netrika.ru/tm-widgets/api/_version', {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setData(data);
+      });
+  };
+
   return (
     <Container>
       <Card>
         <Title>Авторизация через ЕСИА</Title>
         <Subtitle>Войдите с помощью учетной записи ЕСИА</Subtitle>
+        <Link to={'https://esia-portal1.test.gosuslugi.ru/login/'}>REDIRECT</Link>
+        <Button onClick={getApi}>GET DATA</Button>
+        <pre>DATA: {JSON.stringify(data).toString() || null}</pre>
 
         {error && (
           <ErrorMessage>
