@@ -4,6 +4,7 @@ import { Modal } from '@/components/Modal.tsx';
 import { ThemeSelector } from './ThemeSelector';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { Section } from '@/components/ui/CommonComponents.tsx';
 
 const SettingsContent = styled.div`
   display: flex;
@@ -16,11 +17,7 @@ const SettingsContent = styled.div`
   }
 `;
 
-const SettingsRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${props => props.theme.spacing.md};
+const SettingsRow = styled(Section)`
   padding: ${props => props.theme.spacing.sm} 0;
 
   @media (max-width: ${props => props.theme.breakpoints.sm}) {

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Button, Flex, Panel, Spinner } from '@maxhub/max-ui';
 import { media, responsive } from '@/styles/mixins.ts';
+import { Section } from '@/components/ui/CommonComponents.tsx';
 
 export const StyledPanel = styled(Panel)`
   position: fixed;
@@ -108,13 +109,10 @@ export const LoadingSpinner = styled(Spinner)`
   }
 `;
 
-export const ErrorMessage = styled.div`
-  display: flex;
-  flex-direction: column;
+export const ErrorMessage = styled(Section)`
   align-items: center;
   justify-content: center;
   padding: ${props => props.theme.spacing.xl};
-  gap: ${props => props.theme.spacing.md};
   text-align: center;
   min-height: 200px;
   width: 100%;

@@ -6,11 +6,13 @@ import { Step1 } from './steps/Step1';
 import { Step2 } from './steps/Step2';
 import { Step3 } from './steps/Step3';
 import { Step4 } from './steps/Step4';
+import { Step5 } from './steps/Step5';
 import { StepperNavigation } from '@/components/stepper/StepperNavigation.tsx';
 import { Stepper } from '@/components/stepper/Stepper.tsx';
 
 interface FormData {
-  service: string;
+  district: string;
+  lpu: string;
   doctor: string;
   date: string;
   time: string;
@@ -23,8 +25,9 @@ interface FormData {
 const steps = [
   { id: 'medicalOrganization', title: 'Выбор медорганизации', component: Step1 },
   { id: 'specialty', title: 'Выбор специальности', component: Step2 },
-  { id: 'doctorDatetime', title: 'Выбор врача и времени', component: Step3 },
-  { id: 'makingRecord', title: 'Оформление записи', component: Step4 },
+  { id: 'doctor', title: 'Выбор врача', component: Step3 },
+  { id: 'datetime', title: 'Выбор времени', component: Step4 },
+  { id: 'makingRecord', title: 'Оформление записи', component: Step5 },
 ];
 
 const Container = styled.div`
@@ -44,7 +47,8 @@ export const DistrictBooking: FC = () => {
   const methods = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      service: '',
+      district: '',
+      lpu: '',
       doctor: '',
       date: '',
       time: '',

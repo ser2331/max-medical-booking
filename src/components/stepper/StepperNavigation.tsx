@@ -70,14 +70,11 @@ const FinishButton = styled(StyledCompactButton)`
 `;
 
 export const StepperNavigation: React.FC<StepperNavigationProps> = ({
-  currentStep,
   isFirstStep,
   isLastStep,
   onPrev,
   onNext,
 }) => {
-  console.log('StepperNavigation', currentStep);
-
   const renderNextButton = () => {
     if (isLastStep) {
       return <FinishButton type="submit">Завершить</FinishButton>;

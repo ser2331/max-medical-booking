@@ -1,146 +1,245 @@
-import React from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-
+import React, { useState, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
+import { Section } from '@/components/ui/CommonComponents.tsx';
+import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { Calendar } from '@/components/Calendar.tsx';
 
-const Container = styled.div`
+const AppointmentsTitle = styled.h4`
+  margin: 0;
+  color: ${props => props.theme.colors.text.primary};
+  font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+`;
+
+const AppointmentsList = styled.div`
   display: flex;
   flex-direction: column;
+  gap: ${props => props.theme.spacing.sm};
 `;
 
-const Title = styled.h3`
-  margin-bottom: 16px;
-`;
+const AppointmentCard = styled.button<{ $isSelected?: boolean }>`
+  padding: ${props => props.theme.spacing.md};
+  border: 2px solid
+    ${props => (props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.primary)};
+  border-radius: ${props => props.theme.borderRadius.medium};
+  background: ${props =>
+    props.$isSelected ? props.theme.colors.primary + '10' : props.theme.colors.background.card};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
 
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const FieldContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 4px;
-  font-weight: bold;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: #2d5bff;
-    box-shadow: 0 0 0 2px rgba(45, 91, 255, 0.1);
+  &:hover {
+    border-color: ${props =>
+      props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.accent};
   }
 `;
 
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  resize: vertical;
-  font-size: 14px;
-  font-family: inherit;
-
-  &:focus {
-    outline: none;
-    border-color: #2d5bff;
-    box-shadow: 0 0 0 2px rgba(45, 91, 255, 0.1);
-  }
+const AppointmentTime = styled.div`
+  font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  color: ${props => props.theme.colors.text.primary};
+  margin-bottom: ${props => props.theme.spacing.xs};
 `;
+
+const AppointmentDetails = styled.div`
+  display: flex;
+  gap: ${props => props.theme.spacing.md};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  color: ${props => props.theme.colors.text.secondary};
+`;
+
+const AppointmentRoom = styled.span`
+  color: ${props => props.theme.colors.text.primary};
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
+`;
+
+const NoAppointmentsMessage = styled.div`
+  text-align: center;
+  padding: ${props => props.theme.spacing.xl};
+  color: ${props => props.theme.colors.text.secondary};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  background: ${props => props.theme.colors.background.secondary};
+  border-radius: ${props => props.theme.borderRadius.medium};
+`;
+
+const ValidationError = styled.div`
+  color: ${props => props.theme.colors.error};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  margin-top: ${props => props.theme.spacing.md};
+  padding: ${props => props.theme.spacing.sm};
+  background: ${props => props.theme.colors.error}10;
+  border-radius: ${props => props.theme.borderRadius.small};
+  border: 1px solid ${props => props.theme.colors.error}20;
+  text-align: center;
+`;
+
+// Вспомогательные функции
+const formatTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const formatAppointmentTime = (start: string, end: string): string => {
+  return `${formatTime(start)} - ${formatTime(end)}`;
+};
 
 export const Step4: React.FC = () => {
-  const { register, setValue, control } = useFormContext();
-  const phoneValue = useWatch({
-    control,
-    name: 'patientPhone',
-  });
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, '');
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
 
-    if (value.length > 0) {
-      value = value.substring(0, 11);
-      let formattedValue = '+7';
+  const selectedDoctor = watch('doctor');
+  const selectedDate = watch('date');
+  const selectedAppointment = watch('appointment');
 
-      if (value.length > 1) {
-        formattedValue += ` (${value.substring(1, 4)}`;
-      }
-      if (value.length >= 5) {
-        formattedValue += `) ${value.substring(4, 7)}`;
-      }
-      if (value.length >= 8) {
-        formattedValue += `-${value.substring(7, 9)}`;
-      }
-      if (value.length >= 10) {
-        formattedValue += `-${value.substring(9, 11)}`;
-      }
+  // Получаем данные о записях
+  const {
+    data: appointments,
+    error,
+    isLoading,
+  } = useGetAppointmentsQuery(
+    {
+      lpuId: '1', // Замени на актуальный lpuId из формы
+      doctorId: selectedDoctor, // Используем выбранного врача
+    },
+    {
+      skip: !selectedDoctor, // Запрос выполняется только когда выбран врач
+    },
+  );
 
-      setValue('patientPhone', formattedValue, { shouldValidate: true });
-    } else {
-      setValue('patientPhone', '', { shouldValidate: true });
-    }
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Группируем записи по датам и получаем доступные даты
+  const { appointmentsByDate, availableDates } = useMemo(() => {
+    if (!appointments) return { appointmentsByDate: {}, availableDates: new Set<string>() };
+
+    const byDate: Record<string, IAppointment[]> = {};
+    const dates = new Set<string>();
+
+    appointments.forEach(appointment => {
+      const date = appointment.visitStart.split('T')[0];
+      if (!byDate[date]) {
+        byDate[date] = [];
+      }
+      byDate[date].push(appointment);
+      dates.add(date);
+    });
+
+    return { appointmentsByDate: byDate, availableDates: dates };
+  }, [appointments]);
+
+  // Получаем записи для выбранной даты
+  const selectedDateAppointments = useMemo(() => {
+    if (!selectedDate || !appointmentsByDate[selectedDate]) return [];
+    return appointmentsByDate[selectedDate].sort(
+      (a, b) => new Date(a.visitStart).getTime() - new Date(b.visitStart).getTime(),
+    );
+  }, [selectedDate, appointmentsByDate]);
+
+  const handleDateSelect = (date: string) => {
+    console.log('handleDateSelect date', date);
+
+    setValue('date', date, { shouldValidate: true });
+    setValue('appointment', '', { shouldValidate: true }); // Сбрасываем выбранную запись
   };
 
+  const handleAppointmentSelect = (appointmentId: string) => {
+    setValue('appointment', appointmentId, { shouldValidate: true });
+  };
+
+  const handleMonthChange = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(prev.getMonth() - 1);
+      } else {
+        newDate.setMonth(prev.getMonth() + 1);
+      }
+      return newDate;
+    });
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <ErrorMessage>Ошибка загрузки доступных записей</ErrorMessage>;
+  }
+
+  console.log('selectedDate', selectedDate);
+  console.log('availableDates', availableDates);
   return (
-    <Container>
-      <Title>Данные пациента</Title>
+    <Section>
+      <Section>
+        <Calendar
+          currentDate={currentDate}
+          availableDates={availableDates}
+          selectedDate={selectedDate}
+          onDateSelect={handleDateSelect}
+          onMonthChange={handleMonthChange}
+        />
+      </Section>
 
-      <FormContainer>
-        <FieldContainer>
-          <Label>ФИО пациента:</Label>
-          <Input
-            type="text"
-            placeholder="Иванов Иван Иванович"
-            {...register('patientName', { required: 'Введите ФИО' })}
-          />
-        </FieldContainer>
+      <Section>
+        <AppointmentsTitle>
+          {selectedDate
+            ? `Доступные записи на ${new Date(selectedDate).toLocaleDateString('ru-RU')}`
+            : 'Выберите дату'}
+        </AppointmentsTitle>
 
-        <FieldContainer>
-          <Label>Телефон:</Label>
-          <Input
-            type="tel"
-            placeholder="+7 (999) 999-99-99"
-            value={phoneValue || ''}
-            onInput={handlePhoneChange}
-            {...register('patientPhone', {
-              required: 'Введите телефон',
-              validate: value => {
-                const numbers = value?.replace(/\D/g, '') || '';
-                return numbers.length === 11 || 'Номер должен содержать 11 цифр';
-              },
-            })}
-          />
-        </FieldContainer>
+        {!selectedDate ? (
+          <NoAppointmentsMessage>
+            Пожалуйста, выберите дату для просмотра доступных записей
+          </NoAppointmentsMessage>
+        ) : selectedDateAppointments.length === 0 ? (
+          <NoAppointmentsMessage>На выбранную дату нет доступных записей</NoAppointmentsMessage>
+        ) : (
+          <AppointmentsList>
+            {selectedDateAppointments.map(appointment => (
+              <AppointmentCard
+                key={appointment.id}
+                type="button"
+                $isSelected={selectedAppointment === appointment.id}
+                onClick={() => handleAppointmentSelect(appointment.id)}
+              >
+                <AppointmentTime>
+                  {formatAppointmentTime(appointment.visitStart, appointment.visitEnd)}
+                </AppointmentTime>
+                <AppointmentDetails>
+                  {appointment.room && (
+                    <span>
+                      Кабинет: <AppointmentRoom>{appointment.room}</AppointmentRoom>
+                    </span>
+                  )}
+                  {appointment.number && <span>Номер: {appointment.number}</span>}
+                </AppointmentDetails>
+              </AppointmentCard>
+            ))}
+          </AppointmentsList>
+        )}
+      </Section>
 
-        <FieldContainer>
-          <Label>Email:</Label>
-          <Input
-            type="email"
-            placeholder="example@mail.ru"
-            {...register('patientEmail', {
-              pattern: {
-                value: /^\S+@\S+$/i,
-                message: 'Введите корректный email',
-              },
-            })}
-          />
-        </FieldContainer>
+      {/* Скрытые поля для формы */}
+      <input type="hidden" {...register('date', { required: 'Выберите дату' })} />
+      <input type="hidden" {...register('appointment', { required: 'Выберите время записи' })} />
 
-        <FieldContainer>
-          <Label>Комментарий:</Label>
-          <TextArea placeholder="Дополнительная информация..." {...register('comments')} rows={3} />
-        </FieldContainer>
-      </FormContainer>
-    </Container>
+      {(errors.date || errors.appointment) && (
+        <ValidationError>
+          {(errors.date?.message as string) ||
+            (errors.appointment?.message as string) ||
+            'Выберите дату и время записи'}
+        </ValidationError>
+      )}
+    </Section>
   );
 };

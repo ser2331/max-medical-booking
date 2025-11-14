@@ -1,20 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
-import { AppDispatch, RootState } from '@/store';
-import {
-  authenticateWidget,
-  clearError,
-  clearSession,
-} from '../store/slices/authSlice.ts';
+import { useAppDispatch, useAppSelector } from '@/store/redux-hooks.ts';
+import { authenticateWidget, clearError, clearSession } from '../store/slices/authSlice.ts';
 import { AuthData, RoleContext } from '../types/widget';
 
 export const useWidgetSession = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const widgetState = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const widgetState = useAppSelector(state => state.auth);
 
-  const authenticate = useCallback((authData: AuthData, roleContext: RoleContext) => {
-    return dispatch(authenticateWidget({ authData, roleContext }));
-  }, [dispatch]);
+  const authenticate = useCallback(
+    (authData: AuthData, roleContext: RoleContext) => {
+      return dispatch(authenticateWidget({ authData, roleContext }));
+    },
+    [dispatch],
+  );
 
   const logout = useCallback(() => {
     dispatch(clearSession());

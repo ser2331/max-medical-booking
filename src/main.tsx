@@ -7,10 +7,10 @@ import { MaxBridgeProvider } from './providers/MaxBridgeProvider';
 import { ThemeProvider } from './providers/ThemeContext';
 
 import { I18nextProvider } from 'react-i18next';
-import { store } from './store';
 import App from './App.tsx';
 import { GlobalStyles } from './styles/GlobalStyles';
 import i18n from './i18n';
+import { store } from '@/store/store.ts';
 
 import '@maxhub/max-ui/dist/styles.css';
 

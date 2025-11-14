@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '@/store';
 import { WIDGET_CONFIG } from '@/constants.ts';
 import { getUrl } from '@/config/env';
 import { LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
 import { useDebug } from '@/hooks/useDebug';
 import { DebugPanel } from '@/components/debug/DebugPanel';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 const Container = styled.div`
   width: 100%;
@@ -45,7 +44,7 @@ export const MicroFrontend = () => {
   const renderAttemptsRef = useRef(0);
   const containerId = `${name}-container`;
 
-  const { sessionId } = useSelector((state: RootState) => state.auth);
+  const { sessionId } = useAppSelector(state => state.auth);
   const { host, url } = getUrl();
 
   const { debugInfo, addDebugInfo, clearDebugInfo } = useDebug();

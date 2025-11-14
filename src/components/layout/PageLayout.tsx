@@ -21,6 +21,7 @@ const ContentArea = styled.main`
 const ContentWrapper = styled.div`
   display: flex;
   flex: 1;
+  width: 100%;
   -webkit-overflow-scrolling: touch;
   /* Убираем bounce эффект на iOS */
   overscroll-behavior: contain;

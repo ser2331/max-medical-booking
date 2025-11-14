@@ -1,80 +1,108 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
+import { media } from '@/styles/mixins.ts';
+import { RadioInput } from '@/components/RadioInput.tsx';
+import {
+  HeaderRow,
+  Section,
+  SpecialtyContent,
+  SpecialtyName,
+  SpecialtyStats,
+  StatItem,
+} from '@/components/ui/CommonComponents.tsx';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Title = styled.h3`
-  margin-bottom: 16px;
-`;
-
-const DoctorsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const DoctorLabel = styled.label<{ $isSelected: boolean }>`
-  padding: 16px;
-  border: 2px solid ${props => (props.$isSelected ? '#2d5bff' : '#e9ecef')};
-  border-radius: 8px;
+const SpecialtyLabel = styled.label<{ $isSelected: boolean }>`
+  padding: ${props => props.theme.spacing.lg};
+  border: 2px solid
+    ${props => (props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.primary)};
+  border-radius: ${props => props.theme.borderRadius.medium};
   cursor: pointer;
-  background-color: ${props => (props.$isSelected ? '#f0f4ff' : 'white')};
+  background-color: ${props =>
+    props.$isSelected ? props.theme.colors.primary + '10' : props.theme.colors.background.card};
   transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
 
   &:hover {
-    border-color: #2d5bff;
-    background-color: #f8f9ff;
+    border-color: ${props =>
+      props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.accent};
+    background-color: ${props =>
+      props.$isSelected
+        ? props.theme.colors.primary + '15'
+        : props.theme.colors.background.secondary};
+  }
+
+  ${media.md} {
+    padding: ${props => props.theme.spacing.md};
+    border-radius: ${props => props.theme.borderRadius.small};
   }
 `;
 
-const RadioInput = styled.input`
-  margin-right: 12px;
+const StatValue = styled.span`
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
+  color: ${props => props.theme.colors.text.primary};
 `;
 
-const DoctorName = styled.div`
-  font-weight: bold;
-  margin-bottom: 4px;
-`;
-
-const DoctorInfo = styled.div`
-  font-size: 14px;
-  color: #666;
+const ValidationError = styled.div`
+  color: ${props => props.theme.colors.error};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  margin-top: ${props => props.theme.spacing.md};
+  padding: ${props => props.theme.spacing.sm};
+  background: ${props => props.theme.colors.error}10;
+  border-radius: ${props => props.theme.borderRadius.small};
+  border: 1px solid ${props => props.theme.colors.error}20;
+  text-align: center;
 `;
 
 export const Step2: React.FC = () => {
-  const { register, watch } = useFormContext();
-  const selectedDoctor = watch('doctor');
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
+  const selectedSpecialty = watch('doctor');
+  const { data: specialties, error, isLoading } = useGetSpecialtiesQuery({ lpuId: '' });
 
-  const doctors = [
-    { id: 'ivanov', name: 'Иванов А.П.', specialty: 'Терапевт', experience: '15 лет' },
-    { id: 'petrova', name: 'Петрова М.В.', specialty: 'Хирург', experience: '10 лет' },
-    { id: 'sidorov', name: 'Сидоров И.С.', specialty: 'Педиатр', experience: '8 лет' },
-  ];
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <ErrorMessage>Ошибка загрузки специальностей</ErrorMessage>;
+  }
 
   return (
-    <Container>
-      <Title>Выберите специалиста</Title>
-      <DoctorsList>
-        {doctors.map(doctor => (
-          <DoctorLabel key={doctor.id} $isSelected={selectedDoctor === doctor.id}>
-            <RadioInput
-              type="radio"
-              value={doctor.id}
-              {...register('doctor', { required: 'Выберите врача' })}
-            />
-            <div>
-              <DoctorName>{doctor.name}</DoctorName>
-              <DoctorInfo>
-                {doctor.specialty} • {doctor.experience}
-              </DoctorInfo>
-            </div>
-          </DoctorLabel>
-        ))}
-      </DoctorsList>
-    </Container>
+    <Section>
+      {specialties?.map(specialty => (
+        <SpecialtyLabel key={specialty.id} $isSelected={selectedSpecialty === specialty.id}>
+          <RadioInput
+            value={specialty.id}
+            register={register('doctor', { required: 'Выберите специальность врача' })}
+            checked={selectedSpecialty === specialty.id}
+          />
+          <SpecialtyContent>
+            <HeaderRow>
+              <SpecialtyName>{specialty.name}</SpecialtyName>
+            </HeaderRow>
+
+            <SpecialtyStats>
+              <StatItem $type="participant">
+                <span>👥 Доступно врачей:</span>
+                <StatValue>{specialty.countFreeParticipant}</StatValue>
+              </StatItem>
+              <StatItem $type="ticket">
+                <span>🎫 Свободных талонов:</span>
+                <StatValue>{specialty.countFreeTicket}</StatValue>
+              </StatItem>
+            </SpecialtyStats>
+          </SpecialtyContent>
+        </SpecialtyLabel>
+      ))}
+
+      {errors.doctor && <ValidationError>{errors.doctor.message as string}</ValidationError>}
+    </Section>
   );
 };
