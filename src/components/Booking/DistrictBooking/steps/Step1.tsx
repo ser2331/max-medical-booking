@@ -88,7 +88,7 @@ export const Step1: React.FC = () => {
     setValue,
     formState: { errors },
   } = useFormContext();
-  const { data: lpusData, error, isLoading } = useGetLpusQuery();
+  const { data: lpusData, error, isLoading } = useGetLpusQuery({ districtId: '' });
 
   const selectedLpu = watch('lpu');
   const selectedDistrict = watch('district');
