@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
-import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
-import { Section } from '@/components/ui/CommonComponents.tsx';
+import { ErrorMessage, Section } from '@/components/ui/StyledComponents.tsx';
 import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 import { Calendar } from '@/components/Calendar.tsx';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
 
 const AppointmentsTitle = styled.h4`
   margin: 0;
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.md};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
@@ -23,24 +23,24 @@ const AppointmentsList = styled.div`
 const AppointmentCard = styled.button<{ $isSelected?: boolean }>`
   padding: ${props => props.theme.spacing.md};
   border: 2px solid
-    ${props => (props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.primary)};
+    ${props => (props.$isSelected ? props.theme.colors.black : props.theme.colors.black)};
   border-radius: ${props => props.theme.borderRadius.medium};
   background: ${props =>
-    props.$isSelected ? props.theme.colors.primary + '10' : props.theme.colors.background.card};
+    props.$isSelected ? props.theme.colors.black + '10' : props.theme.colors.mainBackgroundColor};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
 
   &:hover {
     border-color: ${props =>
-      props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.accent};
+      props.$isSelected ? props.theme.colors.black : props.theme.colors.black};
   }
 `;
 
 const AppointmentTime = styled.div`
   font-size: ${props => props.theme.typography.fontSize.md};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
@@ -48,31 +48,31 @@ const AppointmentDetails = styled.div`
   display: flex;
   gap: ${props => props.theme.spacing.md};
   font-size: ${props => props.theme.typography.fontSize.sm};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
 `;
 
 const AppointmentRoom = styled.span`
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;
 
 const NoAppointmentsMessage = styled.div`
   text-align: center;
   padding: ${props => props.theme.spacing.xl};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
-  background: ${props => props.theme.colors.background.secondary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
   border-radius: ${props => props.theme.borderRadius.medium};
 `;
 
 const ValidationError = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: ${props => props.theme.colors.red};
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin-top: ${props => props.theme.spacing.md};
   padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.error}10;
+  background: ${props => props.theme.colors.red}10;
   border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.error}20;
+  border: 1px solid ${props => props.theme.colors.red}20;
   text-align: center;
 `;
 
@@ -169,15 +169,13 @@ export const Step4: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <AppSpin />;
   }
 
   if (error) {
     return <ErrorMessage>Ошибка загрузки доступных записей</ErrorMessage>;
   }
 
-  console.log('selectedDate', selectedDate);
-  console.log('availableDates', availableDates);
   return (
     <Section>
       <Section>

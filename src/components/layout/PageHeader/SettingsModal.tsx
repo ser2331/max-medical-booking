@@ -4,7 +4,7 @@ import { Modal } from '@/components/Modal.tsx';
 import { ThemeSelector } from './ThemeSelector';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { Section } from '@/components/ui/CommonComponents.tsx';
+import { Section } from '@/components/ui/StyledComponents.tsx';
 
 const SettingsContent = styled.div`
   display: flex;
@@ -33,14 +33,14 @@ const RowLabel = styled.div`
 `;
 
 const RowLabelTitle = styled.div`
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
   margin-bottom: 2px;
 `;
 
 const RowLabelDescription = styled.div`
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.xs};
   line-height: 1.3;
 `;

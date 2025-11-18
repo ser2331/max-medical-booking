@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import i18n from 'i18next';
 import { useMaxBridgeContext } from './providers/MaxBridgeProvider.tsx';
 import { AppRouter } from './router/AppRouter';
-import { LoadingSpinner, StyledPanel } from './components/ui/StyledComponents.tsx';
+import { Main } from './components/ui/StyledComponents.tsx';
 import { useWidgetSession } from '@/hooks/useWidgetSession.ts';
 import { AUTH_DATA, WIDGET_CONFIG } from '@/constants.ts';
-import { Flex } from '@maxhub/max-ui';
+import { AppLoader } from '@/components/ui/AppLoader.tsx';
 
 function App() {
   const { initData } = useMaxBridgeContext();
@@ -25,23 +25,13 @@ function App() {
   }, [initData]);
 
   if (isLoading && !sessionId) {
-    return (
-      <Flex
-        align="center"
-        justify="center"
-        style={{
-          height: '100dvh',
-        }}
-      >
-        <LoadingSpinner size={20} appearance={'themed'} />
-      </Flex>
-    );
+    return <AppLoader />;
   }
 
   return (
-    <StyledPanel className={'PANEL'}>
+    <Main className={'PANEL'}>
       <AppRouter />
-    </StyledPanel>
+    </Main>
   );
 }
 

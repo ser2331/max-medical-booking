@@ -33,7 +33,7 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   height: 32px;
   border: none;
   border-radius: 50%;
-  background: ${props => props.theme.colors.background.card};
+  background: ${props => props.theme.colors.mainBackgroundColor};
   box-shadow: ${props => props.theme.shadows.small};
   cursor: pointer;
   display: flex;
@@ -43,7 +43,7 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: ${props => props.theme.colors.background.secondary};
+    background: ${props => props.theme.colors.mainBackgroundColor};
     transform: translateY(-50%) scale(1.1);
   }
 
@@ -56,7 +56,7 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
     content: '';
     width: 8px;
     height: 8px;
-    border: 2px solid ${props => props.theme.colors.text.primary};
+    border: 2px solid ${props => props.theme.colors.black};
     border-top: none;
     border-${props => (props.$direction === 'prev' ? 'right' : 'left')}: none;
     transform: rotate(${props => (props.$direction === 'prev' ? '45deg' : '-45deg')});
@@ -75,13 +75,12 @@ const Dot = styled.button<{ $isActive: boolean }>`
   height: 6px;
   border: none;
   border-radius: 50%;
-  background: ${props =>
-    props.$isActive ? props.theme.colors.primary : props.theme.colors.border.primary};
+  background: ${props => (props.$isActive ? props.theme.colors.black : props.theme.colors.black)};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.theme.colors.primary};
+    background: ${props => props.theme.colors.black};
     transform: scale(1.2);
   }
 `;

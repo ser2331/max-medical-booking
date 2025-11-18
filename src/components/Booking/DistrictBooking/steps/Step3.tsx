@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
-import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
-import { RadioInput } from '@/components/RadioInput.tsx';
-import { Accordion } from '@/components/Accordion.tsx';
 import {
   Card,
+  ErrorMessage,
   HeaderRow,
   Section,
   SpecialtyContent,
   SpecialtyName,
   SpecialtyStats,
-} from '@/components/ui/CommonComponents.tsx';
+} from '@/components/ui/StyledComponents.tsx';
+import { RadioInput } from '@/components/RadioInput.tsx';
+import { Accordion } from '@/components/ui/Accordion/Accordion.tsx';
+
 import {
   useGetDoctorsQuery,
   useLazyGetTimetableQuery,
@@ -19,6 +20,7 @@ import {
 
 import { HorizontalSlider } from '@/components/HorizontalSlider.tsx';
 import { ITimeTable } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
 
 const DoctorCard = styled(Card)`
   padding: ${props => props.theme.spacing.sm};
@@ -34,35 +36,33 @@ const StatItem = styled.div<{ $type?: 'participant' | 'ticket' }>`
   color: ${props => {
     switch (props.$type) {
       case 'participant':
-        return props.theme.colors.success;
+        return props.theme.colors.green;
       case 'ticket':
-        return props.theme.colors.warning;
+        return props.theme.colors.red;
       default:
-        return props.theme.colors.text.secondary;
+        return props.theme.colors.black;
     }
   }};
 `;
 
 const StatValue = styled.span`
   font-weight: ${props => props.theme.typography.fontWeight.medium};
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
 `;
 
 const DayCard = styled.div<{ $isAvailable: boolean; $isSelected?: boolean }>`
   padding: ${props => props.theme.spacing.sm};
   border: 1px solid
     ${props => {
-      if (props.$isSelected) return props.theme.colors.primary;
-      return props.$isAvailable
-        ? props.theme.colors.border.primary
-        : props.theme.colors.border.secondary;
+      if (props.$isSelected) return props.theme.colors.black;
+      return props.$isAvailable ? props.theme.colors.black : props.theme.colors.black;
     }};
   border-radius: ${props => props.theme.borderRadius.small};
   background: ${props => {
-    if (props.$isSelected) return props.theme.colors.primary + '10';
+    if (props.$isSelected) return props.theme.colors.black + '10';
     return props.$isAvailable
-      ? props.theme.colors.background.card
-      : props.theme.colors.background.secondary;
+      ? props.theme.colors.mainBackgroundColor
+      : props.theme.colors.mainBackgroundColor;
   }};
   cursor: ${props => (props.$isAvailable ? 'pointer' : 'not-allowed')};
   transition: all 0.2s ease;
@@ -71,8 +71,7 @@ const DayCard = styled.div<{ $isAvailable: boolean; $isSelected?: boolean }>`
 
 const DayDate = styled.div<{ $isAvailable: boolean }>`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props =>
-    props.$isAvailable ? props.theme.colors.text.primary : props.theme.colors.text.tertiary};
+  color: ${props => (props.$isAvailable ? props.theme.colors.black : props.theme.colors.black)};
   font-size: ${props => props.theme.typography.fontSize.xs};
   margin-bottom: ${props => props.theme.spacing.xs};
   text-align: center;
@@ -84,24 +83,22 @@ const DayStatus = styled.div<{ $isAvailable: boolean }>`
   font-size: 10px;
   font-weight: ${props => props.theme.typography.fontWeight.medium};
   background: ${props =>
-    props.$isAvailable ? props.theme.colors.success + '20' : props.theme.colors.error + '20'};
-  color: ${props => (props.$isAvailable ? props.theme.colors.success : props.theme.colors.error)};
+    props.$isAvailable ? props.theme.colors.green + '20' : props.theme.colors.red + '20'};
+  color: ${props => (props.$isAvailable ? props.theme.colors.green : props.theme.colors.red)};
   text-align: center;
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
 const DayTime = styled.div<{ $isAvailable: boolean }>`
   font-size: 11px;
-  color: ${props =>
-    props.$isAvailable ? props.theme.colors.text.secondary : props.theme.colors.text.tertiary};
+  color: ${props => (props.$isAvailable ? props.theme.colors.black : props.theme.colors.black)};
   text-align: center;
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
 const DayReason = styled.div<{ $isAvailable: boolean }>`
   font-size: 10px;
-  color: ${props =>
-    props.$isAvailable ? props.theme.colors.text.tertiary : props.theme.colors.text.tertiary};
+  color: ${props => (props.$isAvailable ? props.theme.colors.black : props.theme.colors.black)};
   text-align: center;
   line-height: 1.2;
   margin-bottom: ${props => props.theme.spacing.xs};
@@ -111,13 +108,13 @@ const DayReason = styled.div<{ $isAvailable: boolean }>`
 const AppointmentsSection = styled.div`
   margin-top: ${props => props.theme.spacing.xs};
   padding-top: ${props => props.theme.spacing.xs};
-  border-top: 1px solid ${props => props.theme.colors.border.secondary};
+  border-top: 1px solid ${props => props.theme.colors.black};
 `;
 
 const AppointmentsTitle = styled.div`
   font-size: 9px;
   font-weight: ${props => props.theme.typography.fontWeight.medium};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   text-align: center;
   margin-bottom: 4px;
 `;
@@ -135,7 +132,7 @@ const AppointmentList = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: ${props => props.theme.colors.border.primary};
+    background: ${props => props.theme.colors.black};
     border-radius: 1px;
   }
 `;
@@ -147,46 +144,43 @@ const AppointmentItem = styled.div<{ $isAvailable?: boolean }>`
   padding: 2px 4px;
   border-radius: 4px;
   background: ${props =>
-    props.$isAvailable
-      ? props.theme.colors.success + '10'
-      : props.theme.colors.background.tertiary};
+    props.$isAvailable ? props.theme.colors.green + '10' : props.theme.colors.mainBackground};
   font-size: 8px;
   line-height: 1;
 `;
 
 const AppointmentTime = styled.span<{ $isAvailable?: boolean }>`
-  color: ${props =>
-    props.$isAvailable ? props.theme.colors.success : props.theme.colors.text.tertiary};
+  color: ${props => (props.$isAvailable ? props.theme.colors.green : props.theme.colors.black)};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;
 
 const AppointmentRoom = styled.span`
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: 7px;
 `;
 
 const NoSlotsMessage = styled.div`
   text-align: center;
   padding: ${props => props.theme.spacing.md};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
 `;
 
 const ScheduleLoading = styled.div`
   text-align: center;
   padding: ${props => props.theme.spacing.md};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
 `;
 
 const ValidationError = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: ${props => props.theme.colors.red};
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin-top: ${props => props.theme.spacing.md};
   padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.error}10;
+  background: ${props => props.theme.colors.red}10;
   border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.error}20;
+  border: 1px solid ${props => props.theme.colors.red}20;
   text-align: center;
 `;
 
@@ -285,7 +279,7 @@ export const Step3: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <AppSpin />;
   }
 
   if (error) {

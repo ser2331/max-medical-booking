@@ -6,27 +6,27 @@ const Container = styled.div`
   padding: ${props => props.theme.spacing.lg};
   max-width: 600px;
   margin: 0 auto;
-  background: ${props => props.theme.colors.background.primary};
-  color: ${props => props.theme.colors.text.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  color: ${props => props.theme.colors.black};
 `;
 
 const UserInfo = styled.div`
-  background: ${props => props.theme.colors.background.secondary};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
   padding: ${props => props.theme.spacing.lg};
   margin-bottom: ${props => props.theme.spacing.lg};
 
   h2 {
     margin: 0 0 ${props => props.theme.spacing.sm} 0;
-    color: ${props => props.theme.colors.text.primary};
+    color: ${props => props.theme.colors.black};
     font-size: ${props => props.theme.typography.fontSize.xl};
     font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
 
   p {
     margin: ${props => props.theme.spacing.xs} 0;
-    color: ${props => props.theme.colors.text.secondary};
+    color: ${props => props.theme.colors.black};
     font-size: ${props => props.theme.typography.fontSize.sm};
   }
 `;
@@ -39,9 +39,8 @@ const ActionsGrid = styled.div`
 `;
 
 const Button = styled.button<{ $disabled?: boolean }>`
-  background: ${props =>
-    props.$disabled ? props.theme.colors.text.tertiary : props.theme.colors.primary};
-  color: ${props => props.theme.colors.text.inverted};
+  background: ${props => (props.$disabled ? props.theme.colors.black : props.theme.colors.black)};
+  color: ${props => props.theme.colors.black};
   border: none;
   border-radius: ${props => props.theme.components.button.borderRadius};
   padding: ${props => props.theme.components.button.padding};
@@ -53,7 +52,7 @@ const Button = styled.button<{ $disabled?: boolean }>`
 
   &:hover {
     background: ${props =>
-      props.$disabled ? props.theme.colors.text.tertiary : props.theme.colors.primaryHover};
+      props.$disabled ? props.theme.colors.black : props.theme.colors.blueHover};
     transform: ${props => (props.$disabled ? 'none' : 'translateY(-1px)')};
     box-shadow: ${props => (props.$disabled ? 'none' : props.theme.shadows.small)};
   }
@@ -64,36 +63,36 @@ const Button = styled.button<{ $disabled?: boolean }>`
 `;
 
 const WarningMessage = styled.div`
-  background: ${props => props.theme.colors.warning}15; // 15% opacity
-  border: 1px solid ${props => props.theme.colors.warning};
+  background: ${props => props.theme.colors.red}15; // 15% opacity
+  border: 1px solid ${props => props.theme.colors.red};
   border-radius: ${props => props.theme.borderRadius.medium};
   padding: ${props => props.theme.spacing.lg};
   text-align: center;
 
   h1 {
     margin: 0 0 ${props => props.theme.spacing.sm} 0;
-    color: ${props => props.theme.colors.warning};
+    color: ${props => props.theme.colors.red};
     font-size: ${props => props.theme.typography.fontSize.lg};
     font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
 
   p {
     margin: 0;
-    color: ${props => props.theme.colors.warning};
+    color: ${props => props.theme.colors.red};
     font-size: ${props => props.theme.typography.fontSize.sm};
   }
 `;
 
 const FeatureStatus = styled.div`
-  background: ${props => props.theme.colors.background.secondary};
-  border: 1px solid ${props => props.theme.colors.border.secondary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
   padding: ${props => props.theme.spacing.lg};
   margin-bottom: ${props => props.theme.spacing.lg};
 
   h3 {
     margin: 0 0 ${props => props.theme.spacing.md} 0;
-    color: ${props => props.theme.colors.text.primary};
+    color: ${props => props.theme.colors.black};
     font-size: ${props => props.theme.typography.fontSize.md};
     font-weight: ${props => props.theme.typography.fontWeight.semibold};
   }
@@ -105,26 +104,26 @@ const FeatureItem = styled.div<{ $supported: boolean }>`
   align-items: center;
   margin: ${props => props.theme.spacing.sm} 0;
   padding: ${props => props.theme.spacing.sm} 0;
-  border-bottom: 1px solid ${props => props.theme.colors.border.secondary};
+  border-bottom: 1px solid ${props => props.theme.colors.black};
 
   &:last-child {
     border-bottom: none;
   }
 
   .feature-name {
-    color: ${props => props.theme.colors.text.primary};
+    color: ${props => props.theme.colors.black};
     font-size: ${props => props.theme.typography.fontSize.sm};
   }
 
   .feature-status {
     font-weight: ${props => props.theme.typography.fontWeight.semibold};
-    color: ${props => (props.$supported ? props.theme.colors.success : props.theme.colors.error)};
+    color: ${props => (props.$supported ? props.theme.colors.green : props.theme.colors.red)};
     font-size: ${props => props.theme.typography.fontSize.sm};
   }
 `;
 
 const Header = styled.h1`
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.xxl};
   font-weight: ${props => props.theme.typography.fontWeight.bold};
   margin-bottom: ${props => props.theme.spacing.lg};
@@ -222,7 +221,7 @@ export const MaxDemo: React.FC = () => {
       <Section>
         <h3
           style={{
-            color: '${props => props.theme.colors.text.primary}',
+            color: '${props => props.theme.colors.black}',
             marginBottom: '${props => props.theme.spacing.md}',
             fontSize: '${props => props.theme.typography.fontSize.lg}',
           }}

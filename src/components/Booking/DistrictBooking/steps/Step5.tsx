@@ -1,8 +1,7 @@
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
-import { Section } from '@/components/ui/CommonComponents.tsx';
-import { Card } from '@/components/ui/StyledComponents.tsx';
+import { Card, Section } from '@/components/ui/StyledComponents.tsx';
 const FieldsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -18,7 +17,7 @@ const FieldWrapper = styled.div`
 `;
 
 const Label = styled.label`
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;
@@ -26,26 +25,26 @@ const Label = styled.label`
 const Input = styled.input`
   width: 100%;
   padding: ${props => props.theme.spacing.md};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
-  background: ${props => props.theme.colors.background.card};
-  color: ${props => props.theme.colors.text.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   transition: all 0.2s ease;
 
   &:focus {
     outline: none;
-    border-color: ${props => props.theme.colors.primary};
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary}20;
+    border-color: ${props => props.theme.colors.black};
+    box-shadow: 0 0 0 2px ${props => props.theme.colors.black}20;
   }
 
   &::placeholder {
-    color: ${props => props.theme.colors.text.tertiary};
+    color: ${props => props.theme.colors.black};
   }
 
   &:disabled {
-    background: ${props => props.theme.colors.background.secondary};
-    color: ${props => props.theme.colors.text.tertiary};
+    background: ${props => props.theme.colors.mainBackgroundColor};
+    color: ${props => props.theme.colors.black};
     cursor: not-allowed;
   }
 `;
@@ -53,10 +52,10 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   width: 100%;
   padding: ${props => props.theme.spacing.md};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
-  background: ${props => props.theme.colors.background.card};
-  color: ${props => props.theme.colors.text.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-family: inherit;
   resize: vertical;
@@ -64,12 +63,12 @@ const TextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: ${props => props.theme.colors.primary};
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary}20;
+    border-color: ${props => props.theme.colors.black};
+    box-shadow: 0 0 0 2px ${props => props.theme.colors.black}20;
   }
 
   &::placeholder {
-    color: ${props => props.theme.colors.text.tertiary};
+    color: ${props => props.theme.colors.black};
   }
 `;
 
@@ -78,24 +77,24 @@ const CheckboxContainer = styled.div`
   align-items: flex-start;
   gap: ${props => props.theme.spacing.sm};
   padding: ${props => props.theme.spacing.md};
-  background: ${props => props.theme.colors.background.secondary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
   border-radius: ${props => props.theme.borderRadius.medium};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
 `;
 
 const Checkbox = styled.input`
   margin-top: 2px;
-  accent-color: ${props => props.theme.colors.primary};
+  accent-color: ${props => props.theme.colors.black};
 `;
 
 const CheckboxLabel = styled.label`
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   line-height: 1.4;
   cursor: pointer;
 
   a {
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.black};
     text-decoration: underline;
 
     &:hover {
@@ -105,13 +104,13 @@ const CheckboxLabel = styled.label`
 `;
 
 const ValidationError = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: ${props => props.theme.colors.red};
   font-size: ${props => props.theme.typography.fontSize.xs};
   margin-top: ${props => props.theme.spacing.xs};
 `;
 
 const RequiredField = styled.span`
-  color: ${props => props.theme.colors.error};
+  color: ${props => props.theme.colors.red};
 `;
 
 export const Step5: React.FC = () => {

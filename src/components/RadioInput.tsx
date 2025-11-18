@@ -6,7 +6,7 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 const Radio = styled.input`
   margin-right: ${props => props.theme.spacing.md};
   margin-top: 2px;
-  accent-color: ${props => props.theme.colors.primary};
+  accent-color: ${props => props.theme.colors.black};
   cursor: pointer;
 
   ${media.md} {

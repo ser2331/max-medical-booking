@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { baseTheme as theme } from './themes/index.ts';
+import { baseTheme as theme } from './themes/baseTheme.ts';
 
 // Типизированные медиа-запросы
 export const breakpoints = {

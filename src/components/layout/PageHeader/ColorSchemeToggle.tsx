@@ -4,8 +4,8 @@ import { useTheme } from '@/providers/ThemeContext.tsx';
 
 const ToggleContainer = styled.div`
   display: flex;
-  background: ${props => props.theme.colors.background.secondary};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
   padding: 2px;
   gap: 2px;
@@ -24,9 +24,8 @@ const ToggleOption = styled.button<{ $isActive: boolean }>`
   padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.md};
   border: none;
   border-radius: ${props => props.theme.borderRadius.small};
-  background: ${props => (props.$isActive ? props.theme.colors.background.primary : 'transparent')};
-  color: ${props =>
-    props.$isActive ? props.theme.colors.text.primary : props.theme.colors.text.secondary};
+  background: ${props => (props.$isActive ? props.theme.colors.mainBackground : 'transparent')};
+  color: ${props => (props.$isActive ? props.theme.colors.black : props.theme.colors.black)};
   cursor: pointer;
   font-size: ${props => props.theme.typography.fontSize.sm};
   transition: all 0.2s ease;
@@ -38,9 +37,7 @@ const ToggleOption = styled.button<{ $isActive: boolean }>`
 
   &:hover {
     background: ${props =>
-      props.$isActive
-        ? props.theme.colors.background.primary
-        : props.theme.colors.background.tertiary};
+      props.$isActive ? props.theme.colors.mainBackgroundColor : props.theme.colors.mainBackground};
   }
 `;
 

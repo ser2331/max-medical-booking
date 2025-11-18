@@ -2,21 +2,35 @@ import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { PageLayout } from '../components/layout/PageLayout';
-import { AppointmentTypeSelector } from '@/components/AppointmentTypeSelector/AppointmentTypeSelector.tsx';
 import { DistrictBooking } from '@/components/Booking/DistrictBooking/DistrictBooking.tsx';
 import { InsuranceBooking } from '@/components/Booking/InsuranceBooking/InsuranceBooking.tsx';
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { Card } from '@/components/ui/Cart.tsx';
+import { OptionButton } from '@/components/ui/OptionButton/OptionButton.tsx';
 
-const PageContent = styled.div`
+const menuOptions = [
+  {
+    type: 'district' as const,
+    title: 'По району',
+  },
+  {
+    type: 'insurance' as const,
+    title: 'По полису',
+  },
+];
+type MenuOptionType = 'district' | 'insurance';
+export const PageContent = styled(Flex).attrs({
+  $direction: 'column',
+  $justifyContent: 'flex-start',
+})`
   flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
 `;
 export const DoctorAppointmentMakePage: FC = () => {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState<'district' | 'insurance'>('district');
+  const [selectedType, setSelectedType] = useState<MenuOptionType>('district');
 
-  const handleTypeSelect = (type: 'district' | 'insurance') => {
+  const handleTypeSelect = (type: MenuOptionType) => {
     setSelectedType(type);
   };
 
@@ -38,7 +52,13 @@ export const DoctorAppointmentMakePage: FC = () => {
       onBack={() => navigate(-1)}
     >
       <PageContent>
-        <AppointmentTypeSelector onTypeSelect={handleTypeSelect} selectedType={selectedType} />
+        <Card>
+          <OptionButton<MenuOptionType>
+            options={menuOptions}
+            onChange={handleTypeSelect}
+            selectedType={selectedType}
+          />
+        </Card>
 
         {renderContent()}
       </PageContent>

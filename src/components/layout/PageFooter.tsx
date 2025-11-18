@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CompactButton, ContentFlex } from '../ui/StyledComponents.tsx';
+import { CompactButton, Flex } from '../ui/StyledComponents.tsx';
 
 const FooterContainer = styled.footer`
   flex-shrink: 0;
   padding: ${props => props.theme.spacing.md};
-  border-top: 1px solid ${props => props.theme.colors.border.secondary};
+  border-top: 1px solid ${props => props.theme.colors.black};
 
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     padding: ${props => props.theme.spacing.sm};
@@ -42,7 +42,7 @@ interface PageFooterProps {
 export const PageFooter: React.FC<PageFooterProps> = ({ submitButton, backButton }) => {
   return (
     <FooterContainer>
-      <ContentFlex>
+      <Flex>
         {backButton && (
           <FooterButton onClick={backButton.onClick} variant={backButton.variant || 'outline'}>
             {backButton.text}
@@ -58,7 +58,7 @@ export const PageFooter: React.FC<PageFooterProps> = ({ submitButton, backButton
             {submitButton.text}
           </FooterButton>
         )}
-      </ContentFlex>
+      </Flex>
     </FooterContainer>
   );
 };

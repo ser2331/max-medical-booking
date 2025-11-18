@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageLayout } from '@/components/layout/PageLayout.tsx';
 import { MicroFrontend } from '@/components/widget/MicroFrontend.tsx';
-import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
+import { ErrorMessage } from '@/components/ui/StyledComponents.tsx';
 import { useAppSelector } from '@/store/redux-hooks.ts';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
 
 export const BookingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export const BookingPage: React.FC = () => {
   if (isLoading || !sessionId) {
     return (
       <PageLayout title={t('loading')} onBack={handleBack}>
-        <LoadingSpinner>{t('widget.initializing')}</LoadingSpinner>
+        <AppSpin />
       </PageLayout>
     );
   }

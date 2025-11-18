@@ -2,6 +2,8 @@ import { FC, ReactNode, useState } from 'react';
 import styled from 'styled-components';
 import { Flex } from '@maxhub/max-ui';
 import { media } from '@/styles/mixins.ts';
+import { Card } from '@/components/ui/Cart.tsx';
+import { ArrowIcon } from '@/assets/icons/Arrow/ArrowIcon.tsx';
 
 export const AccordionContainer = styled(Flex)`
   align-items: stretch !important;
@@ -11,14 +13,14 @@ export const AccordionContainer = styled(Flex)`
 `;
 
 export const AccordionItem = styled.div<{ $isExpanded?: boolean }>`
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
   overflow: hidden;
-  background: ${props => props.theme.colors.background.card};
+  background: ${props => props.theme.colors.mainBackgroundColor};
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: ${props => props.theme.colors.border.accent};
+    border-color: ${props => props.theme.colors.black};
     box-shadow: ${props => props.theme.shadows.small};
   }
 
@@ -27,73 +29,23 @@ export const AccordionItem = styled.div<{ $isExpanded?: boolean }>`
   }
 `;
 
-export const AccordionHeader = styled.button<{ $isExpanded: boolean }>`
+export const AccordionHeader = styled('div')`
   width: 100%;
-  padding: ${props => props.theme.spacing.lg};
-  border: none;
-  background: ${props =>
-    props.$isExpanded ? props.theme.colors.primary + '15' : props.theme.colors.background.card};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: ${props => props.theme.typography.fontSize.md};
-  font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.text.primary};
   transition: all 0.2s ease;
-
-  &:hover {
-    background: ${props =>
-      props.$isExpanded
-        ? props.theme.colors.primary + '20'
-        : props.theme.colors.background.secondary};
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${props => props.theme.colors.primary};
-    outline-offset: -2px;
-  }
-
-  ${media.md} {
-    padding: ${props => props.theme.spacing.md};
-    font-size: ${props => props.theme.typography.fontSize.sm};
-  }
-`;
-
-export const AccordionToggle = styled.span<{ $isExpanded: boolean }>`
-  font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.text.secondary};
-  font-weight: ${props => props.theme.typography.fontWeight.normal};
-  transition: transform 0.2s ease;
-  transform: ${props => (props.$isExpanded ? 'rotate(0deg)' : 'rotate(-90deg)')};
-
-  &::before {
-    content: '▼';
-    display: inline-block;
-    margin-right: ${props => props.theme.spacing.xs};
-  }
 `;
 
 export const AccordionContent = styled.div<{ $isExpanded: boolean }>`
-  padding: 0 ${props => (props.$isExpanded ? props.theme.spacing.lg : 0)}
-    ${props => (props.$isExpanded ? props.theme.spacing.lg : 0)};
-  background: ${props => props.theme.colors.background.secondary};
   max-height: ${props => (props.$isExpanded ? '1000px' : '0')};
   opacity: ${props => (props.$isExpanded ? 1 : 0)};
   overflow: hidden;
   transition: all 0.3s ease;
-
-  ${media.md} {
-    padding: 0 ${props => (props.$isExpanded ? props.theme.spacing.md : 0)}
-      ${props => (props.$isExpanded ? props.theme.spacing.md : 0)};
-  }
 `;
 
 export const AccordionBody = styled(Flex)`
-  align-items: stretch !important;
-  gap: ${props => props.theme.spacing.sm};
-  margin-top: ${props => props.theme.spacing.md};
-  opacity: 1;
   transition: opacity 0.2s ease;
 `;
 
@@ -145,21 +97,16 @@ export const Accordion: FC<AccordionProps> = ({
         const isExpanded = expandedItems.has(item.key);
 
         return (
-          <AccordionItem key={item.key} $isExpanded={isExpanded}>
-            <AccordionHeader
-              type="button"
-              onClick={() => !item.disabled && toggleItem(item.key)}
-              $isExpanded={isExpanded}
-              disabled={item.disabled}
-            >
+          <Card key={item.key}>
+            <AccordionHeader onClick={() => !item.disabled && toggleItem(item.key)}>
               <span>{item.header}</span>
-              <AccordionToggle $isExpanded={isExpanded} />
+              <ArrowIcon rotate={isExpanded ? 90 : -90} color={''} />
             </AccordionHeader>
 
             <AccordionContent $isExpanded={isExpanded}>
               <AccordionBody direction="column">{item.children}</AccordionBody>
             </AccordionContent>
-          </AccordionItem>
+          </Card>
         );
       })}
     </AccordionContainer>

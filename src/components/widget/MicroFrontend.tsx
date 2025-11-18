@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { WIDGET_CONFIG } from '@/constants.ts';
 import { getUrl } from '@/config/env';
-import { LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
 import { useDebug } from '@/hooks/useDebug';
 import { DebugPanel } from '@/components/debug/DebugPanel';
 import { useAppSelector } from '@/store/redux-hooks.ts';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
 
 const Container = styled.div`
   width: 100%;
@@ -85,11 +85,11 @@ export const MicroFrontend = () => {
       }
 
       // Перехват authorize и других API запросов - делаем абсолютными URL
-      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
-        const newUrl = `${url}${requestUrl}`;
-        addDebugInfo('fetchUrlRewritten', JSON.stringify({ from: requestUrl, to: newUrl }));
-        args[0] = newUrl;
-      }
+      // if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
+      //   const newUrl = `${url}${requestUrl}`;
+      //   addDebugInfo('fetchUrlRewritten', JSON.stringify({ from: requestUrl, to: newUrl }));
+      //   args[0] = newUrl;
+      // }
 
       return originalFetch.apply(this, args);
     };
@@ -196,6 +196,9 @@ export const MicroFrontend = () => {
     addDebugInfo('host', host);
 
     const scriptId = `micro-frontend-script-${name}`;
+    const styleId = `micro-frontend-style-${name}`;
+    const scriptConfigId = `micro-frontend-script-config-${name}`;
+
     const windowWithWidget = window as unknown as WindowWithWidget;
 
     // Очистка предыдущего виджета если он существует
@@ -242,6 +245,11 @@ export const MicroFrontend = () => {
 
           addDebugInfo('assets', JSON.stringify({ mainJs, mainCss }));
 
+          //Загрузка Config
+          const scriptConfig = document.createElement('script');
+          scriptConfig.src = `${url}/config.js?v=${new Date().getTime()}`;
+          scriptConfig.id = scriptConfigId;
+
           // Загрузка CSS
           if (mainCss) {
             const cssUrl = mainCss.startsWith('http')
@@ -253,6 +261,7 @@ export const MicroFrontend = () => {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = cssUrl;
+            link.id = styleId;
             link.onload = () => addDebugInfo('cssLoaded', 'true');
             link.onerror = () => addDebugInfo('cssError', 'true');
             document.head.appendChild(link);
@@ -351,7 +360,7 @@ export const MicroFrontend = () => {
             height: '200px',
           }}
         >
-          <LoadingSpinner />
+          <AppSpin />
           <div style={{ marginTop: '10px', color: '#666' }}>
             {loadPhase === 'fetching' && 'Загрузка манифеста...'}
             {loadPhase === 'loading' && 'Загрузка виджета...'}

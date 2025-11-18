@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useEsiaDemo } from '@/hooks/useEsiaDemo';
-import { LoadingSpinner } from '@/components/ui/StyledComponents';
 import { Link } from 'react-router-dom';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
 
 const Container = styled.div`
   display: flex;
@@ -154,7 +154,7 @@ export const EsiaAuthContainer: React.FC = () => {
           <Button onClick={handleAuth} disabled={isLoading}>
             {isLoading ? (
               <>
-                <LoadingSpinner size={16} />
+                <AppSpin />
                 Перенаправление...
               </>
             ) : (

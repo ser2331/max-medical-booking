@@ -5,17 +5,17 @@ const CalendarGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: ${props => props.theme.spacing.xs};
-  background: ${props => props.theme.colors.background.card};
+  background: ${props => props.theme.colors.mainBackgroundColor};
   padding: ${props => props.theme.spacing.sm};
   border-radius: ${props => props.theme.borderRadius.medium};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
 `;
 
 const CalendarHeader = styled.div`
   text-align: center;
   font-size: ${props => props.theme.typography.fontSize.xs};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   padding: ${props => props.theme.spacing.xs};
 `;
 
@@ -31,21 +31,21 @@ const CalendarDay = styled.button<{
   height: 36px;
   border: 2px solid
     ${props => {
-      if (props.$isSelected) return props.theme.colors.text.primary;
+      if (props.$isSelected) return props.theme.colors.black;
       return 'transparent';
     }};
   border-radius: ${props => props.theme.borderRadius.small};
   background: ${props => {
-    if (props.$isSelected) return props.theme.colors.primaryHover;
+    if (props.$isSelected) return props.theme.colors.blueHover;
 
-    if (props.$isAvailable) return props.theme.colors.primary;
+    if (props.$isAvailable) return props.theme.colors.black;
   }};
 
   color: ${props => {
-    if (!props.$isCurrentMonth) return props.theme.colors.text.tertiary;
-    if (props.$isSelected) return props.theme.colors.text.inverted;
-    if (props.$isAvailable) return props.theme.colors.text.primary;
-    return props.theme.colors.text.secondary;
+    if (!props.$isCurrentMonth) return props.theme.colors.black;
+    if (props.$isSelected) return props.theme.colors.black;
+    if (props.$isAvailable) return props.theme.colors.black;
+    return props.theme.colors.black;
   }};
   cursor: ${props => (props.$isAvailable ? 'pointer' : 'not-allowed')};
   font-size: ${props => props.theme.typography.fontSize.sm};
@@ -65,19 +65,19 @@ const NavigationButton = styled.button`
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   padding: ${props => props.theme.spacing.xs};
   border-radius: ${props => props.theme.borderRadius.small};
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${props => props.theme.colors.background.secondary};
+    background-color: ${props => props.theme.colors.mainBackgroundColor};
   }
 `;
 
 const CalendarTitle = styled.span`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
 `;
 
 export interface CalendarDayInfo {

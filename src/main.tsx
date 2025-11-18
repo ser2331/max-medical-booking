@@ -1,30 +1,26 @@
 import { FC } from 'react';
 import ReactDOM from 'react-dom/client';
-import { MaxUI } from '@maxhub/max-ui';
+import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+
 import { MaxBridgeProvider } from './providers/MaxBridgeProvider';
 import { ThemeProvider } from './providers/ThemeContext';
 
-import { I18nextProvider } from 'react-i18next';
 import App from './App.tsx';
-import { GlobalStyles } from './styles/GlobalStyles';
 import i18n from './i18n';
 import { store } from '@/store/store.ts';
 
-import '@maxhub/max-ui/dist/styles.css';
+import './assets/style/index.scss';
 
 // eslint-disable-next-line react-refresh/only-export-components
 const Root: FC = () => {
   return (
-    <MaxUI colorScheme="light">
-      <ThemeProvider>
-        <GlobalStyles />
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </ThemeProvider>
-    </MaxUI>
+    <ThemeProvider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ThemeProvider>
   );
 };
 

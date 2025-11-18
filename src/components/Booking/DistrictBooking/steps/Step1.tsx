@@ -1,62 +1,34 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
-import { ErrorMessage, LoadingSpinner } from '@/components/ui/StyledComponents.tsx';
-import { media } from '@/styles/mixins.ts';
+import { ErrorMessage, Flex } from '@/components/ui/StyledComponents.tsx';
 import styled from 'styled-components';
-import { Accordion } from '@/components/Accordion.tsx';
-import { RadioInput } from '@/components/RadioInput.tsx';
+import { Accordion } from '@/components/ui/Accordion/Accordion.tsx';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
-export const LpuItem = styled.label<{ $isSelected: boolean }>`
-  padding: ${props => props.theme.spacing.md};
-  border: 2px solid
-    ${props => (props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.primary)};
-  border-radius: ${props => props.theme.borderRadius.small};
-  cursor: pointer;
-  background: ${props =>
-    props.$isSelected ? props.theme.colors.primary + '10' : props.theme.colors.background.card};
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: flex-start;
-
-  &:hover {
-    border-color: ${props =>
-      props.$isSelected ? props.theme.colors.primary : props.theme.colors.border.accent};
-    background: ${props =>
-      props.$isSelected
-        ? props.theme.colors.primary + '15'
-        : props.theme.colors.background.secondary};
-  }
-
-  ${media.md} {
-    padding: ${props => props.theme.spacing.sm};
-    border-radius: ${props => props.theme.borderRadius};
-  }
-`;
-
-export const LpuContent = styled.div`
+export const LpuContent = styled(Flex).attrs({ $direction: 'column' })`
   flex: 1;
-  display: flex;
-  flex-direction: column;
   gap: ${props => props.theme.spacing.xs};
 `;
 
 export const LpuName = styled.div`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
 export const LpuAddress = styled.div`
   font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   line-height: 1.4;
 `;
 
 export const LpuContact = styled.div`
   font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   line-height: 1.4;
   display: flex;
   align-items: center;
@@ -65,22 +37,31 @@ export const LpuContact = styled.div`
 
 export const LpuMeta = styled.div`
   font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.text.tertiary};
+  color: ${props => props.theme.colors.black};
   margin-top: ${props => props.theme.spacing.xs};
   line-height: 1.3;
 `;
 
 export const ValidationError = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: ${props => props.theme.colors.red};
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin-top: ${props => props.theme.spacing.md};
   padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.error}10;
+  background: ${props => props.theme.colors.red}10;
   border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.error}20;
+  border: 1px solid ${props => props.theme.colors.red}20;
   text-align: center;
 `;
 
+const LpuCard = styled(Flex)`
+  &:nth-child(1) {
+    margin-top: 16px;
+  }
+  &:not(&:nth-last-child(1)) {
+    border-bottom: 1px solid ${props => props.theme.colors.grey1};
+    padding-bottom: ${props => props.theme.spacing.md};
+  }
+`;
 export const Step1: React.FC = () => {
   const {
     register,
@@ -89,7 +70,8 @@ export const Step1: React.FC = () => {
     formState: { errors },
   } = useFormContext();
   const { data: lpusData, error, isLoading } = useGetLpusQuery({ districtId: '' });
-
+  const stepFields = STEPS_CONFIG[0].fields;
+  const [districtField, lpuField] = stepFields;
   const selectedLpu = watch('lpu');
   const selectedDistrict = watch('district');
 
@@ -107,12 +89,12 @@ export const Step1: React.FC = () => {
   }, [lpusData]);
 
   const handleLpuSelect = (lpuId: number, district: string) => {
-    setValue('lpu', lpuId.toString(), {
+    setValue(lpuField, lpuId.toString(), {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
-    setValue('district', district, {
+    setValue(districtField, district, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -120,7 +102,7 @@ export const Step1: React.FC = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <AppSpin />;
   }
 
   if (error) {
@@ -134,10 +116,10 @@ export const Step1: React.FC = () => {
       header: district,
       defaultExpanded: district === selectedDistrict,
       children: (
-        <>
+        <Flex $direction={'column'} $align={'stretch'} $gap={16}>
           {lpusByDistrict[district].map(lpu => (
-            <LpuItem key={lpu.id} $isSelected={selectedLpu === lpu.id.toString()}>
-              <RadioInput
+            <LpuCard $gap={8} key={lpu.id} onClick={() => handleLpuSelect(lpu.id, district)}>
+              <RadioButton
                 value={lpu.id}
                 register={register('lpu', {
                   required: 'Выберите медицинское учреждение',
@@ -156,9 +138,9 @@ export const Step1: React.FC = () => {
                   {lpu.inDepthExamination && ' • 🩺 Диспансеризация'}
                 </LpuMeta>
               </LpuContent>
-            </LpuItem>
+            </LpuCard>
           ))}
-        </>
+        </Flex>
       ),
     }));
 

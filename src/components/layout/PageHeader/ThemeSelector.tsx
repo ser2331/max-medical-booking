@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '@/providers/ThemeContext.tsx';
-import { SkinName } from '@/styles/themes/manager.ts';
+import { SkinName } from '@/styles/themes/theme.types.ts';
 
 const SelectorContainer = styled.div`
   position: relative;
@@ -11,10 +11,10 @@ const SelectorContainer = styled.div`
 
 const SelectorButton = styled.button`
   padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.small};
-  background: ${props => props.theme.colors.background.primary};
-  color: ${props => props.theme.colors.text.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  color: ${props => props.theme.colors.black};
   cursor: pointer;
   font-size: ${props => props.theme.typography.fontSize.sm};
   width: 100%;
@@ -25,8 +25,8 @@ const SelectorButton = styled.button`
   gap: ${props => props.theme.spacing.sm};
 
   &:hover {
-    border-color: ${props => props.theme.colors.border.accent};
-    background: ${props => props.theme.colors.background.secondary};
+    border-color: ${props => props.theme.colors.blackPure};
+    background: ${props => props.theme.colors.formButtonBackground};
   }
 
   &::after {
@@ -42,8 +42,8 @@ const Dropdown = styled.div<{ $isOpen: boolean }>`
   left: 0;
   right: 0;
   margin-top: ${props => props.theme.spacing.xs};
-  background: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  border: 1px solid ${props => props.theme.colors.black};
   border-radius: ${props => props.theme.borderRadius.medium};
   box-shadow: ${props => props.theme.shadows.medium};
   padding: ${props => props.theme.spacing.sm};
@@ -59,9 +59,8 @@ const DropdownItem = styled.button<{ $isActive: boolean }>`
   width: 100%;
   padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.xs};
   border: none;
-  background: ${props =>
-    props.$isActive ? props.theme.colors.background.secondary : 'transparent'};
-  color: ${props => props.theme.colors.text.primary};
+  background: ${props => (props.$isActive ? props.theme.colors.mainBackground : 'transparent')};
+  color: ${props => props.theme.colors.black};
   text-align: left;
   cursor: pointer;
   border-radius: ${props => props.theme.borderRadius.small};
@@ -69,7 +68,7 @@ const DropdownItem = styled.button<{ $isActive: boolean }>`
   font-size: ${props => props.theme.typography.fontSize.sm};
 
   &:hover {
-    background: ${props => props.theme.colors.background.secondary};
+    background: ${props => props.theme.colors.mainBackgroundColor};
   }
 
   &:not(:last-child) {
@@ -96,6 +95,8 @@ export const ThemeSelector: React.FC = () => {
   }, []);
 
   const skinEntries = Object.entries(availableSkins);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const currentSkinName = availableSkins[currentSkin]?.displayName || 'Стандартная';
 
   const handleSkinSelect = (skinKey: SkinName) => {
@@ -118,7 +119,7 @@ export const ThemeSelector: React.FC = () => {
             $isActive={currentSkin === key}
             onClick={() => handleSkinSelect(key as SkinName)}
           >
-            {skin.displayName}
+            {skin}
           </DropdownItem>
         ))}
       </Dropdown>

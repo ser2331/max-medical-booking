@@ -1,27 +1,36 @@
 import styled from 'styled-components';
-import { Button, Flex, Panel, Spinner } from '@maxhub/max-ui';
-import { media, responsive } from '@/styles/mixins.ts';
-import { Section } from '@/components/ui/CommonComponents.tsx';
+import { media } from '@/styles/mixins.ts';
 
-export const StyledPanel = styled(Panel)`
+export const Main = styled('div')`
   position: fixed;
+  overflow: hidden;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  height: 100dvh;
+  width: 100%;
+  background: ${props => props.theme.colors.mainBackground};
+`;
+
+export const Flex = styled('div')<{
+  $direction?: 'row' | 'column';
+  $align?: 'center' | 'flex-start' | 'flex-end' | 'stretch';
+  $justifyContent?: 'space-between' | 'space-around' | 'flex-start';
+  $gap?: number;
+}>`
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: ${props => props.theme.colors.background.primary};
+  flex-direction: ${props => props.$direction || 'row'};
+  align-items: ${props => props.$align || 'center'};
+  justify-content: ${props => props.$justifyContent || 'center'};
+  gap: ${props => (props.$gap || 0) + 'px'};
 `;
 
-export const ContentFlex = styled(Flex)`
-  height: 100%;
-  background: ${props => props.theme.colors.background.primary};
-  ${responsive.gap}
+export const Section = styled(Flex).attrs({ $direction: 'column' })`
+  gap: ${props => props.theme.spacing.md};
 `;
 
-export const CompactButton = styled(Button)<{ width?: number; height?: number }>`
+export const CompactButton = styled('button')<{ width?: number; height?: number }>`
   && {
     width: ${({ width }) => width || '32px'};
     height: ${({ height }) => height || '32px'};
@@ -35,13 +44,13 @@ export const CompactButton = styled(Button)<{ width?: number; height?: number }>
 
     /* Базовые стили для разных состояний */
     &:not(:disabled) {
-      background: ${props => props.theme.colors.primary};
-      color: ${props => props.theme.colors.text.inverted};
-      border: 1px solid ${props => props.theme.colors.primary};
+      background: ${props => props.theme.colors.blue};
+      color: ${props => props.theme.colors.white};
+      border: 1px solid ${props => props.theme.colors.blue};
 
       &:hover {
-        background: ${props => props.theme.colors.primaryHover};
-        border-color: ${props => props.theme.colors.primaryHover};
+        background: ${props => props.theme.colors.blueHover};
+        border-color: ${props => props.theme.colors.blueHover};
         transform: translateY(-1px);
         box-shadow: ${props => props.theme.shadows.small};
       }
@@ -53,9 +62,9 @@ export const CompactButton = styled(Button)<{ width?: number; height?: number }>
     }
 
     &:disabled {
-      background: ${props => props.theme.colors.background.tertiary};
-      color: ${props => props.theme.colors.text.tertiary};
-      border: 1px solid ${props => props.theme.colors.border.secondary};
+      background: ${props => props.theme.colors.grey3};
+      color: ${props => props.theme.colors.grey2};
+      border: 1px solid ${props => props.theme.colors.grey3};
       cursor: not-allowed;
     }
 
@@ -74,38 +83,12 @@ export const CompactButton = styled(Button)<{ width?: number; height?: number }>
     }
   }
 `;
+
 export const IconButton = styled(CompactButton)`
   && {
     padding: 0;
     background: none !important;
     border: none !important;
-  }
-`;
-
-export const LoadingSpinner = styled(Spinner)`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 24px;
-  height: 24px;
-
-  /* Стилизация спиннера под текущую тему */
-  svg {
-    div {
-      background: ${props => props.theme.colors.text.accent} !important;
-    }
-  }
-
-  /* Разные размеры для адаптива */
-  ${media.md} {
-    width: 20px;
-    height: 20px;
-  }
-
-  ${media.xs} {
-    width: 18px;
-    height: 18px;
   }
 `;
 
@@ -116,9 +99,9 @@ export const ErrorMessage = styled(Section)`
   text-align: center;
   min-height: 200px;
   width: 100%;
-  background: ${props => props.theme.colors.background.secondary};
+  background: ${props => props.theme.colors.grey1};
   border-radius: ${props => props.theme.borderRadius.medium};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  border: 1px solid ${props => props.theme.colors.grey3};
 
   /* Иконка ошибки */
   &::before {
@@ -128,14 +111,14 @@ export const ErrorMessage = styled(Section)`
   }
 
   h3 {
-    color: ${props => props.theme.colors.error};
+    color: ${props => props.theme.colors.red};
     font-size: ${props => props.theme.typography.fontSize.lg};
     font-weight: ${props => props.theme.typography.fontWeight.semibold};
     margin: 0 0 ${props => props.theme.spacing.sm} 0;
   }
 
   p {
-    color: ${props => props.theme.colors.text.secondary};
+    color: ${props => props.theme.colors.grey2};
     font-size: ${props => props.theme.typography.fontSize.sm};
     margin: 0;
     line-height: 1.5;
@@ -167,71 +150,83 @@ export const ErrorMessage = styled(Section)`
 `;
 
 export const SuccessMessage = styled(ErrorMessage)`
-  background: ${props => props.theme.colors.success}15; // 8% прозрачность
-  border-color: ${props => props.theme.colors.success};
+  background: ${props => props.theme.colors.greenLight};
+  border-color: ${props => props.theme.colors.green};
 
   &::before {
     content: '✅';
   }
 
   h3 {
-    color: ${props => props.theme.colors.success};
+    color: ${props => props.theme.colors.green};
   }
 `;
 
 export const WarningMessage = styled(ErrorMessage)`
-  background: ${props => props.theme.colors.warning}15;
-  border-color: ${props => props.theme.colors.warning};
+  background: ${props => props.theme.colors.orangeLight};
+  border-color: ${props => props.theme.colors.orange};
 
   &::before {
     content: '⚠️';
   }
 
   h3 {
-    color: ${props => props.theme.colors.warning};
+    color: ${props => props.theme.colors.orange};
   }
 `;
 
-export const Card = styled.div`
-  background: ${props => props.theme.colors.background.card};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+//================>Card components
+export const Card = styled.div<{ $isSelected?: boolean }>`
+  border: 2px solid
+    ${props => (props.$isSelected ? props.theme.colors.blue : props.theme.colors.grey3)};
   border-radius: ${props => props.theme.borderRadius.medium};
-  padding: ${props => props.theme.spacing.lg};
-  box-shadow: ${props => props.theme.shadows.small};
-  transition: all 0.3s ease;
+  background: ${props =>
+    props.$isSelected ? props.theme.colors.blueLight : props.theme.colors.cardElemBackground};
+  transition: all 0.2s ease;
 
   &:hover {
-    box-shadow: ${props => props.theme.shadows.medium};
-    border-color: ${props => props.theme.colors.border.accent};
+    border-color: ${props =>
+      props.$isSelected ? props.theme.colors.blue : props.theme.colors.blue};
   }
 
   ${media.md} {
-    padding: ${props => props.theme.spacing.md};
     border-radius: ${props => props.theme.borderRadius.small};
-  }
-
-  ${media.xs} {
-    padding: ${props => props.theme.spacing.sm};
   }
 `;
 
-export const SecondaryButton = styled(CompactButton)`
-  && {
-    background: transparent;
-    color: ${props => props.theme.colors.text.primary};
-    border: 1px solid ${props => props.theme.colors.border.primary};
+export const SpecialtyContent = styled(Flex).attrs({ $direction: 'column', $align: 'flex-start' })`
+  flex: 1;
+`;
 
-    &:not(:disabled) {
-      &:hover {
-        background: ${props => props.theme.colors.background.secondary};
-        border-color: ${props => props.theme.colors.border.accent};
-        transform: translateY(-1px);
-      }
+export const SpecialtyName = styled.div`
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  color: ${props => props.theme.colors.black};
+  font-size: ${props => props.theme.typography.fontSize.md};
+  margin-bottom: ${props => props.theme.spacing.xs};
+`;
 
-      &:active {
-        background: ${props => props.theme.colors.background.tertiary};
-        transform: translateY(0);
-      }
+export const SpecialtyStats = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+export const StatItem = styled.div<{ $type?: 'participant' | 'ticket' }>`
+  display: flex;
+  align-items: center;
+  gap: ${props => props.theme.spacing.xs};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  color: ${props => {
+    switch (props.$type) {
+      case 'participant':
+        return props.theme.colors.green;
+      case 'ticket':
+        return props.theme.colors.orange;
+      default:
+        return props.theme.colors.grey2;
     }
-  }
+  }};
+`;
+
+export const HeaderRow = styled(Section)`
+  margin-bottom: ${props => props.theme.spacing.xs};
 `;

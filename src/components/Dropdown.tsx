@@ -11,8 +11,8 @@ const MoreButton = styled(CompactButton)<{ $isOpen: boolean }>`
   width: 32px;
   height: 32px;
   &:hover {
-    border-color: ${props => props.theme.colors.primary};
-    background: ${props => props.theme.colors.background.secondary};
+    border-color: ${props => props.theme.colors.blackPure};
+    background: ${props => props.theme.colors.mainBackgroundColor};
     transform: scale(1.05);
   }
 
@@ -21,7 +21,7 @@ const MoreButton = styled(CompactButton)<{ $isOpen: boolean }>`
   }
 
   &:focus-visible {
-    outline: 2px solid ${props => props.theme.colors.primary};
+    outline: 2px solid ${props => props.theme.colors.blackPure};
     outline-offset: 2px;
   }
 `;
@@ -31,8 +31,8 @@ const DropdownContainer = styled.div<{ $isOpen: boolean; $position?: 'bottom' | 
   ${props => (props.$position === 'top' ? 'bottom: 100%;' : 'top: 100%;')}
   right: 0;
   margin-${props => (props.$position === 'top' ? 'bottom: 8px' : 'top: 8px')};
-  background: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border.primary};
+  background: ${props => props.theme.colors.mainBackgroundColor};
+  border: 1px solid ${props => props.theme.colors.blackPure};
   border-radius: ${props => props.theme.borderRadius.medium};
   box-shadow: ${props => props.theme.shadows.medium};
   padding: ${props => props.theme.spacing.sm};
@@ -65,14 +65,14 @@ const DropdownItem = styled.button<{
   padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
   border: none;
   background: ${props => {
-    if (props.$isActive) return props.theme.colors.background.secondary;
-    if (props.$disabled) return props.theme.colors.background.tertiary;
+    if (props.$isActive) return props.theme.colors.mainBackgroundColor;
+    if (props.$disabled) return props.theme.colors.mainBackground;
     return 'transparent';
   }};
   color: ${props => {
-    if (props.$disabled) return props.theme.colors.text.tertiary;
-    if (props.$isDanger) return props.theme.colors.error;
-    return props.theme.colors.text.primary;
+    if (props.$disabled) return props.theme.colors.black;
+    if (props.$isDanger) return props.theme.colors.red;
+    return props.theme.colors.black;
   }};
   cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
   border-radius: ${props => props.theme.borderRadius.small};
@@ -83,8 +83,8 @@ const DropdownItem = styled.button<{
 
   &:hover:not(:disabled) {
     background: ${props => {
-      if (props.$isDanger) return `${props.theme.colors.error}15`; // 8% opacity
-      return props.theme.colors.background.secondary;
+      if (props.$isDanger) return `${props.theme.colors.red}15`; // 8% opacity
+      return props.theme.colors.mainBackgroundColor;
     }};
     transform: ${props => (props.$disabled ? 'none' : 'translateX(2px)')};
   }
@@ -99,7 +99,7 @@ const DropdownItem = styled.button<{
 
   &:focus-visible {
     outline: 2px solid
-      ${props => (props.$isDanger ? props.theme.colors.error : props.theme.colors.primary)};
+      ${props => (props.$isDanger ? props.theme.colors.red : props.theme.colors.black)};
     outline-offset: -2px;
   }
 `;
@@ -123,16 +123,16 @@ const ItemLabel = styled.span`
 
 const DropdownDivider = styled.div`
   height: 1px;
-  background: ${props => props.theme.colors.border.secondary};
+  background: ${props => props.theme.colors.black};
   margin: ${props => props.theme.spacing.xs} 0;
 `;
 
 const DropdownHeader = styled.div`
   padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
-  color: ${props => props.theme.colors.text.secondary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.xs};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  border-bottom: 1px solid ${props => props.theme.colors.border.secondary};
+  border-bottom: 1px solid ${props => props.theme.colors.black};
   margin-bottom: ${props => props.theme.spacing.xs};
   text-transform: uppercase;
   letter-spacing: 0.5px;

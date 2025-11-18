@@ -1,0 +1,76 @@
+:root {
+  --widget-main-background: #F3F8FF;
+  --widget-black: #3D4247;
+  --widget-black-pure: #000000;
+  --widget-blue: #147DC1;
+  --widget-blue-dark: color-mix(in srgb, var(--widget-blue) 70%, black);
+  --widget-blue-hover: color-mix(in srgb, var(--widget-blue) 85%, black);
+  --widget-blue-light: color-mix(in srgb, var(--widget-blue) 25%, white);
+  --widget-blue-highlight: color-mix(in srgb, var(--widget-blue) 40%, white);
+  --widget-white: #FFFFFF;
+  --widget-grey-1: #EEEEEE;
+  --widget-grey-2: #616161;
+  --widget-grey-3: #BDBDBD;
+  --widget-grey-4: #F5F5F5;
+  --widget-grey-5: #E0E0E0;
+  --widget-grey-6: #212121;
+  --widget-red: #FF4D4F;
+  --widget-red-light: #FFCDD4;
+  --widget-red-extra: #FF3733;
+  --widget-red-message: #EA6873;
+  --widget-red-light-2: #fff1f1;
+
+  --widget-oragne: #FFAF55;
+  --widget-orange-light: #FFF2E1;
+  --widget-red-link: #D0727A;
+  --widget-green: #52C41A;
+  --widget-green-light: #F6FFED;
+
+  --status-in-progress: var(--widget-oragne);
+  --status-canceled: var(--widget-red);
+  --status-finished: var(--widget-blue);
+
+  --main-background-color: #f1f3f6;
+  --card-metadata--color: #797979;
+
+  --input-border: rgba(61, 66, 71, 0.07);
+  --input-border-hover: #798491;
+  --input-border-active: #798491;
+  --input-border-error: #fa0000;
+  --input-label-error: #fa0000;
+
+  --card-elem--background: var(--widget-white);
+
+  --input-background: rgba(61, 66, 71, 0.07);
+  --input-label-color: rgba(61, 66, 71, 0.8);
+
+  --overdue-border: #D0727A;
+  --overdue-background: #FEECED;
+  --overdue-date: #E8AA84;
+
+  --transition-elem--color: var(--widget-white);
+  --transition-elem--background: var(--widget-blue);
+  --transition-elem--background-hover: var(--widget-blue-hover);
+
+  --form-block-border: #D8D9DA;
+
+  --footer-form--button-submit--background: var(--widget-white);
+  --footer-form--button-submit--background-hover: var(--widget-blue);
+  --footer-form--button-submit--color: var(--widget-blue);
+  --footer-form--button-submit--color-hover: var(--widget-white);
+  --footer-form--button-cancel--background: var(--widget-white);
+  --footer-form--button-cancel--color: var(--widget-blue);
+  --footer-form--button-cancel--background-hover: var(--widget-white);
+  --footer-form--button-cancel--color-hover: var(--widget-blue);
+
+  --form-button-color: var(--widget-white);
+  --form-button-background: var(--widget-blue);
+  --form-button-color-hover: var(--widget-white);
+  --form-button-background-hover: var(--widget-blue);
+  --form-button-cancel-color: var(--widget-blue);
+  --form-button-cancel-background: var(--widget-white);
+  --form-button-cancel-color-hover: var(--widget-blue);
+  --form-button-cancel-background-hover: var(--widget-white);
+
+  --sticky-style: sticky;
+}

@@ -4,11 +4,12 @@ import { PageHeader } from './PageHeader/PageHeader.tsx';
 import { PageFooter } from './PageFooter';
 
 const LayoutContainer = styled.div`
-  flex: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  color: ${({ theme }) => theme.colors.text.primary};
+  height: 100%;
+  width: 100%;
+  color: ${({ theme }) => theme.colors.black};
 `;
 
 const ContentArea = styled.main`
@@ -16,15 +17,9 @@ const ContentArea = styled.main`
   overflow: hidden;
   position: relative;
   display: flex;
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  width: 100%;
-  -webkit-overflow-scrolling: touch;
-  /* Убираем bounce эффект на iOS */
-  overscroll-behavior: contain;
+  align-items: center;
+  justify-content: center;
+  padding: ${props => props.theme.spacing.md};
 `;
 
 interface PageLayoutProps {
@@ -68,9 +63,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         onClose={onClose}
       />
 
-      <ContentArea className={'body'}>
-        <ContentWrapper>{children}</ContentWrapper>
-      </ContentArea>
+      <ContentArea className={'body'}>{children}</ContentArea>
 
       {(submitButton || backButton) && (
         <PageFooter submitButton={submitButton} backButton={backButton} />

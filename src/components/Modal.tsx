@@ -8,7 +8,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background: ${props => props.theme.colors.background.overlay};
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
 `;
 
 const ModalContainer = styled.div<{ $isOpen: boolean; $size?: 'sm' | 'md' | 'lg' }>`
-  background: ${props => props.theme.colors.background.primary};
+  background: ${props => props.theme.colors.cardElemBackground};
   border-radius: ${props => props.theme.borderRadius.large};
   box-shadow: ${props => props.theme.shadows.large};
   width: 100%;
@@ -51,13 +51,13 @@ const ModalHeader = styled.div<{ $withBorder?: boolean }>`
   justify-content: space-between;
   padding: ${props => props.theme.spacing.lg};
   border-bottom: ${props =>
-    props.$withBorder ? `1px solid ${props.theme.colors.border.primary}` : 'none'};
+    props.$withBorder ? `1px solid ${props.theme.colors.formBlockBorder}` : 'none'};
   flex-shrink: 0;
 `;
 
 const ModalTitle = styled.h2`
   margin: 0;
-  color: ${props => props.theme.colors.text.primary};
+  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.xl};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   line-height: 1.2;
@@ -70,8 +70,8 @@ const CloseButton = styled.button`
   width: 32px;
   height: 32px;
   border: none;
-  background: ${props => props.theme.colors.background.secondary};
-  color: ${props => props.theme.colors.text.secondary};
+  background: ${props => props.theme.colors.grey1};
+  color: ${props => props.theme.colors.grey2};
   border-radius: ${props => props.theme.borderRadius.medium};
   cursor: pointer;
   font-size: ${props => props.theme.typography.fontSize.lg};
@@ -79,8 +79,8 @@ const CloseButton = styled.button`
   flex-shrink: 0;
 
   &:hover {
-    background: ${props => props.theme.colors.background.tertiary};
-    color: ${props => props.theme.colors.text.primary};
+    background: ${props => props.theme.colors.grey3};
+    color: ${props => props.theme.colors.black};
     transform: scale(1.1);
   }
 
@@ -93,6 +93,7 @@ const ModalContent = styled.div<{ $padding?: boolean }>`
   flex: 1;
   overflow-y: auto;
   padding: ${props => (props.$padding ? props.theme.spacing.lg : '0')};
+
   @media (max-width: ${props => props.theme.breakpoints.sm}) {
     padding: ${props => (props.$padding ? props.theme.spacing.md : '0')};
   }
@@ -105,7 +106,7 @@ const ModalFooter = styled.div<{ $withBorder?: boolean }>`
   gap: ${props => props.theme.spacing.sm};
   padding: ${props => props.theme.spacing.lg};
   border-top: ${props =>
-    props.$withBorder ? `1px solid ${props.theme.colors.border.primary}` : 'none'};
+    props.$withBorder ? `1px solid ${props.theme.colors.formBlockBorder}` : 'none'};
   flex-shrink: 0;
 `;
 

@@ -2,16 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { Flex, Typography } from '@maxhub/max-ui';
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
-import { CompactButton, IconButton } from '@/components/ui/StyledComponents.tsx';
-import { GearIcon } from '@/assets/icons/gear/gear.tsx';
+// import { GearIcon } from '@/assets/icons/gear/gear.tsx';
 import { useModal } from '@/hooks/useModal.tsx';
 import { SettingsModal } from './SettingsModal';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 const HeaderContainer = styled.header`
   flex-shrink: 0;
   padding: ${props => props.theme.spacing.md};
-  background: ${props => props.theme.colors.background.primary};
-  border-bottom: 1px solid ${props => props.theme.colors.border.secondary};
+  background: ${props => props.theme.colors.mainBackground};
   position: relative;
 
   @media (max-width: ${props => props.theme.breakpoints.md}) {
@@ -81,10 +80,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
     }
   };
 
-  const handleSettingsClick = () => {
-    hapticFeedback('impact', 'light');
-    settingsModal.open();
-  };
+  // const handleSettingsClick = () => {
+  //   hapticFeedback('impact', 'light');
+  //   settingsModal.open();
+  // };
 
   return (
     <HeaderContainer className="header">
@@ -92,7 +91,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
         {/* Левая часть */}
         <HeaderActions>
           {showBackButton ? (
-            <CompactButton onClick={handleBack}>←</CompactButton>
+            <CustomButton size={'small'} onClick={handleBack}>
+              ←
+            </CustomButton>
           ) : (
             <Spacer $width="48px" />
           )}
@@ -101,12 +102,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
         {/* Заголовок */}
         <HeaderTitle>{title}</HeaderTitle>
 
+        <div style={{ width: '10px' }} />
         {/* Правая часть */}
-        <HeaderActions>
-          <IconButton onClick={handleSettingsClick}>
-            <GearIcon size={24} />
-          </IconButton>
-        </HeaderActions>
+        {/*<HeaderActions>*/}
+        {/*  <IconButton onClick={handleSettingsClick}>*/}
+        {/*    <GearIcon size={24} />*/}
+        {/*  </IconButton>*/}
+        {/*</HeaderActions>*/}
       </HeaderFlex>
 
       {/* Модальное окно настроек */}
