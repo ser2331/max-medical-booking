@@ -6,13 +6,16 @@ import {
   STEPS_CONFIG,
 } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 import { Stepper } from '@/components/stepper/Stepper.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const defaultValues: AppointmentFormData = getDefaultValues();
 
 export const DistrictBooking: FC = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = (data: AppointmentFormData) => {
     console.log('Форма отправлена:', data);
-    alert('Запись успешно создана!');
+    navigate('/');
   };
 
   const handleStepChange = (currentStep: number, previousStep: number) => {

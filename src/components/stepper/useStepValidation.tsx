@@ -44,10 +44,6 @@ export const useStepValidation = <TFieldValues extends FieldValues>(
       const value = watchedStepFields?.[index];
       return !!value;
     });
-    console.log('currentStepFields', currentStepFields);
-    console.log('watchedStepFields', watchedStepFields);
-    console.log('hasStepErrors', hasStepErrors);
-    console.log('allFieldsHaveValues', allFieldsHaveValues);
     return !hasStepErrors && allFieldsHaveValues;
   }, [currentStepFields, errors, watchedStepFields]);
 
