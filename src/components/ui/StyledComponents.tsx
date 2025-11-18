@@ -84,23 +84,13 @@ export const CompactButton = styled('button')<{ width?: number; height?: number 
   }
 `;
 
-export const IconButton = styled(CompactButton)`
-  && {
-    padding: 0;
-    background: none !important;
-    border: none !important;
-  }
-`;
-
 export const ErrorMessage = styled(Section)`
   align-items: center;
   justify-content: center;
   padding: ${props => props.theme.spacing.xl};
   text-align: center;
-  min-height: 200px;
-  width: 100%;
   background: ${props => props.theme.colors.grey1};
-  border-radius: ${props => props.theme.borderRadius.medium};
+  border-radius: ${props => props.theme.borderRadius.large};
   border: 1px solid ${props => props.theme.colors.grey3};
 
   /* Иконка ошибки */
@@ -146,51 +136,6 @@ export const ErrorMessage = styled(Section)`
     &::before {
       font-size: ${props => props.theme.typography.fontSize.xl};
     }
-  }
-`;
-
-export const SuccessMessage = styled(ErrorMessage)`
-  background: ${props => props.theme.colors.greenLight};
-  border-color: ${props => props.theme.colors.green};
-
-  &::before {
-    content: '✅';
-  }
-
-  h3 {
-    color: ${props => props.theme.colors.green};
-  }
-`;
-
-export const WarningMessage = styled(ErrorMessage)`
-  background: ${props => props.theme.colors.orangeLight};
-  border-color: ${props => props.theme.colors.orange};
-
-  &::before {
-    content: '⚠️';
-  }
-
-  h3 {
-    color: ${props => props.theme.colors.orange};
-  }
-`;
-
-//================>Card components
-export const Card = styled.div<{ $isSelected?: boolean }>`
-  border: 2px solid
-    ${props => (props.$isSelected ? props.theme.colors.blue : props.theme.colors.grey3)};
-  border-radius: ${props => props.theme.borderRadius.medium};
-  background: ${props =>
-    props.$isSelected ? props.theme.colors.blueLight : props.theme.colors.cardElemBackground};
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: ${props =>
-      props.$isSelected ? props.theme.colors.blue : props.theme.colors.blue};
-  }
-
-  ${media.md} {
-    border-radius: ${props => props.theme.borderRadius.small};
   }
 `;
 

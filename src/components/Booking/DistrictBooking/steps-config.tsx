@@ -6,13 +6,16 @@ import { Step5 } from '@/components/Booking/DistrictBooking/steps/Step5.tsx';
 export interface AppointmentFormData {
   district: string;
   lpu: string;
+  specialty: string;
   doctor: string;
   date: string;
-  time: string;
-  patientName: string;
-  patientPhone: string;
-  patientEmail: string;
-  comments: string;
+  appointment: string;
+  lastName: string;
+  firstName: string;
+  birthdate: string;
+  phone: string;
+  mail: string;
+  consentAgreement: string;
 }
 
 export interface StepConfig {
@@ -35,28 +38,28 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'specialty',
     title: 'Выбор специальности',
     component: Step2,
-    fields: ['doctor'],
+    fields: ['specialty'],
     required: true,
   },
   {
     id: 'doctor',
     title: 'Выбор врача',
     component: Step3,
-    fields: ['date', 'time'],
+    fields: ['doctor'],
     required: true,
   },
   {
     id: 'datetime',
     title: 'Выбор времени',
     component: Step4,
-    fields: ['patientName', 'patientPhone'],
+    fields: ['appointment', 'date'],
     required: true,
   },
   {
     id: 'makingRecord',
     title: 'Оформление записи',
     component: Step5,
-    fields: ['patientEmail', 'comments'],
+    fields: ['lastName', 'firstName', 'birthdate', 'phone', 'mail', 'consentAgreement'],
     required: false,
   },
 ];

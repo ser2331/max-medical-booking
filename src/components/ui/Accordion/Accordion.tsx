@@ -1,32 +1,12 @@
 import { FC, ReactNode, useState } from 'react';
 import styled from 'styled-components';
-import { Flex } from '@maxhub/max-ui';
-import { media } from '@/styles/mixins.ts';
 import { Card } from '@/components/ui/Cart.tsx';
 import { ArrowIcon } from '@/assets/icons/Arrow/ArrowIcon.tsx';
+import { Flex } from '@/components/ui/StyledComponents.tsx';
 
-export const AccordionContainer = styled(Flex)`
-  align-items: stretch !important;
+export const AccordionContainer = styled(Flex).attrs({ $direction: 'column', $align: 'stretch' })`
   gap: ${props => props.theme.spacing.sm};
-  width: 100%;
   transition: all 0.2s ease;
-`;
-
-export const AccordionItem = styled.div<{ $isExpanded?: boolean }>`
-  border: 1px solid ${props => props.theme.colors.black};
-  border-radius: ${props => props.theme.borderRadius.medium};
-  overflow: hidden;
-  background: ${props => props.theme.colors.mainBackgroundColor};
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: ${props => props.theme.colors.black};
-    box-shadow: ${props => props.theme.shadows.small};
-  }
-
-  ${media.md} {
-    border-radius: ${props => props.theme.borderRadius.small};
-  }
 `;
 
 export const AccordionHeader = styled('div')`
@@ -92,7 +72,7 @@ export const Accordion: FC<AccordionProps> = ({
   };
 
   return (
-    <AccordionContainer direction="column" className={`ACCORDION ${className}`}>
+    <AccordionContainer className={`ACCORDION ${className}`}>
       {items.map(item => {
         const isExpanded = expandedItems.has(item.key);
 
@@ -104,7 +84,7 @@ export const Accordion: FC<AccordionProps> = ({
             </AccordionHeader>
 
             <AccordionContent $isExpanded={isExpanded}>
-              <AccordionBody direction="column">{item.children}</AccordionBody>
+              <AccordionBody>{item.children}</AccordionBody>
             </AccordionContent>
           </Card>
         );

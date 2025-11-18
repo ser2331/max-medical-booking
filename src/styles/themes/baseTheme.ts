@@ -25,6 +25,7 @@ export const baseTheme: Omit<ThemeConfig, 'colors' | 'name' | 'mode'> = {
   },
   spacing: {
     xs: '4px',
+    xsm: '8px',
     sm: '12px',
     md: '16px',
     lg: '24px',

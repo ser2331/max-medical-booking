@@ -1,5 +1,6 @@
 import { FieldValues, Path, useFormContext } from 'react-hook-form';
 import { StepConfig } from '@/components/stepper/Stepper.types.ts';
+import { useMemo } from 'react';
 
 export const useStepValidation = <TFieldValues extends FieldValues>(
   currentStep: number,
@@ -7,12 +8,16 @@ export const useStepValidation = <TFieldValues extends FieldValues>(
 ) => {
   const formContext = useFormContext<TFieldValues>();
 
-  // Проверяем, что formContext доступен
   if (!formContext) {
     throw new Error('useStepValidation must be used within a FormProvider');
   }
 
-  const { trigger, getFieldState } = formContext;
+  const {
+    trigger,
+    getFieldState,
+    watch,
+    formState: { errors },
+  } = formContext;
 
   const getStepFields = (stepIndex: number): Path<TFieldValues>[] => {
     return steps[stepIndex]?.fields || [];
@@ -26,8 +31,27 @@ export const useStepValidation = <TFieldValues extends FieldValues>(
     return fields;
   };
 
+  const currentStepFields = useMemo(() => getStepFields(currentStep), [currentStep, steps]);
+
+  const watchedStepFields = watch(currentStepFields as Path<TFieldValues>[]);
+
+  const isCurrentStepValid = useMemo((): boolean => {
+    if (currentStepFields.length === 0) return false;
+
+    const hasStepErrors = currentStepFields.some((_field, index) => !!errors[index]);
+
+    const allFieldsHaveValues = currentStepFields.every((_field, index) => {
+      const value = watchedStepFields?.[index];
+      return !!value;
+    });
+    console.log('currentStepFields', currentStepFields);
+    console.log('watchedStepFields', watchedStepFields);
+    console.log('hasStepErrors', hasStepErrors);
+    console.log('allFieldsHaveValues', allFieldsHaveValues);
+    return !hasStepErrors && allFieldsHaveValues;
+  }, [currentStepFields, errors, watchedStepFields]);
+
   const validateCurrentStep = async (): Promise<boolean> => {
-    const currentStepFields = getStepFields(currentStep);
     if (currentStepFields.length > 0) {
       return await trigger(currentStepFields);
     }
@@ -52,5 +76,6 @@ export const useStepValidation = <TFieldValues extends FieldValues>(
     arePreviousStepsValid,
     getStepFields,
     getFieldsUpToStep,
+    isCurrentStepValid,
   };
 };

@@ -1,19 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Flex } from '@maxhub/max-ui';
+import { Flex } from '@/components/ui/StyledComponents.tsx';
 
 const SliderContainer = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 100%;
 `;
 
 const SliderWrapper = styled.div`
   display: flex;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   gap: ${props => props.theme.spacing.sm};
   transition: transform 0.3s ease;
   cursor: grab;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   &:active {
     cursor: grabbing;
@@ -21,6 +31,7 @@ const SliderWrapper = styled.div`
 `;
 
 const Slide = styled.div`
+  height: 100%;
   flex: 0 0 auto;
 `;
 
@@ -33,7 +44,7 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   height: 32px;
   border: none;
   border-radius: 50%;
-  background: ${props => props.theme.colors.mainBackgroundColor};
+  background: ${props => props.theme.colors.white};
   box-shadow: ${props => props.theme.shadows.small};
   cursor: pointer;
   display: flex;
@@ -43,13 +54,15 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: ${props => props.theme.colors.mainBackgroundColor};
+    background: ${props => props.theme.colors.grey4};
     transform: translateY(-50%) scale(1.1);
+    box-shadow: ${props => props.theme.shadows.medium};
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: ${props => props.theme.colors.grey3};
   }
 
   &::before {
@@ -63,26 +76,15 @@ const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   }
 `;
 
-const DotsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: ${props => props.theme.spacing.xs};
-  margin-top: ${props => props.theme.spacing.sm};
-`;
-
-const Dot = styled.button<{ $isActive: boolean }>`
-  width: 6px;
-  height: 6px;
+const Dot = styled.div<{ $isActive: boolean }>`
+  width: ${props => props.theme.spacing.xs};
+  height: ${props => props.theme.spacing.xs};
   border: none;
   border-radius: 50%;
-  background: ${props => (props.$isActive ? props.theme.colors.black : props.theme.colors.black)};
+  background: ${props => (props.$isActive ? props.theme.colors.blue : props.theme.colors.grey3)};
   cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${props => props.theme.colors.black};
-    transform: scale(1.2);
-  }
+  transition: all 0.3s ease;
+  opacity: ${props => (props.$isActive ? 1 : 0.6)};
 `;
 
 interface HorizontalSliderProps {
@@ -97,18 +99,40 @@ interface HorizontalSliderProps {
 export const HorizontalSlider: React.FC<HorizontalSliderProps> = ({
   children,
   slideWidth = 140,
-  gap = 8,
+  gap = 12,
   showNavigation = true,
   showDots = true,
   className,
 }) => {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
 
-  const slidesToShow = Math.floor((sliderRef.current?.offsetWidth || 0) / (slideWidth + gap));
+  // Фиксируем ширину контейнера при монтировании
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.getBoundingClientRect().width;
+        setContainerWidth(width);
+      }
+    };
+
+    // Обновляем ширину при монтировании
+    updateContainerWidth();
+
+    // Также обновляем при ресайзе
+    window.addEventListener('resize', updateContainerWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateContainerWidth);
+    };
+  }, []);
+
+  const slidesToShow = Math.floor(containerWidth / (slideWidth + gap));
   const totalSlides = children.length;
   const maxIndex = Math.max(0, totalSlides - slidesToShow);
 
@@ -190,11 +214,15 @@ export const HorizontalSlider: React.FC<HorizontalSliderProps> = ({
   };
 
   return (
-    <SliderContainer className={`SLIDER ${className}`}>
-      {showNavigation && (
+    <SliderContainer
+      ref={containerRef}
+      className={`horizontal-slider ${className || ''}`}
+      style={{ width: '100%' }}
+    >
+      {showNavigation && totalSlides > 1 && (
         <>
           <NavigationButton
-            type="button" // ← ДОБАВЛЕНО: явно указываем тип кнопки
+            type="button"
             $direction="prev"
             onClick={prevSlide}
             disabled={currentIndex === 0}
@@ -219,29 +247,35 @@ export const HorizontalSlider: React.FC<HorizontalSliderProps> = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleMouseUp}
-        style={{ gap: `${gap}px` }}
+        style={{ gap: `${gap}px`, width: containerWidth }}
       >
-        <Flex>
+        <Flex $gap={gap}>
           {children.map((child, index) => (
-            <Slide key={index} style={{ width: `${slideWidth}px`, height: '100%' }}>
+            <Slide
+              key={index}
+              style={{
+                width: `${slideWidth}px`,
+                // flexShrink: 0,
+              }}
+            >
               {child}
             </Slide>
           ))}
         </Flex>
       </SliderWrapper>
 
-      {showDots && totalSlides > 1 && (
-        <DotsContainer>
+      {showDots && totalSlides > 1 && maxIndex > 0 && (
+        <Flex $gap={2}>
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <Dot
               key={index}
-              type="button"
               $isActive={index === currentIndex}
               onClick={() => handleDotClick(index)}
               aria-label={`Перейти к слайду ${index + 1}`}
+              aria-current={index === currentIndex ? 'true' : 'false'}
             />
           ))}
-        </DotsContainer>
+        </Flex>
       )}
     </SliderContainer>
   );

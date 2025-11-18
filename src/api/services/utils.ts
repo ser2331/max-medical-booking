@@ -1,28 +1,88 @@
-// api/services/utils.ts
-import { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-
 export const mockQueryFn = <T>(
   url: string,
   mockData: T,
-  options?: { delay: number },
-): Promise<{ data: T }> => {
-  return new Promise(resolve => {
-    // Имитируем задержку сети
+  options?: {
+    delay?: number;
+    shouldError?: boolean;
+    errorMessage?: string;
+    errorRate?: number;
+    errorCode?: number;
+  },
+): Promise<{
+  data: {
+    result: T;
+    success: boolean;
+    errorCode: number;
+    message: string | null;
+    stackTrace: string | null;
+  };
+}> => {
+  return new Promise((resolve, reject) => {
+    const delay = options?.delay || 500;
+    const shouldError = options?.shouldError || false;
+    const errorRate = options?.errorRate || 0;
+    const errorCode = options?.errorCode || 500;
+    const errorMessage = options?.errorMessage || 'Произошла случайная ошибка';
+
+    // Генерируем случайную ошибку
+    const randomError = Math.random() < errorRate;
+
     setTimeout(() => {
-      console.log(`🔧 Mock response for: ${url}`);
-      resolve({ data: mockData });
-    }, options?.delay || 500);
+      if (shouldError || randomError) {
+        console.error(`❌ Mock error for: ${url}`, errorMessage);
+
+        // Возвращаем ошибку в формате API
+        reject({
+          data: {
+            result: null,
+            success: false,
+            errorCode: errorCode,
+            message: errorMessage,
+            stackTrace: 'Mock stack trace for debugging',
+          },
+        });
+      } else {
+        console.log(`🔧 Mock response for: ${url}`);
+        // Возвращаем успешный ответ в формате API
+        resolve({
+          data: {
+            result: mockData,
+            success: true,
+            errorCode: 0,
+            message: null,
+            stackTrace: null,
+          },
+        });
+      }
+    }, delay);
   });
 };
 
-// Альтернативная версия с правильной типизацией для RTK Query
-export const createMockQueryFn = <T>(
-  mockData: T,
-): BaseQueryFn<string | FetchArgs, T, FetchBaseQueryError> => {
-  return async () => {
-    // Имитируем задержку сети
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log('🔧 Using mock data');
-    return { data: mockData };
-  };
+// Хелпер для обработки API ответов
+export const handleApiResponse = async <T>(
+  endpoint: string,
+  mockData: T[],
+  options?: { delay?: number; errorRate?: number },
+) => {
+  try {
+    const response = await mockQueryFn(endpoint, mockData, options);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || `Ошибка загрузки ${endpoint}`);
+    }
+
+    return { data: response.data.result };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+  } catch (error: never) {
+    if (error.data) {
+      return {
+        error: {
+          status: error.data.errorCode,
+          data: error.data.message,
+        },
+      };
+    }
+    return { error };
+  }
 };

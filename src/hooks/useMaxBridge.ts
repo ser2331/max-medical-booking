@@ -17,10 +17,7 @@ const isRealMaxEnvironment = (): boolean => {
 
   // 3. Проверяем, что это не наш мок (по структуре данных)
   const isMockData =
-    user.id === 123456789 ||
-    user.first_name === 'Демо' ||
-    user.last_name === 'Пользователь' ||
-    window.WebApp.platform === 'web'; // В реальном MAX платформа не будет 'web'
+    user.id === 123456789 || user.first_name === 'Демо' || user.last_name === 'Пользователь';
 
   // 4. Дополнительные проверки для реального MAX
   const hasValidInitData =

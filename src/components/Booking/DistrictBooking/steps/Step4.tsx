@@ -1,11 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
-import { ErrorMessage, Section } from '@/components/ui/StyledComponents.tsx';
+import moment from 'moment';
+import { ErrorMessage, Flex, Section } from '@/components/ui/StyledComponents.tsx';
 import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
-import { Calendar } from '@/components/Calendar.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { CustomDatePicker } from '@/components/ui/DateTimePicker/DateTimePicker.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
 const AppointmentsTitle = styled.h4`
   margin: 0;
@@ -14,45 +16,35 @@ const AppointmentsTitle = styled.h4`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
 
-const AppointmentsList = styled.div`
-  display: flex;
-  flex-direction: column;
+const AppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
+  width: 100%;
   gap: ${props => props.theme.spacing.sm};
 `;
 
 const AppointmentCard = styled.button<{ $isSelected?: boolean }>`
+  width: 100%;
   padding: ${props => props.theme.spacing.md};
-  border: 2px solid
-    ${props => (props.$isSelected ? props.theme.colors.black : props.theme.colors.black)};
+  border: ${props =>
+    props.$isSelected ? `1px solid ${props.theme.colors.blueHighlight}` : 'none'};
   border-radius: ${props => props.theme.borderRadius.medium};
   background: ${props =>
-    props.$isSelected ? props.theme.colors.black + '10' : props.theme.colors.mainBackgroundColor};
+    props.$isSelected ? props.theme.colors.blueLight : props.theme.colors.white};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-
-  &:hover {
-    border-color: ${props =>
-      props.$isSelected ? props.theme.colors.black : props.theme.colors.black};
-  }
 `;
 
 const AppointmentTime = styled.div`
   font-size: ${props => props.theme.typography.fontSize.md};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.black};
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
 const AppointmentDetails = styled.div`
-  display: flex;
-  gap: ${props => props.theme.spacing.md};
   font-size: ${props => props.theme.typography.fontSize.sm};
-  color: ${props => props.theme.colors.black};
 `;
 
 const AppointmentRoom = styled.span`
-  color: ${props => props.theme.colors.black};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;
 
@@ -76,17 +68,17 @@ const ValidationError = styled.div`
   text-align: center;
 `;
 
-// Вспомогательные функции
+// Вспомогательные функции с использованием moment
 const formatTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('ru-RU', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return moment(dateString).format('HH:mm');
 };
 
 const formatAppointmentTime = (start: string, end: string): string => {
   return `${formatTime(start)} - ${formatTime(end)}`;
+};
+
+const formatDateToDisplay = (dateString: string): string => {
+  return moment(dateString).format('DD.MM.YYYY');
 };
 
 export const Step4: React.FC = () => {
@@ -96,6 +88,8 @@ export const Step4: React.FC = () => {
     setValue,
     formState: { errors },
   } = useFormContext();
+  const stepFields = STEPS_CONFIG[3].fields;
+  const [appointment, date] = stepFields;
 
   const selectedDoctor = watch('doctor');
   const selectedDate = watch('date');
@@ -108,15 +102,13 @@ export const Step4: React.FC = () => {
     isLoading,
   } = useGetAppointmentsQuery(
     {
-      lpuId: '1', // Замени на актуальный lpuId из формы
-      doctorId: selectedDoctor, // Используем выбранного врача
+      lpuId: '1',
+      doctorId: selectedDoctor,
     },
     {
-      skip: !selectedDoctor, // Запрос выполняется только когда выбран врач
+      skip: !selectedDoctor,
     },
   );
-
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   // Группируем записи по датам и получаем доступные даты
   const { appointmentsByDate, availableDates } = useMemo(() => {
@@ -126,7 +118,7 @@ export const Step4: React.FC = () => {
     const dates = new Set<string>();
 
     appointments.forEach(appointment => {
-      const date = appointment.visitStart.split('T')[0];
+      const date = moment(appointment.visitStart).format('YYYY-MM-DD');
       if (!byDate[date]) {
         byDate[date] = [];
       }
@@ -141,31 +133,18 @@ export const Step4: React.FC = () => {
   const selectedDateAppointments = useMemo(() => {
     if (!selectedDate || !appointmentsByDate[selectedDate]) return [];
     return appointmentsByDate[selectedDate].sort(
-      (a, b) => new Date(a.visitStart).getTime() - new Date(b.visitStart).getTime(),
+      (a, b) => moment(a.visitStart).valueOf() - moment(b.visitStart).valueOf(),
     );
   }, [selectedDate, appointmentsByDate]);
 
-  const handleDateSelect = (date: string) => {
-    console.log('handleDateSelect date', date);
-
-    setValue('date', date, { shouldValidate: true });
-    setValue('appointment', '', { shouldValidate: true }); // Сбрасываем выбранную запись
+  const handleDateSelect = (_date: Date | string | null) => {
+    const formattedDate = moment(_date).format('YYYY-MM-DD') as string;
+    setValue(appointment, '', { shouldValidate: true });
+    setValue(date, formattedDate, { shouldValidate: true });
   };
 
   const handleAppointmentSelect = (appointmentId: string) => {
     setValue('appointment', appointmentId, { shouldValidate: true });
-  };
-
-  const handleMonthChange = (direction: 'prev' | 'next') => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      if (direction === 'prev') {
-        newDate.setMonth(prev.getMonth() - 1);
-      } else {
-        newDate.setMonth(prev.getMonth() + 1);
-      }
-      return newDate;
-    });
   };
 
   if (isLoading) {
@@ -179,19 +158,18 @@ export const Step4: React.FC = () => {
   return (
     <Section>
       <Section>
-        <Calendar
-          currentDate={currentDate}
-          availableDates={availableDates}
-          selectedDate={selectedDate}
-          onDateSelect={handleDateSelect}
-          onMonthChange={handleMonthChange}
+        <CustomDatePicker
+          availableDates={Array.from(availableDates)}
+          onChange={handleDateSelect}
+          value={selectedDate ? moment(selectedDate).toDate() : null}
+          outputFormat="YYYY-MM-DD"
         />
       </Section>
 
-      <Section>
+      <Section style={{ width: '100%' }}>
         <AppointmentsTitle>
           {selectedDate
-            ? `Доступные записи на ${new Date(selectedDate).toLocaleDateString('ru-RU')}`
+            ? `Доступные записи на ${formatDateToDisplay(selectedDate)}`
             : 'Выберите дату'}
         </AppointmentsTitle>
 

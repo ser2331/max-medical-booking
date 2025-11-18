@@ -5,6 +5,7 @@ import { useStepValidation } from '@/components/stepper/useStepValidation.tsx';
 import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+
 const StepperHeader = styled(Flex)`
   height: 20px;
   padding: ${props => props.theme.spacing.lg};
@@ -84,6 +85,7 @@ const StepContent = styled.div`
 `;
 
 const NavigationBtn = styled(CustomButton)`
+  width: 100%;
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;
@@ -95,7 +97,10 @@ export const StepperForm = <TFieldValues extends FieldValues>({
 }: Pick<StepperProps<TFieldValues>, 'steps' | 'onSubmit' | 'onStepChange'>) => {
   const { handleSubmit } = useFormContext<TFieldValues>();
   const { currentStep, next, prev, goToStep, isFirstStep, isLastStep } = useStepper(steps.length);
-  const { validateCurrentStep, arePreviousStepsValid } = useStepValidation(currentStep, steps);
+  const { validateCurrentStep, arePreviousStepsValid, isCurrentStepValid } = useStepValidation(
+    currentStep,
+    steps,
+  );
 
   const CurrentStepComponent = steps[currentStep].component;
 
@@ -151,17 +156,17 @@ export const StepperForm = <TFieldValues extends FieldValues>({
   const renderNavigation = () => (
     <NavigationContainer>
       {!isFirstStep && (
-        <NavigationBtn style={{ width: '100%' }} variant="outline-default" onClick={handlePrev}>
+        <NavigationBtn variant="outline-default" onClick={handlePrev}>
           Назад
         </NavigationBtn>
       )}
 
       {!isLastStep ? (
-        <NavigationBtn style={{ width: '100%' }} variant="primary" onClick={handleNext}>
+        <NavigationBtn disabled={!isCurrentStepValid} variant="primary" onClick={handleNext}>
           Далее
         </NavigationBtn>
       ) : (
-        <NavigationBtn style={{ width: '100%' }} variant="primary" type="submit">
+        <NavigationBtn disabled={!isCurrentStepValid} variant="primary" type="submit">
           Завершить
         </NavigationBtn>
       )}

@@ -15,6 +15,7 @@ import {
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
 const StatValue = styled.span`
   font-weight: ${props => props.theme.typography.fontWeight.medium};
@@ -39,10 +40,12 @@ export const Step2: React.FC = () => {
     setValue,
     formState: { errors },
   } = useFormContext();
-  const selectedSpecialty = watch('doctor');
+  const selectedSpecialty = watch('specialty');
   const { data: specialties, error, isLoading } = useGetSpecialtiesQuery({ lpuId: '' });
-  const handleDoctorSelect = (doctor: string) => {
-    setValue('doctor', doctor, {
+  const stepFields = STEPS_CONFIG[1].fields;
+  const [specialty] = stepFields;
+  const handleDoctorSelect = (specialtyId: string) => {
+    setValue(specialty, specialtyId, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,

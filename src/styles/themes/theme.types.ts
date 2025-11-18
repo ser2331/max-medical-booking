@@ -118,6 +118,7 @@ export interface ThemeConfig {
   };
   spacing: {
     xs: string;
+    xsm: string;
     sm: string;
     md: string;
     lg: string;
