@@ -123,6 +123,7 @@ export interface ThemeConfig {
     md: string;
     lg: string;
     xl: string;
+    xml: string;
     xxl: string;
     xxxl: string;
   };

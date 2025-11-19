@@ -1,182 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useEsiaDemo } from '@/hooks/useEsiaDemo';
-import { Link } from 'react-router-dom';
-import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { useNavigate } from 'react-router-dom';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import authBackground from '@/assets/images/auth/authBack.png';
+import authIcon from '@/assets/images/auth/Icon.png';
+import { ImageLoader } from '@/components/ImageLoader.tsx';
+
+const Container = styled(Flex).attrs({ $direction: 'column', $gap: 32 })`
+  width: 100%;
+  height: 100%;
+  background: url(${authBackground}) no-repeat center center;
+  background-size: cover;
+  padding: ${props => props.theme.spacing.md};
+  transition: opacity 0.3s ease;
 `;
 
-const Card = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 40px;
-  max-width: 500px;
+const Text = styled.span`
   width: 100%;
   text-align: center;
+  max-width: ${props => props.theme.breakpoints.sm};
 `;
 
-const Title = styled.h1`
-  color: #333;
-  margin-bottom: 8px;
-  font-size: 28px;
+const Title = styled(Text)`
+  color: ${props => props.theme.colors.blueDark};
+  font-size: ${props => props.theme.spacing.lg};
+  line-height: ${props => props.theme.spacing.xml};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
 
-const Subtitle = styled.p`
-  color: #666;
-  margin-bottom: 32px;
+const Subtitle = styled(Text)`
+  color: ${props => props.theme.colors.black};
+  font-size: ${props => props.theme.typography.fontSize.md};
+  line-height: ${props => props.theme.spacing.lg};
 `;
 
-const UserInfoCard = styled.div`
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 24px;
-  margin: 24px 0;
-  text-align: left;
-`;
-
-const UserField = styled.div`
-  margin: 12px 0;
-  display: flex;
-  justify-content: space-between;
-
-  strong {
-    color: #333;
-    min-width: 120px;
-  }
-
-  span {
-    color: #666;
-    text-align: right;
-    flex: 1;
-    margin-left: 16px;
-  }
-`;
-
-const Button = styled.button`
-  background: #2d5bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 16px 32px;
-  font-size: 16px;
-  cursor: pointer;
+const AuthBtn = styled(CustomButton)`
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
+  max-width: ${props => props.theme.breakpoints.xs};
 `;
 
-const LogoutButton = styled(Button)`
-  background: #dc3545;
-  margin-top: 16px;
+const Icon = styled.img`
+  width: 20px;
+  height: 20px;
 `;
 
-const ErrorMessage = styled.div`
-  background: #fee;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px 0;
-  color: #721c24;
-`;
-
-export const EsiaAuth: React.FC = () => {
-  const { isLoading, error, userInfo, initiateAuth, logout, restoreSession } = useEsiaDemo();
-  const [data, setData] = useState('');
-
-  useEffect(() => {
-    restoreSession();
-  }, [restoreSession]);
-
-  const handleAuth = async () => {
-    await initiateAuth();
-  };
-
-  const formatUserData = (user: any) => {
-    const fields = [
-      { label: 'ФИО', value: `${user.lastName} ${user.firstName} ${user.middleName || ''}`.trim() },
-      { label: 'ID', value: user.sub },
-      { label: 'Дата рождения', value: user.birthDate },
-      { label: 'Email', value: user.email || 'Не указан' },
-      { label: 'Телефон', value: user.mobile || 'Не указан' },
-    ];
-
-    return fields.filter(field => field.value);
-  };
-
-  const getApi = () => {
-    fetch('https://r78-dev.zdrav.netrika.ru/tm-widgets/api/_version', {
-      headers: {
-        Accept: 'application/json',
-      },
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        console.log(data);
-        setData(data);
-      });
-  };
+const AuthContent: React.FC = () => {
+  const navigate = useNavigate();
 
   return (
     <Container>
-      <Card>
-        <Title>Авторизация через ЕСИА</Title>
-        <Subtitle>Войдите с помощью учетной записи ЕСИА</Subtitle>
-        <Link to={'https://esia-portal1.test.gosuslugi.ru/login/'}>REDIRECT</Link>
-        <Button onClick={getApi}>GET DATA</Button>
-        <pre>DATA: {JSON.stringify(data).toString() || null}</pre>
+      <Title>Запись к врачу</Title>
+      <Subtitle>
+        Для записи к врачу или на телемедицинские услуги, пожалуйста, авторизуйтесь через ГОСУСЛУГИ
+      </Subtitle>
 
-        {error && (
-          <ErrorMessage>
-            <strong>Ошибка:</strong> {error}
-          </ErrorMessage>
-        )}
-
-        {!userInfo ? (
-          <Button onClick={handleAuth} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <AppSpin />
-                Перенаправление...
-              </>
-            ) : (
-              'Войти через ЕСИА'
-            )}
-          </Button>
-        ) : (
-          <div>
-            <UserInfoCard>
-              <h3 style={{ marginTop: 0, textAlign: 'center' }}>✅ Успешная авторизация</h3>
-              {formatUserData(userInfo).map((field, index) => (
-                <UserField key={index}>
-                  <strong>{field.label}:</strong>
-                  <span>{field.value}</span>
-                </UserField>
-              ))}
-            </UserInfoCard>
-
-            <LogoutButton onClick={logout}>Выйти из системы</LogoutButton>
-          </div>
-        )}
-      </Card>
+      <AuthBtn onClick={() => navigate('/')}>
+        <Icon src={authIcon} alt="Госуслуги" />
+        Войти через ГОСУСЛУГИ
+      </AuthBtn>
     </Container>
+  );
+};
+
+export const EsiaAuth: React.FC = () => {
+  return (
+    <ImageLoader images={[authBackground, authIcon]}>
+      <AuthContent />
+    </ImageLoader>
   );
 };

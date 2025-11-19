@@ -30,6 +30,7 @@ export const baseTheme: Omit<ThemeConfig, 'colors' | 'name' | 'mode'> = {
     md: '16px',
     lg: '24px',
     xl: '32px',
+    xml: '36px',
     xxl: '48px',
     xxxl: '100px',
   },
