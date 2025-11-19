@@ -88,11 +88,11 @@ export const MicroFrontend = () => {
       }
 
       // Перехват authorize и других API запросов - делаем абсолютными URL
-      // if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
-      //   const newUrl = `${url}${requestUrl}`;
-      //   addDebugInfo('fetchUrlRewritten', JSON.stringify({ from: requestUrl, to: newUrl }));
-      //   args[0] = newUrl;
-      // }
+      if (typeof requestUrl === 'string' && requestUrl.includes('/tm-widgets/api')) {
+        const newUrl = `${url}${requestUrl}`;
+        addDebugInfo('fetchUrlRewritten', JSON.stringify({ from: requestUrl, to: newUrl }));
+        args[0] = newUrl;
+      }
 
       return originalFetch.apply(this, args);
     };

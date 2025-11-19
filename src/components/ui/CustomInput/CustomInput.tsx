@@ -102,7 +102,7 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     if (onChange) {
       onChange(event.target.value);
     } else if (register?.onChange) {
-      register.onChange({ target: event.target.value, type: event.target.value });
+      register.onChange(event);
     }
   };
 

@@ -17,7 +17,7 @@ const RadioContainer = styled.div<{
       !props.$disabled &&
       !props.$isError &&
       `
-      .radiobutton__input {
+      .radiobutton__input_1 {
         border-color: ${props.theme.colors.blueHover};
       }
     `}
@@ -115,13 +115,13 @@ export const RadioButton = (props: RadiobuttonProps) => {
       <RadioInput
         $checked={props.checked}
         $isError={props.isError}
-        className="radiobutton__input"
+        className="radiobutton__input_1"
       />
       {props.label && (
         <RadioLabel
           $isError={props.isError}
           $disabled={props.disabled}
-          className="radiobutton__label"
+          className="radiobutton__label_1"
         >
           {props.label}
         </RadioLabel>

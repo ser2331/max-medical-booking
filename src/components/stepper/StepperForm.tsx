@@ -168,7 +168,11 @@ export const StepperForm = <TFieldValues extends FieldValues>({
           Далее
         </NavigationBtn>
       ) : (
-        <NavigationBtn disabled={!isCurrentStepValid} variant="primary" type="submit">
+        <NavigationBtn
+          disabled={!isCurrentStepValid}
+          variant="primary"
+          onClick={handleSubmit(onSubmit)}
+        >
           Завершить
         </NavigationBtn>
       )}
@@ -180,7 +184,6 @@ export const StepperForm = <TFieldValues extends FieldValues>({
       {renderStepperHeader()}
 
       <form
-        onSubmit={handleSubmit(onSubmit)}
         style={{
           display: 'flex',
           flexDirection: 'column',
