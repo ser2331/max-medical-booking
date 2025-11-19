@@ -1,27 +1,26 @@
-@use "./_variables.scss";
+@use './_variables.scss';
 
 html {
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
 
   scrollbar-width: thin;
-  scrollbar-color: #147DC1 #d7d7d7;
+  scrollbar-color: #147dc1 #d7d7d7;
 }
 
 body {
   background-color: var(--body-background);
   height: calc(100% - 10px);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 #widgetsRoot {
@@ -90,7 +89,7 @@ h6 {
 
     &_operations {
       padding: 37px;
-      border: 1px solid #D8D9DA;
+      border: 1px solid #d8d9da;
       border-radius: 8px;
       margin-right: 0;
     }
@@ -150,12 +149,12 @@ textarea {
 }
 
 .widget-sign-error-container {
-  border: 1px solid #FF4D4F;
+  border: 1px solid #ff4d4f;
   width: fit-content;
   padding: 10px;
   margin-top: 10px;
   border-radius: 6px;
-  background: #FFCDD480;
+  background: #ffcdd480;
   font-size: 14px;
 
   &__error {
@@ -295,7 +294,7 @@ select:-webkit-autofill:focus {
 
 .performers-widget-container {
   .form-input__title {
-    color: #3D4247;
+    color: #3d4247;
     font-weight: 500;
     text-transform: uppercase;
   }

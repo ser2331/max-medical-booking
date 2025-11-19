@@ -6,12 +6,8 @@ import { MaxDemo } from '../components/MaxDemo.tsx';
 export const MaxDemoPage: React.FC = () => {
   const navigate = useNavigate();
 
-
   return (
-    <PageLayout
-      title={'MaxDemoPage Information'}
-      onBack={() => navigate(-1)}
-    >
+    <PageLayout title={'MaxDemoPage Information'} onBack={() => navigate(-1)}>
       <MaxDemo />
     </PageLayout>
   );

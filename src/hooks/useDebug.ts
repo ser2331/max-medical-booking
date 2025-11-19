@@ -23,6 +23,7 @@ export const useDebug = (): UseDebugReturn => {
       if (currentEntries.length >= 50) {
         // Удаляем самую старую запись (кроме timestamp)
         const oldestKey = currentEntries[0][0];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [oldestKey]: _, ...rest } = prev;
         return { ...rest, [key]: value, timestamp: Date.now().toString() };
       }

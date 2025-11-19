@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthData, RoleContext } from '@/types/widget.ts';
 import { getUrl } from '@/config/env';
 
@@ -16,19 +16,16 @@ const initialState: WidgetState = {
 
 export const authenticateWidget = createAsyncThunk(
   'widget/authenticate',
-  async ({ authData, roleContext }: {
-    authData: AuthData;
-    roleContext: RoleContext
-  }) => {
+  async ({ authData, roleContext }: { authData: AuthData; roleContext: RoleContext }) => {
     const WIDGET_API_BASE = getUrl().api;
 
     // Шаг 1: Авторизация
     const authResponse = await fetch(`${WIDGET_API_BASE}/sign-in`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': authData.authToken,
+        Authorization: authData.authToken,
       },
       body: JSON.stringify({
         userId: authData.userId,
@@ -49,9 +46,9 @@ export const authenticateWidget = createAsyncThunk(
     const registerResponse = await fetch(`${WIDGET_API_BASE}/registerUser/`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': authResult.result.sessionId,
+        Authorization: authResult.result.sessionId,
       },
       body: JSON.stringify({
         roleContext: [roleContext],
@@ -78,20 +75,20 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    clearSession: (state) => {
+    clearSession: state => {
       state.sessionId = null;
       state.error = null;
     },
     setSession: (state, action: PayloadAction<string>) => {
       state.sessionId = action.payload;
     },
-    clearError: (state) => {
+    clearError: state => {
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(authenticateWidget.pending, (state) => {
+      .addCase(authenticateWidget.pending, state => {
         state.isLoading = true;
         state.error = null;
       })

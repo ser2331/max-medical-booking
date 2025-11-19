@@ -13,17 +13,18 @@ export const envConfig: EnvConfig = {
 };
 
 interface UrlConfig {
-  url: string;        // Базовый URL виджета
-  host: string;       // Хост для виджетов
-  api: string;        // API endpoint
-  isProd: boolean;    // Флаг production
+  url: string; // Базовый URL виджета
+  host: string; // Хост для виджетов
+  api: string; // API endpoint
+  isProd: boolean; // Флаг production
 }
 
 export const getUrl = (): UrlConfig => {
   return {
     url: import.meta.env.VITE_NETRIKA_WIDGET_URL || 'https://r78-rc.zdrav.netrika.ru',
     host: import.meta.env.VITE_NETRIKA_WIDGET_HOST || 'https://r78-rc.zdrav.netrika.ru/tm.widgets',
-    api: import.meta.env.VITE_NETRIKA_WIDGET_API || 'https://r78-rc.zdrav.netrika.ru/tm-widgets/api',
+    api:
+      import.meta.env.VITE_NETRIKA_WIDGET_API || 'https://r78-rc.zdrav.netrika.ru/tm-widgets/api',
     isProd: false,
   };
 };
