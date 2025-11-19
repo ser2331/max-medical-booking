@@ -14,7 +14,12 @@ export default defineConfig({
     //only dev
     proxy: {
       '/tm-widgets/api': {
-        target: 'https://r78-rc.zdrav.netrika.ru',
+        target: process.env.VITE_NETRIKA_WIDGET_URL,
+        changeOrigin: true,
+        secure: false,
+      },
+      '/tm.widgets': {
+        target: process.env.VITE_NETRIKA_WIDGET_URL,
         changeOrigin: true,
         secure: false,
       },
