@@ -1,9 +1,11 @@
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
-import { Flex, Section } from '@/components/ui/StyledComponents.tsx';
-import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
+
+import { Flex, Section, ValidationError } from '@/components/ui/StyledComponents.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
+import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
+import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomTextarea } from '@/components/ui/CustomTextarea/CustomTextarea.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
@@ -23,46 +25,6 @@ const CheckboxContainer = styled(Flex).attrs({ $align: 'flex-start' })`
     border-color: ${props => props.theme.colors.blue};
     box-shadow: 0 0 0 2px ${props => props.theme.colors.blueLight};
   }
-`;
-
-const Checkbox = styled.input`
-  margin-top: 2px;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-
-  &:checked {
-    accent-color: ${props => props.theme.colors.blue};
-  }
-`;
-
-const CheckboxLabel = styled.label`
-  color: ${props => props.theme.colors.black};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  line-height: 1.4;
-  cursor: pointer;
-  flex: 1;
-
-  a {
-    color: ${props => props.theme.colors.blue};
-    text-decoration: underline;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: ${props => props.theme.colors.blueHover};
-      text-decoration: none;
-    }
-  }
-`;
-
-const ValidationError = styled.div`
-  color: ${props => props.theme.colors.red};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  margin-top: ${props => props.theme.spacing.sm};
-  padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.redLight};
-  border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.red}20;
 `;
 
 export const Step5: React.FC = () => {
@@ -207,17 +169,20 @@ export const Step5: React.FC = () => {
         {/* Согласие на обработку данных */}
         <CheckboxContainer>
           <Checkbox
-            type="checkbox"
-            {...register(consentAgreement, {
-              required: 'Необходимо согласие на обработку персональных данных',
-            })}
+            register={{
+              ...register(consentAgreement, {
+                required: 'Необходимо согласие на обработку персональных данных',
+              }),
+            }}
+            title={
+              <>
+                Я даю согласие на обработку моих персональных данных в соответствии с{' '}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                  политикой конфиденциальности
+                </a>
+              </>
+            }
           />
-          <CheckboxLabel htmlFor="consentAgreement">
-            Я даю согласие на обработку моих персональных данных в соответствии с{' '}
-            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-              политикой конфиденциальности
-            </a>
-          </CheckboxLabel>
         </CheckboxContainer>
 
         {shouldShowError(consentAgreement) && (

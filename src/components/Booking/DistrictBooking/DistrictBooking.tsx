@@ -1,4 +1,7 @@
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useMessageToast } from '@/hooks/useMessageToast.ts';
 
 import {
   AppointmentFormData,
@@ -6,15 +9,16 @@ import {
   STEPS_CONFIG,
 } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 import { Stepper } from '@/components/stepper/Stepper.tsx';
-import { useNavigate } from 'react-router-dom';
 
 const defaultValues: AppointmentFormData = getDefaultValues();
 
 export const DistrictBooking: FC = () => {
   const navigate = useNavigate();
+  const messageToast = useMessageToast();
 
   const handleSubmit = (data: AppointmentFormData) => {
     console.log('Форма отправлена:', data);
+    messageToast('Форма заполнена успешно');
     navigate('/');
   };
 

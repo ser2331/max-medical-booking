@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { WIDGET_CONFIG } from '@/constants.ts';
-import { getUrl } from '@/config/env';
-import { useDebug } from '@/hooks/useDebug';
-import { DebugPanel } from '@/components/debug/DebugPanel';
+
 import { useAppSelector } from '@/store/redux-hooks.ts';
+import { useDebug } from '@/hooks/useDebug';
+
+import { DebugPanel } from '@/components/debug/DebugPanel';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { WIDGET_CONFIG } from '@/constants.ts';
+
+import { getUrl } from '@/config/env';
 
 const Container = styled.div`
   width: 100%;

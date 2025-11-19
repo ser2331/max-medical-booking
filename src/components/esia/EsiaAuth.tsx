@@ -96,7 +96,7 @@ const ErrorMessage = styled.div`
   color: #721c24;
 `;
 
-export const EsiaAuthContainer: React.FC = () => {
+export const EsiaAuth: React.FC = () => {
   const { isLoading, error, userInfo, initiateAuth, logout, restoreSession } = useEsiaDemo();
   const [data, setData] = useState('');
 

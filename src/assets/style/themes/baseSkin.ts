@@ -1,5 +1,5 @@
 import { baseTheme } from './baseTheme';
-import { ThemeConfig } from '@/styles/themes/theme.types.ts';
+import { ThemeConfig } from '@/assets/style/themes/theme.types.ts';
 
 // Функции для работы с CSS переменными
 const getCssVariable = (name: string): string => {

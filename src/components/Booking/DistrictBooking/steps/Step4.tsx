@@ -2,10 +2,18 @@ import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import moment from 'moment';
-import { ErrorMessage, Flex, Section } from '@/components/ui/StyledComponents.tsx';
+
 import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import {
+  ErrorMessage,
+  Flex,
+  Section,
+  SpecialtyName,
+  ValidationError,
+} from '@/components/ui/StyledComponents.tsx';
 import { CustomDatePicker } from '@/components/ui/DateTimePicker/DateTimePicker.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
@@ -21,7 +29,7 @@ const AppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
   gap: ${props => props.theme.spacing.sm};
 `;
 
-const AppointmentCard = styled.button<{ $isSelected?: boolean }>`
+const AppointmentCard = styled.div<{ $isSelected?: boolean }>`
   width: 100%;
   padding: ${props => props.theme.spacing.md};
   border: ${props =>
@@ -32,12 +40,6 @@ const AppointmentCard = styled.button<{ $isSelected?: boolean }>`
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-`;
-
-const AppointmentTime = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.md};
-  font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
 const AppointmentDetails = styled.div`
@@ -55,17 +57,6 @@ const NoAppointmentsMessage = styled.div`
   font-size: ${props => props.theme.typography.fontSize.sm};
   background: ${props => props.theme.colors.mainBackgroundColor};
   border-radius: ${props => props.theme.borderRadius.medium};
-`;
-
-const ValidationError = styled.div`
-  color: ${props => props.theme.colors.red};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  margin-top: ${props => props.theme.spacing.md};
-  padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.red}10;
-  border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.red}20;
-  text-align: center;
 `;
 
 // Вспомогательные функции с использованием moment
@@ -184,13 +175,12 @@ export const Step4: React.FC = () => {
             {selectedDateAppointments.map(appointment => (
               <AppointmentCard
                 key={appointment.id}
-                type="button"
                 $isSelected={selectedAppointment === appointment.id}
                 onClick={() => handleAppointmentSelect(appointment.id)}
               >
-                <AppointmentTime>
+                <SpecialtyName>
                   {formatAppointmentTime(appointment.visitStart, appointment.visitEnd)}
-                </AppointmentTime>
+                </SpecialtyName>
                 <AppointmentDetails>
                   {appointment.room && (
                     <span>

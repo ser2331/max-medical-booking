@@ -1,6 +1,6 @@
 import { ChangeEvent, FC } from 'react';
 import styled from 'styled-components';
-import { media } from '@/styles/mixins.ts';
+import { media } from '@/assets/style/mixins.ts';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 const Radio = styled.input`

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import { PageHeader } from './PageHeader/PageHeader.tsx';
 import { PageFooter } from './PageFooter';
 

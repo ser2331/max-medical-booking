@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { media } from '@/styles/mixins.ts';
+import { media } from '@/assets/style/mixins.ts';
 
 export const Main = styled('div')`
   position: fixed;
@@ -28,60 +28,6 @@ export const Flex = styled('div')<{
 
 export const Section = styled(Flex).attrs({ $direction: 'column' })`
   gap: ${props => props.theme.spacing.md};
-`;
-
-export const CompactButton = styled('button')<{ width?: number; height?: number }>`
-  && {
-    width: ${({ width }) => width || '32px'};
-    height: ${({ height }) => height || '32px'};
-    padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
-    flex-shrink: 0;
-    font-family: ${props => props.theme.typography.fontFamily.primary};
-    font-size: ${props => props.theme.typography.fontSize.sm};
-    font-weight: ${props => props.theme.typography.fontWeight.medium};
-    border-radius: ${props => props.theme.components.button.borderRadius};
-    transition: all 0.2s ease;
-
-    /* Базовые стили для разных состояний */
-    &:not(:disabled) {
-      background: ${props => props.theme.colors.blue};
-      color: ${props => props.theme.colors.white};
-      border: 1px solid ${props => props.theme.colors.blue};
-
-      &:hover {
-        background: ${props => props.theme.colors.blueHover};
-        border-color: ${props => props.theme.colors.blueHover};
-        transform: translateY(-1px);
-        box-shadow: ${props => props.theme.shadows.small};
-      }
-
-      &:active {
-        transform: translateY(0);
-        box-shadow: none;
-      }
-    }
-
-    &:disabled {
-      background: ${props => props.theme.colors.grey3};
-      color: ${props => props.theme.colors.grey2};
-      border: 1px solid ${props => props.theme.colors.grey3};
-      cursor: not-allowed;
-    }
-
-    /* Адаптивные стили */
-    ${media.md} {
-      padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.sm};
-      font-size: ${props => props.theme.typography.fontSize.xs};
-      border-radius: ${props => props.theme.borderRadius.small};
-    }
-
-    ${media.xs} {
-      padding: 6px 10px;
-      font-size: ${props => props.theme.typography.fontSize.xs};
-      min-height: 32px;
-      border-radius: ${props => props.theme.borderRadius.small};
-    }
-  }
 `;
 
 export const ErrorMessage = styled(Section)`
@@ -138,23 +84,34 @@ export const ErrorMessage = styled(Section)`
     }
   }
 `;
+export const ValidationError = styled.div`
+  color: ${props => props.theme.colors.red};
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  margin-top: ${props => props.theme.spacing.md};
+  padding: ${props => props.theme.spacing.sm};
+  background: ${props => props.theme.colors.red}10;
+  border-radius: ${props => props.theme.borderRadius.small};
+  border: 1px solid ${props => props.theme.colors.red}20;
+  text-align: center;
+`;
+
+export const HeaderRow = styled(Section)`
+  margin-bottom: ${props => props.theme.spacing.xs};
+`;
 
 export const SpecialtyContent = styled(Flex).attrs({ $direction: 'column', $align: 'flex-start' })`
   flex: 1;
 `;
-
 export const SpecialtyName = styled.div`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.md};
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
-
 export const SpecialtyStats = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
-
 export const StatItem = styled.div<{ $type?: 'participant' | 'ticket' }>`
   display: flex;
   align-items: center;
@@ -171,7 +128,7 @@ export const StatItem = styled.div<{ $type?: 'participant' | 'ticket' }>`
     }
   }};
 `;
-
-export const HeaderRow = styled(Section)`
-  margin-bottom: ${props => props.theme.spacing.xs};
+export const StatValue = styled.span`
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
+  color: ${props => props.theme.colors.black};
 `;

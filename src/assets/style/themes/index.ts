@@ -1,5 +1,5 @@
 import { lightTheme, darkTheme } from './baseSkin.ts';
-import { Skin, SkinName } from '@/styles/themes/theme.types.ts';
+import { Skin, SkinName } from '@/assets/style/themes/theme.types.ts';
 
 // Реестр всех скинов
 export const skins: Record<SkinName, Skin> = {

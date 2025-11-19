@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
 import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+
 import {
   ErrorMessage,
   Flex,
@@ -11,27 +11,13 @@ import {
   SpecialtyName,
   SpecialtyStats,
   StatItem,
+  StatValue,
+  ValidationError,
 } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
-
-const StatValue = styled.span`
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
-  color: ${props => props.theme.colors.black};
-`;
-
-const ValidationError = styled.div`
-  color: ${props => props.theme.colors.red};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  margin-top: ${props => props.theme.spacing.md};
-  padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.red}10;
-  border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.red}20;
-  text-align: center;
-`;
 
 export const Step2: React.FC = () => {
   const {

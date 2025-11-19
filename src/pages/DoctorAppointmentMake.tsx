@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { PageLayout } from '../components/layout/PageLayout';
 import { DistrictBooking } from '@/components/Booking/DistrictBooking/DistrictBooking.tsx';
 import { InsuranceBooking } from '@/components/Booking/InsuranceBooking/InsuranceBooking.tsx';
@@ -26,6 +27,19 @@ export const PageContent = styled(Flex).attrs({
   flex: 1;
   height: 100%;
 `;
+
+// Вспомогательная функция для заголовка
+const getPageTitle = (type: 'district' | 'insurance'): string => {
+  switch (type) {
+    case 'district':
+      return 'Запись по району';
+    case 'insurance':
+      return 'Запись по полису ОМС';
+    default:
+      return 'Запись на прием';
+  }
+};
+
 export const DoctorAppointmentMakePage: FC = () => {
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState<MenuOptionType>('district');
@@ -64,16 +78,4 @@ export const DoctorAppointmentMakePage: FC = () => {
       </PageContent>
     </PageLayout>
   );
-};
-
-// Вспомогательная функция для заголовка
-const getPageTitle = (type: 'district' | 'insurance'): string => {
-  switch (type) {
-    case 'district':
-      return 'Запись по району';
-    case 'insurance':
-      return 'Запись по полису ОМС';
-    default:
-      return 'Запись на прием';
-  }
 };

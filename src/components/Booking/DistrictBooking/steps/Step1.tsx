@@ -1,56 +1,31 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
-import { ErrorMessage, Flex } from '@/components/ui/StyledComponents.tsx';
 import styled from 'styled-components';
+
+import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+
+import { ErrorMessage, Flex, Section, ValidationError } from '@/components/ui/StyledComponents.tsx';
 import { Accordion } from '@/components/ui/Accordion/Accordion.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
 
-export const LpuContent = styled(Flex).attrs({ $direction: 'column' })`
-  flex: 1;
-  gap: ${props => props.theme.spacing.xs};
-`;
-
 export const LpuName = styled.div`
-  font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.black};
   font-size: ${props => props.theme.typography.fontSize.sm};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
   margin-bottom: ${props => props.theme.spacing.xs};
 `;
 
-export const LpuAddress = styled.div`
+export const LpuAddress = styled(Flex)`
   font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.black};
   line-height: 1.4;
 `;
 
-export const LpuContact = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.black};
-  line-height: 1.4;
-  display: flex;
-  align-items: center;
-  gap: ${props => props.theme.spacing.xs};
-`;
+export const LpuContact = styled(LpuAddress)``;
 
-export const LpuMeta = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.xs};
-  color: ${props => props.theme.colors.black};
+export const LpuMeta = styled(LpuAddress)`
   margin-top: ${props => props.theme.spacing.xs};
   line-height: 1.3;
-`;
-
-export const ValidationError = styled.div`
-  color: ${props => props.theme.colors.red};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  margin-top: ${props => props.theme.spacing.md};
-  padding: ${props => props.theme.spacing.sm};
-  background: ${props => props.theme.colors.red}10;
-  border-radius: ${props => props.theme.borderRadius.small};
-  border: 1px solid ${props => props.theme.colors.red}20;
-  text-align: center;
 `;
 
 const LpuCard = styled(Flex)`
@@ -127,7 +102,7 @@ export const Step1: React.FC = () => {
                 checked={selectedLpu === lpu.id.toString()}
                 onChange={() => handleLpuSelect(lpu.id, district)}
               />
-              <LpuContent>
+              <Section>
                 <LpuName>{lpu.lpuFullName}</LpuName>
                 <LpuAddress>{lpu.address}</LpuAddress>
                 {lpu.phone && <LpuContact>📞 {lpu.phone}</LpuContact>}
@@ -137,7 +112,7 @@ export const Step1: React.FC = () => {
                   {lpu.covidVaccination && ' • 💉 COVID-вакцинация'}
                   {lpu.inDepthExamination && ' • 🩺 Диспансеризация'}
                 </LpuMeta>
-              </LpuContent>
+              </Section>
             </LpuCard>
           ))}
         </Flex>

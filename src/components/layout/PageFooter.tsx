@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CompactButton, Flex } from '../ui/StyledComponents.tsx';
+
+import { Flex } from '../ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 const FooterContainer = styled.footer`
   flex-shrink: 0;
@@ -13,15 +15,6 @@ const FooterContainer = styled.footer`
 
   @media (max-width: ${props => props.theme.breakpoints.xs}) {
     padding: 12px ${props => props.theme.spacing.xs};
-  }
-`;
-
-const FooterButton = styled(CompactButton)<{ variant?: string }>`
-  flex: 1;
-
-  @media (max-width: ${props => props.theme.breakpoints.xs}) {
-    font-size: 14px;
-    padding: 10px 12px;
   }
 `;
 
@@ -43,20 +36,12 @@ export const PageFooter: React.FC<PageFooterProps> = ({ submitButton, backButton
   return (
     <FooterContainer>
       <Flex>
-        {backButton && (
-          <FooterButton onClick={backButton.onClick} variant={backButton.variant || 'outline'}>
-            {backButton.text}
-          </FooterButton>
-        )}
+        {backButton && <CustomButton onClick={backButton.onClick}>{backButton.text}</CustomButton>}
 
         {submitButton && (
-          <FooterButton
-            onClick={submitButton.onClick}
-            disabled={submitButton.disabled}
-            variant={submitButton.variant || 'accent'}
-          >
+          <CustomButton onClick={submitButton.onClick} disabled={submitButton.disabled}>
             {submitButton.text}
-          </FooterButton>
+          </CustomButton>
         )}
       </Flex>
     </FooterContainer>

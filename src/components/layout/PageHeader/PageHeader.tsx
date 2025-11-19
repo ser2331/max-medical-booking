@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Flex, Typography } from '@maxhub/max-ui';
+
+import { useModal } from '@/hooks/useModal.ts';
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
-// import { GearIcon } from '@/assets/icons/gear/gear.tsx';
-import { useModal } from '@/hooks/useModal.tsx';
-import { SettingsModal } from './SettingsModal';
+
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { SettingsModal } from './SettingsModal';
+// import { GearIcon } from '@/assets/icons/gear/gear.tsx';
 
 const HeaderContainer = styled.header`
   flex-shrink: 0;

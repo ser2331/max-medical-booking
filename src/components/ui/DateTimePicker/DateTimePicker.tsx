@@ -9,7 +9,7 @@ import { CustomSelect } from '@/components/ui/CustomSelect/CustomSelect.tsx';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { Locale } from 'date-fns';
-import { media } from '@/styles/mixins.ts';
+import { media } from '@/assets/style/mixins.ts';
 
 const FormFieldContainer = styled.div`
   width: 100%;

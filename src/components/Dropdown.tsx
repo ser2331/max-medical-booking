@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { CompactButton } from '@/components/ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 const DropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-const MoreButton = styled(CompactButton)<{ $isOpen: boolean }>`
+const MoreButton = styled(CustomButton)<{ $isOpen: boolean }>`
   width: 32px;
   height: 32px;
   &:hover {
@@ -209,13 +209,8 @@ export const Dropdown: FC<DropdownProps> = ({
 
   return (
     <DropdownWrapper className={className} ref={dropdownRef}>
-      <MoreButton
-        $isOpen={isDropdownOpen}
-        onClick={toggleDropdown}
-        disabled={disabled}
-        title="Дополнительные действия"
-      >
-        {icon}
+      <MoreButton $isOpen={isDropdownOpen} onClick={toggleDropdown} disabled={disabled}>
+        {`${icon} Дополнительные действия`}
       </MoreButton>
 
       <DropdownContainer $isOpen={isDropdownOpen} $position={position}>

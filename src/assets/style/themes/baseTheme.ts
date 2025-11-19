@@ -1,4 +1,4 @@
-import { ThemeConfig } from '@/styles/themes/theme.types.ts';
+import { ThemeConfig } from '@/assets/style/themes/theme.types.ts';
 
 export const baseTheme: Omit<ThemeConfig, 'colors' | 'name' | 'mode'> = {
   typography: {

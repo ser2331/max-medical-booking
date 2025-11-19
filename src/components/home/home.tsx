@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
+import { useMessageToast } from '@/hooks/useMessageToast.ts';
+
 import { UserCard } from '@/components/ui/User/UserCard.tsx';
 import { MenuItem } from '@/components/ui/Menu/MenuItem.tsx';
 import { MenuGrid } from '@/components/ui/Menu/MenuGrid.tsx';
 import { SectionTitle } from '@/components/ui/Typography/SectionTitle.tsx';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
-// Types
-interface MenuItemType {
-  name: string;
-  description: string;
-  icon: string;
-  path: string;
-}
 export const PageContainer = styled(Flex)`
   flex: 1;
   height: 100%;
@@ -34,50 +31,61 @@ export const PageContent = styled(Flex).attrs({
   box-shadow: ${props => props.theme.shadows.small};
 `;
 
+interface MenuItemType {
+  name: string;
+  description: string;
+  icon: string;
+  path: string;
+}
+
+// Основные пункты меню
+const mainMenuItems: MenuItemType[] = [
+  {
+    name: 'Медицинские заявки',
+    description: '',
+    icon: '🏥',
+    path: '/booking',
+  },
+  {
+    name: 'Запись на прием к врачу',
+    description: '',
+    icon: '📋',
+    path: '/doctor-appointment-make',
+  },
+];
+// Скрытые пункты для разработчиков
+const devMenuItems: MenuItemType[] = [
+  {
+    name: 'DEMO AUTH',
+    description: 'AUTH',
+    icon: '🔐',
+    path: '/auth',
+  },
+  {
+    name: 'DEBUG',
+    description: 'DEBUG',
+    icon: '🐛',
+    path: '/debug',
+  },
+  {
+    name: 'maxDemo',
+    description: 'maxDemo',
+    icon: '⚡',
+    path: '/maxDemo',
+  },
+];
+
 export const Home: React.FC = () => {
   const { user, hapticFeedback } = useMaxBridgeContext();
+  const messageToast = useMessageToast();
   const [showDevTools, setShowDevTools] = useState(false);
-
-  // Основные пункты меню
-  const mainMenuItems: MenuItemType[] = [
-    {
-      name: 'Медицинские заявки',
-      description: '',
-      icon: '🏥',
-      path: '/booking',
-    },
-    {
-      name: 'Запись на прием к врачу',
-      description: '',
-      icon: '📋',
-      path: '/doctor-appointment-make',
-    },
-  ];
-
-  // Скрытые пункты для разработчиков
-  const devMenuItems: MenuItemType[] = [
-    {
-      name: 'DEMO AUTH',
-      description: 'AUTH',
-      icon: '🔐',
-      path: '/auth',
-    },
-    {
-      name: 'DEBUG',
-      description: 'DEBUG',
-      icon: '🐛',
-      path: '/debug',
-    },
-    {
-      name: 'maxDemo',
-      description: 'maxDemo',
-      icon: '⚡',
-      path: '/maxDemo',
-    },
-  ];
 
   const handleMenuClick = () => {
     hapticFeedback('impact', 'light');
+  };
+
+  const handleShowToast = () => {
+    messageToast('TOAST ', 'success');
   };
 
   const toggleDevTools = () => {
@@ -118,6 +126,7 @@ export const Home: React.FC = () => {
                 onClick={handleMenuClick}
               />
             ))}
+            <CustomButton onClick={handleShowToast}>Show TOAST</CustomButton>
           </MenuGrid>
         )}
       </PageContent>

@@ -1,11 +1,17 @@
 import { useEffect } from 'react';
 import i18n from 'i18next';
-import { useMaxBridgeContext } from './providers/MaxBridgeProvider.tsx';
+import { ToastContainer } from 'react-toastify';
+
 import { AppRouter } from './router/AppRouter';
-import { Main } from './components/ui/StyledComponents.tsx';
+
+import { useMaxBridgeContext } from './providers/MaxBridgeProvider.tsx';
 import { useWidgetSession } from '@/hooks/useWidgetSession.ts';
-import { AUTH_DATA, WIDGET_CONFIG } from '@/constants.ts';
+
 import { AppLoader } from '@/components/ui/AppLoader.tsx';
+import { Main } from './components/ui/StyledComponents.tsx';
+import { AUTH_DATA, WIDGET_CONFIG } from '@/constants.ts';
+import { CircleAlertIcon } from '@/assets/icons/CircleAlertIcon.tsx';
+import { BadgeCheckIcon } from '@/assets/icons/BadgeCheckIcon.tsx';
 
 function App() {
   const { initData } = useMaxBridgeContext();
@@ -30,6 +36,19 @@ function App() {
 
   return (
     <Main className={'PANEL'}>
+      <ToastContainer
+        theme="light"
+        icon={({ type }) => {
+          switch (type) {
+            case 'error':
+              return <CircleAlertIcon />;
+            case 'success':
+              return <BadgeCheckIcon />;
+            default:
+              return null;
+          }
+        }}
+      />
       <AppRouter />
     </Main>
   );

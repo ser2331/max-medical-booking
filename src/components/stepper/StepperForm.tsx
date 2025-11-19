@@ -1,10 +1,12 @@
 import { FieldValues, useFormContext } from 'react-hook-form';
-import { StepperProps } from '@/components/stepper/Stepper.types.ts';
+import styled from 'styled-components';
+
 import { useStepper } from '@/components/stepper/useStepper.tsx';
 import { useStepValidation } from '@/components/stepper/useStepValidation.tsx';
-import styled from 'styled-components';
+
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { StepperProps } from '@/components/stepper/Stepper.types.ts';
 
 const StepperHeader = styled(Flex)`
   height: 20px;
@@ -179,7 +181,13 @@ export const StepperForm = <TFieldValues extends FieldValues>({
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          overflow: 'hidden',
+          width: '100%',
+        }}
       >
         <StepContent>
           <CurrentStepComponent />

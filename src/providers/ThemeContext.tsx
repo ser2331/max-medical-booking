@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { SkinName, ThemeConfig } from '@/styles/themes/theme.types.ts';
-import { getAvailableSkins, getTheme } from '@/styles/themes';
+import { SkinName, ThemeConfig } from '@/assets/style/themes/theme.types.ts';
+import { getAvailableSkins, getTheme } from '@/assets/style/themes';
 
 interface ThemeContextType {
   colorScheme: 'light' | 'dark';
