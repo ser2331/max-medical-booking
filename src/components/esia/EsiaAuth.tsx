@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
+import { media } from '@/assets/style/mixins.ts';
+
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import authBackground from '@/assets/images/auth/authBack.png';
@@ -39,6 +41,9 @@ const Subtitle = styled(Text)`
 const AuthBtn = styled(CustomButton)`
   width: 100%;
   max-width: ${props => props.theme.breakpoints.xs};
+  ${media.md} {
+    max-width: 100%;
+  }
 `;
 
 const Icon = styled.img`
