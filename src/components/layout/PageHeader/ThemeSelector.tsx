@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '@/providers/ThemeContext.tsx';
-import { SkinName } from '@/styles/themes/theme.types.ts';
+import { SkinName } from '@/assets/style/themes/theme.types.ts';
 
 const SelectorContainer = styled.div`
   position: relative;
