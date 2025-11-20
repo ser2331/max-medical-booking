@@ -1,14 +1,16 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { PageLayout } from '../components/layout/PageLayout';
-import { DistrictBooking } from '@/components/Booking/DistrictBooking/DistrictBooking.tsx';
-import { InsuranceBooking } from '@/components/Booking/InsuranceBooking/InsuranceBooking.tsx';
-import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
 import { OptionButton } from '@/components/ui/OptionButton/OptionButton.tsx';
-
+import { DistrictBooking } from '@/components/DoctorAppointmentMake/DistrictBooking/DistrictBooking.tsx';
+import { InsuranceBooking } from '@/components/DoctorAppointmentMake/InsuranceBooking/InsuranceBooking.tsx';
+import { useAppDispatch, useAppSelector } from '@/store/redux-hooks.ts';
+import { onChangeBookingType } from '@/store/slices/stepperSlice.ts';
+import { StepperDots } from '@/components/stepper/StepperDots.tsx';
+import { STEPS_CONFIG as DistrictSteppingConfig } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { STEPS_CONFIG as InsuranceSteppingConfig } from '@/components/DoctorAppointmentMake/InsuranceBooking/steps-config.tsx';
 const menuOptions = [
   {
     type: 'district' as const,
@@ -20,13 +22,11 @@ const menuOptions = [
   },
 ];
 type MenuOptionType = 'district' | 'insurance';
-export const PageContent = styled(Flex).attrs({
-  $direction: 'column',
-  $justifyContent: 'flex-start',
-})`
-  flex: 1;
-  height: 100%;
-`;
+
+const steps = {
+  district: DistrictSteppingConfig,
+  insurance: InsuranceSteppingConfig,
+};
 
 // Вспомогательная функция для заголовка
 const getPageTitle = (type: 'district' | 'insurance'): string => {
@@ -42,7 +42,11 @@ const getPageTitle = (type: 'district' | 'insurance'): string => {
 
 export const DoctorAppointmentMakePage: FC = () => {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState<MenuOptionType>('district');
+  const dispatch = useAppDispatch();
+  const { type: selectedType, step } = useAppSelector(state => state.stepper);
+  const setSelectedType = (type: string) => {
+    dispatch(onChangeBookingType(type));
+  };
 
   const handleTypeSelect = (type: MenuOptionType) => {
     setSelectedType(type);
@@ -61,21 +65,25 @@ export const DoctorAppointmentMakePage: FC = () => {
 
   return (
     <PageLayout
-      title={selectedType ? getPageTitle(selectedType) : 'Запись на прием'}
+      title={selectedType ? getPageTitle(selectedType as MenuOptionType) : 'Запись на прием'}
       showBackButton={true}
       onBack={() => navigate(-1)}
     >
-      <PageContent>
-        <Card>
-          <OptionButton<MenuOptionType>
-            options={menuOptions}
-            onChange={handleTypeSelect}
-            selectedType={selectedType}
-          />
-        </Card>
+      <>
+        <StepperDots steps={steps[(selectedType as MenuOptionType) || 'district']} />
 
-        {renderContent()}
-      </PageContent>
+        <Card $vertical style={{ height: 'auto', flex: 1 }} className={'FORM_CARD'}>
+          {!step && (
+            <OptionButton<MenuOptionType>
+              options={menuOptions}
+              onChange={handleTypeSelect}
+              selectedType={(selectedType as MenuOptionType) || 'district'}
+            />
+          )}
+
+          {renderContent()}
+        </Card>
+      </>
     </PageLayout>
   );
 };

@@ -23,6 +23,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/tm-widgets': {
+        target: process.env.VITE_NETRIKA_WIDGET_URL,
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 

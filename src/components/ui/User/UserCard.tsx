@@ -5,14 +5,6 @@ import { Avatar } from '../Avatar/Avatar';
 
 const UserCardContainer = styled(Flex).attrs({ $gap: 24 })`
   width: 100%;
-  margin-bottom: ${props => props.theme.spacing.xl};
-`;
-
-const UserAvatar = styled.div`
-  width: ${props => props.theme.spacing.xxxl};
-  height: ${props => props.theme.spacing.xxxl};
-  background: ${props => props.theme.colors.grey1};
-  border-radius: 50%;
 `;
 
 const UserName = styled.h3`
@@ -21,7 +13,6 @@ const UserName = styled.h3`
 `;
 
 const UserStatus = styled.p`
-  color: ${props => props.theme.colors.blackPure};
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin: 0;
 `;
@@ -37,16 +28,14 @@ interface UserCardProps {
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
     <UserCardContainer $align="center">
-      <UserAvatar>
-        <Avatar
-          src={user.photo_url}
-          alt={user.first_name}
-          text={user.first_name[0]}
-          size={'xlarge'}
-        />
-      </UserAvatar>
+      <Avatar
+        src={user.photo_url}
+        alt={user.first_name}
+        size={'large'}
+        showFallbackOnError={false}
+      />
 
-      <Flex $direction="column">
+      <Flex $direction="column" $gap={8}>
         <UserName>
           {user.first_name} {user.last_name}
         </UserName>

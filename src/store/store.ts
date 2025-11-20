@@ -2,9 +2,11 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { commonApi } from './common.api';
 
 import authSlice from '@/store/slices/authSlice.ts';
+import stepperSlice from '@/store/slices/stepperSlice.ts';
 
 const rootReducer = combineReducers({
   auth: authSlice,
+  stepper: stepperSlice,
   [commonApi.reducerPath]: commonApi.reducer,
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const AvatarContainer = styled.div<{
@@ -30,8 +30,8 @@ const AvatarContainer = styled.div<{
         `;
       case 'large':
         return `
-          width: 64px;
-          height: 64px;
+          width: 75px;
+          height: 75px;
           font-size: ${props.theme.typography.fontSize.lg};
         `;
       case 'xlarge':
@@ -68,46 +68,46 @@ const AvatarContainer = styled.div<{
   }
 `;
 
-const AvatarText = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  text-transform: uppercase;
-`;
-
 export interface AvatarProps {
   src?: string;
-  text?: string;
   size?: 'small' | 'medium' | 'large' | 'xlarge';
   shape?: 'circle' | 'square';
   border?: boolean;
   alt?: string;
   className?: string;
   onClick?: () => void;
+  fallbackSrc?: string; // Дополнительная кастомная картинка для fallback
+  showFallbackOnError?: boolean; // Показывать ли fallback при ошибке
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
   src,
-  text,
   size = 'medium',
   shape = 'circle',
   border = false,
   alt = 'Avatar',
   className,
   onClick,
+  fallbackSrc,
+  showFallbackOnError = true,
 }) => {
-  const getInitials = (name: string): string => {
-    return name
-      .split(' ')
-      .map(part => part.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  const [imageError, setImageError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(src);
+
+  const handleImageError = () => {
+    if (fallbackSrc && showFallbackOnError) {
+      setCurrentSrc(fallbackSrc);
+      setImageError(false); // Сбрасываем ошибку для попытки загрузки fallback
+    } else {
+      setImageError(true);
+    }
   };
 
-  const displayText = text ? getInitials(text) : '?';
+  // Сбрасываем состояние при изменении src
+  React.useEffect(() => {
+    setCurrentSrc(src);
+    setImageError(false);
+  }, [src]);
 
   return (
     <AvatarContainer
@@ -119,7 +119,12 @@ export const Avatar: React.FC<AvatarProps> = ({
       role={onClick ? 'button' : 'img'}
       aria-label={alt}
     >
-      {src ? <img src={src} alt={alt} /> : <AvatarText>{displayText}</AvatarText>}
+      {currentSrc && !imageError ? (
+        <img src={currentSrc} alt={alt} onError={handleImageError} loading="lazy" />
+      ) : // Показываем кастомную иконку или ничего
+      fallbackSrc && showFallbackOnError ? (
+        <img src={fallbackSrc} alt={alt} onError={() => setImageError(true)} />
+      ) : null}
     </AvatarContainer>
   );
 };

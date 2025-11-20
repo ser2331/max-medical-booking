@@ -10,7 +10,7 @@ const SelectionContainer = styled(Flex)`
 
 const OptionsContainer = styled(Flex)`
   width: 100%;
-  height: 100%;
+  //height: 100%;
   gap: 0;
   background: ${props => props.theme.colors.grey1};
   padding: ${props => props.theme.spacing.xs};

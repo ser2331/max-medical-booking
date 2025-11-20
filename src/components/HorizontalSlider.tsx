@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { NavigationIcon } from '@/assets/icons/NavigationIcon.tsx';
 
 const SliderContainer = styled.div`
-  position: relative;
   overflow: hidden;
   width: 100%;
   max-width: 100%;
@@ -16,7 +16,6 @@ const SliderWrapper = styled.div`
   gap: ${props => props.theme.spacing.sm};
   transition: transform 0.3s ease;
   cursor: grab;
-  width: 100%;
 
   &::-webkit-scrollbar {
     display: none;
@@ -37,42 +36,25 @@ const Slide = styled.div`
 
 const NavigationButton = styled.button<{ $direction: 'prev' | 'next' }>`
   position: absolute;
-  top: 50%;
+  top: 0;
   ${props => (props.$direction === 'prev' ? 'left: 0;' : 'right: 0;')}
   transform: translateY(-50%);
   width: 32px;
-  height: 32px;
+  height: 100%;
   border: none;
-  border-radius: 50%;
-  background: ${props => props.theme.colors.white};
-  box-shadow: ${props => props.theme.shadows.small};
+  border-radius: ${props => props.theme.borderRadius.medium};
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
   transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: ${props => props.theme.colors.grey4};
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: ${props => props.theme.shadows.medium};
-  }
+  background: transparent;
+  transform: rotate(${props => (props.$direction === 'prev' ? '180deg' : '0deg')});
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background: ${props => props.theme.colors.grey3};
-  }
-
-  &::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border: 2px solid ${props => props.theme.colors.black};
-    border-top: none;
-    border-${props => (props.$direction === 'prev' ? 'right' : 'left')}: none;
-    transform: rotate(${props => (props.$direction === 'prev' ? '45deg' : '-45deg')});
   }
 `;
 
@@ -214,69 +196,77 @@ export const HorizontalSlider: React.FC<HorizontalSliderProps> = ({
   };
 
   return (
-    <SliderContainer
-      ref={containerRef}
-      className={`horizontal-slider ${className || ''}`}
-      style={{ width: '100%' }}
-    >
-      {showNavigation && totalSlides > 1 && (
-        <>
-          <NavigationButton
-            type="button"
-            $direction="prev"
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-            aria-label="Предыдущий слайд"
-          />
-          <NavigationButton
-            type="button"
-            $direction="next"
-            onClick={nextSlide}
-            disabled={currentIndex >= maxIndex}
-            aria-label="Следующий слайд"
-          />
-        </>
-      )}
-
-      <SliderWrapper
-        ref={sliderRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleMouseUp}
-        style={{ gap: `${gap}px`, width: containerWidth }}
+    <Flex style={{ position: 'relative' }}>
+      <div style={{ width: '44px' }} />
+      <SliderContainer
+        ref={containerRef}
+        className={`horizontal-slider ${className || ''}`}
+        style={{ width: '100%' }}
       >
-        <Flex $gap={gap}>
-          {children.map((child, index) => (
-            <Slide
-              key={index}
-              style={{
-                width: `${slideWidth}px`,
-                // flexShrink: 0,
-              }}
+        {showNavigation && totalSlides > 1 && (
+          <>
+            <NavigationButton
+              type="button"
+              $direction="prev"
+              onClick={prevSlide}
+              disabled={currentIndex === 0}
+              aria-label="Предыдущий слайд"
             >
-              {child}
-            </Slide>
-          ))}
-        </Flex>
-      </SliderWrapper>
+              <NavigationIcon />
+            </NavigationButton>
+            <NavigationButton
+              type="button"
+              $direction="next"
+              onClick={nextSlide}
+              disabled={currentIndex >= maxIndex}
+              aria-label="Следующий слайд"
+            >
+              <NavigationIcon />
+            </NavigationButton>
+          </>
+        )}
 
-      {showDots && totalSlides > 1 && maxIndex > 0 && (
-        <Flex $gap={2}>
-          {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-            <Dot
-              key={index}
-              $isActive={index === currentIndex}
-              onClick={() => handleDotClick(index)}
-              aria-label={`Перейти к слайду ${index + 1}`}
-              aria-current={index === currentIndex ? 'true' : 'false'}
-            />
-          ))}
-        </Flex>
-      )}
-    </SliderContainer>
+        <SliderWrapper
+          ref={sliderRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleMouseUp}
+          style={{ gap: `${gap}px`, width: containerWidth }}
+        >
+          <Flex $gap={gap}>
+            {children.map((child, index) => (
+              <Slide
+                key={index}
+                style={{
+                  width: `${slideWidth}px`,
+                  // flexShrink: 0,
+                }}
+              >
+                {child}
+              </Slide>
+            ))}
+          </Flex>
+        </SliderWrapper>
+
+        {showDots && totalSlides > 1 && maxIndex > 0 && (
+          <Flex $gap={2}>
+            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+              <Dot
+                key={index}
+                $isActive={index === currentIndex}
+                onClick={() => handleDotClick(index)}
+                aria-label={`Перейти к слайду ${index + 1}`}
+                aria-current={index === currentIndex ? 'true' : 'false'}
+              />
+            ))}
+          </Flex>
+        )}
+      </SliderContainer>
+      <div style={{ width: '44px' }} />
+    </Flex>
   );
 };

@@ -6,8 +6,8 @@ import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { PageLayout } from '@/components/layout/PageLayout.tsx';
 import { MicroFrontend } from '@/components/widget/MicroFrontend.tsx';
-import { ErrorMessage } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 
 export const BookingPage: React.FC = () => {
   const { t } = useTranslation();

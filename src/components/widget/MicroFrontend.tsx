@@ -5,7 +5,6 @@ import { useAppSelector } from '@/store/redux-hooks.ts';
 import { useDebug } from '@/hooks/useDebug';
 
 import { DebugPanel } from '@/components/debug/DebugPanel';
-import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { WIDGET_CONFIG } from '@/constants.ts';
 
 import { getUrl } from '@/config/env';
@@ -13,17 +12,6 @@ import { getUrl } from '@/config/env';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  main {
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
 `;
 
 interface WindowWithWidget {
@@ -35,11 +23,9 @@ interface WindowWithWidget {
 
 const name = 'TMWidget';
 
+const showDebug = false;
 export const MicroFrontend = () => {
   const [widgetRendered, setWidgetRendered] = useState(false);
-  const [loadPhase, setLoadPhase] = useState<
-    'idle' | 'fetching' | 'loading' | 'rendering' | 'complete' | 'error'
-  >('idle');
 
   const isInitializedRef = useRef(false);
   const dataSentRef = useRef(false);
@@ -60,7 +46,6 @@ export const MicroFrontend = () => {
       fetchInterceptedRef.current = false;
       renderAttemptsRef.current = 0;
       setWidgetRendered(false);
-      setLoadPhase('idle');
       clearDebugInfo();
     };
   }, []);
@@ -165,7 +150,6 @@ export const MicroFrontend = () => {
 
             if (hasContent) {
               setWidgetRendered(true);
-              setLoadPhase('complete');
               addDebugInfo('renderSuccess', JSON.stringify(true));
               resolve(true);
             } else if (attempt < 3) {
@@ -194,7 +178,6 @@ export const MicroFrontend = () => {
       return;
     }
 
-    setLoadPhase('fetching');
     addDebugInfo('loadStarted', 'true');
     addDebugInfo('host', host);
 
@@ -225,7 +208,6 @@ export const MicroFrontend = () => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
-        setLoadPhase('loading');
         addDebugInfo('manifestFetched', 'true');
         return response.json();
       })
@@ -284,7 +266,6 @@ export const MicroFrontend = () => {
           script.onload = () => {
             addDebugInfo('scriptLoaded', 'true');
             isInitializedRef.current = true;
-            setLoadPhase('rendering');
 
             // Даем время скрипту на инициализацию
             setTimeout(() => {
@@ -295,7 +276,6 @@ export const MicroFrontend = () => {
           };
 
           script.onerror = error => {
-            setLoadPhase('error');
             addDebugInfo('scriptError', JSON.stringify(error));
           };
 
@@ -304,7 +284,6 @@ export const MicroFrontend = () => {
         },
       )
       .catch(error => {
-        setLoadPhase('error');
         addDebugInfo('loadError', error.message);
         console.error('Widget loading error:', error);
       });
@@ -344,34 +323,36 @@ export const MicroFrontend = () => {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }} className={'main'}>
       {/* Дебаг панель */}
-      <DebugPanel
-        debugInfo={debugInfo}
-        clearDebugInfo={clearDebugInfo}
-        title="MicroFrontend Debug"
-      />
+      {showDebug && (
+        <DebugPanel
+          debugInfo={debugInfo}
+          clearDebugInfo={clearDebugInfo}
+          title="MicroFrontend Debug"
+        />
+      )}
 
       {/* Лоадер или контент */}
-      {!widgetRendered && loadPhase !== 'complete' && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '200px',
-          }}
-        >
-          <AppSpin />
-          <div style={{ marginTop: '10px', color: '#666' }}>
-            {loadPhase === 'fetching' && 'Загрузка манифеста...'}
-            {loadPhase === 'loading' && 'Загрузка виджета...'}
-            {loadPhase === 'rendering' && 'Рендеринг...'}
-            {loadPhase === 'error' && 'Ошибка загрузки'}
-          </div>
-        </div>
-      )}
+      {/*{!widgetRendered && loadPhase !== 'complete' && (*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      display: 'flex',*/}
+      {/*      flexDirection: 'column',*/}
+      {/*      alignItems: 'center',*/}
+      {/*      justifyContent: 'center',*/}
+      {/*      height: '200px',*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <AppSpin />*/}
+      {/*    <div style={{ marginTop: '10px', color: '#666' }}>*/}
+      {/*      {loadPhase === 'fetching' && 'Загрузка манифеста...'}*/}
+      {/*      {loadPhase === 'loading' && 'Загрузка виджета...'}*/}
+      {/*      {loadPhase === 'rendering' && 'Рендеринг...'}*/}
+      {/*      {loadPhase === 'error' && 'Ошибка загрузки'}*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <Container id={containerId} />
     </div>

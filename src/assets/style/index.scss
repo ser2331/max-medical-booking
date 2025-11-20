@@ -22,9 +22,13 @@ code {
   font-family: 'Open Sans', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-div {
+div, a {
   box-sizing: border-box;
   scrollbar-width: thin;
+}
+
+.main {
+  min-height: auto !important;
 }
 
 h1,
@@ -33,7 +37,7 @@ h3,
 h4,
 h5,
 h6,
-button, div {
+button, div, a {
   margin: 0;
   font-family: 'Open Sans', serif;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import styled from 'styled-components';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
@@ -6,50 +6,43 @@ import { useMessageToast } from '@/hooks/useMessageToast.ts';
 
 import { UserCard } from '@/components/ui/User/UserCard.tsx';
 import { MenuItem } from '@/components/ui/Menu/MenuItem.tsx';
-import { MenuGrid } from '@/components/ui/Menu/MenuGrid.tsx';
 import { SectionTitle } from '@/components/ui/Typography/SectionTitle.tsx';
-import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { Card } from '@/components/ui/Cart.tsx';
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { TeleMedIcon } from '@/assets/icons/TeleMedIcon.tsx';
+import { BookingIcon } from '@/assets/icons/BookingIcon.tsx';
 
-export const PageContainer = styled(Flex)`
+export const PageContainer = styled(Card).attrs({ $vertical: true })`
   flex: 1;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
 `;
-
-export const PageContent = styled(Flex).attrs({
-  $direction: 'column',
-  $justifyContent: 'flex-start',
-})`
-  flex: 1;
-  height: 100%;
-  box-sizing: border-box;
-  padding: ${props => props.theme.spacing.md};
-  background: ${props => props.theme.colors.white};
-  border-radius: ${props => props.theme.borderRadius.large};
-  box-shadow: ${props => props.theme.shadows.small};
+export const Menu = styled(Flex).attrs({ $direction: 'column' })`
+  gap: ${props => props.theme.spacing.md};
+  width: 100%;
 `;
-
 interface MenuItemType {
   name: string;
   description: string;
-  icon: string;
+  icon: ReactNode;
   path: string;
 }
 
 // Основные пункты меню
 const mainMenuItems: MenuItemType[] = [
   {
-    name: 'Медицинские заявки',
+    name: 'Телемедицинские услуги',
     description: '',
-    icon: '🏥',
+    icon: <TeleMedIcon />,
     path: '/booking',
   },
   {
     name: 'Запись на прием к врачу',
     description: '',
-    icon: '📋',
+    icon: <BookingIcon />,
     path: '/doctor-appointment-make',
   },
 ];
@@ -95,13 +88,27 @@ export const Home: React.FC = () => {
 
   return (
     <PageContainer className="page-container">
-      <PageContent className="page-content">
-        {/* Карточка пользователя */}
-        {user && <UserCard user={user} />}
+      {/* Карточка пользователя */}
+      {user && <UserCard user={user} />}
 
-        {/* Основные действия */}
-        <MenuGrid>
-          {mainMenuItems.map(item => (
+      {/* Основные действия */}
+      <Menu>
+        {mainMenuItems.map(item => (
+          <MenuItem
+            key={item.path}
+            name={item.name}
+            description={item.description}
+            icon={item.icon}
+            path={item.path}
+            onClick={handleMenuClick}
+          />
+        ))}
+      </Menu>
+
+      <SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>
+      {showDevTools && (
+        <Menu>
+          {devMenuItems.map(item => (
             <MenuItem
               key={item.path}
               name={item.name}
@@ -111,25 +118,9 @@ export const Home: React.FC = () => {
               onClick={handleMenuClick}
             />
           ))}
-        </MenuGrid>
-
-        <SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>
-        {showDevTools && (
-          <MenuGrid>
-            {devMenuItems.map(item => (
-              <MenuItem
-                key={item.path}
-                name={item.name}
-                description={item.description}
-                icon={item.icon}
-                path={item.path}
-                onClick={handleMenuClick}
-              />
-            ))}
-            <CustomButton onClick={handleShowToast}>Show TOAST</CustomButton>
-          </MenuGrid>
-        )}
-      </PageContent>
+          <CustomButton onClick={handleShowToast}>Show TOAST</CustomButton>
+        </Menu>
+      )}
     </PageContainer>
   );
 };

@@ -4,31 +4,14 @@ import styled from 'styled-components';
 
 import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 
-import { ErrorMessage, Flex, Section, ValidationError } from '@/components/ui/StyledComponents.tsx';
+import { CheckCardDescription, CheckCardName, Flex } from '@/components/ui/StyledComponents.tsx';
 import { Accordion } from '@/components/ui/Accordion/Accordion.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
-import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
+import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
+import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
 
-export const LpuName = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  margin-bottom: ${props => props.theme.spacing.xs};
-`;
-
-export const LpuAddress = styled(Flex)`
-  font-size: ${props => props.theme.typography.fontSize.xs};
-  line-height: 1.4;
-`;
-
-export const LpuContact = styled(LpuAddress)``;
-
-export const LpuMeta = styled(LpuAddress)`
-  margin-top: ${props => props.theme.spacing.xs};
-  line-height: 1.3;
-`;
-
-const LpuCard = styled(Flex)`
+const LpuCard = styled(Flex).attrs({ $align: 'flex-start' })`
   &:nth-child(1) {
     margin-top: 16px;
   }
@@ -37,13 +20,9 @@ const LpuCard = styled(Flex)`
     padding-bottom: ${props => props.theme.spacing.md};
   }
 `;
+
 export const Step1: React.FC = () => {
-  const {
-    register,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useFormContext();
+  const { register, watch, setValue } = useFormContext();
   const { data: lpusData, error, isLoading } = useGetLpusQuery({ districtId: '' });
   const stepFields = STEPS_CONFIG[0].fields;
   const [districtField, lpuField] = stepFields;
@@ -81,7 +60,7 @@ export const Step1: React.FC = () => {
   }
 
   if (error) {
-    return <ErrorMessage>Ошибка загрузки данных</ErrorMessage>;
+    return <ErrorMessage />;
   }
 
   const accordionItems = Object.keys(lpusByDistrict)
@@ -91,9 +70,9 @@ export const Step1: React.FC = () => {
       header: district,
       defaultExpanded: district === selectedDistrict,
       children: (
-        <Flex $direction={'column'} $align={'stretch'} $gap={16}>
+        <Flex $direction={'column'} $align={'flex-start'} $gap={16}>
           {lpusByDistrict[district].map(lpu => (
-            <LpuCard $gap={8} key={lpu.id} onClick={() => handleLpuSelect(lpu.id, district)}>
+            <LpuCard $gap={12} key={lpu.id} onClick={() => handleLpuSelect(lpu.id, district)}>
               <RadioButton
                 value={lpu.id}
                 register={register('lpu', {
@@ -102,17 +81,17 @@ export const Step1: React.FC = () => {
                 checked={selectedLpu === lpu.id.toString()}
                 onChange={() => handleLpuSelect(lpu.id, district)}
               />
-              <Section>
-                <LpuName>{lpu.lpuFullName}</LpuName>
-                <LpuAddress>{lpu.address}</LpuAddress>
-                {lpu.phone && <LpuContact>📞 {lpu.phone}</LpuContact>}
-                {lpu.email && <LpuContact>✉️ {lpu.email}</LpuContact>}
-                <LpuMeta>
-                  {lpu.lpuShortName}
-                  {lpu.covidVaccination && ' • 💉 COVID-вакцинация'}
-                  {lpu.inDepthExamination && ' • 🩺 Диспансеризация'}
-                </LpuMeta>
-              </Section>
+              <Flex $direction={'column'} $align={'flex-start'} $gap={4}>
+                <CheckCardName>{lpu.lpuFullName}</CheckCardName>
+                <CheckCardDescription>{lpu.address}</CheckCardDescription>
+                {lpu.phone && <CheckCardDescription>{lpu.phone}</CheckCardDescription>}
+                {lpu.email && <CheckCardDescription>{lpu.email}</CheckCardDescription>}
+                {/*<LpuMeta>*/}
+                {/*  {lpu.lpuShortName}*/}
+                {/*  {lpu.covidVaccination && ' • 💉 COVID-вакцинация'}*/}
+                {/*  {lpu.inDepthExamination && ' • 🩺 Диспансеризация'}*/}
+                {/*</LpuMeta>*/}
+              </Flex>
             </LpuCard>
           ))}
         </Flex>
@@ -129,15 +108,6 @@ export const Step1: React.FC = () => {
           required: 'Выберите район',
         })}
       />
-
-      {/* Валидация */}
-      {(errors.lpu || errors.district) && (
-        <ValidationError>
-          {(errors.lpu?.message as string) ||
-            (errors.district?.message as string) ||
-            'Пожалуйста, выберите медицинское учреждение'}
-        </ValidationError>
-      )}
     </div>
   );
 };

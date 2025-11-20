@@ -8,14 +8,17 @@ import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.typ
 
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import {
-  ErrorMessage,
+  CheckCardDescription,
+  CheckCardName,
   Flex,
+  Line,
   Section,
-  SpecialtyName,
-  ValidationError,
+  StatValue,
 } from '@/components/ui/StyledComponents.tsx';
 import { CustomDatePicker } from '@/components/ui/DateTimePicker/DateTimePicker.tsx';
-import { STEPS_CONFIG } from '@/components/Booking/DistrictBooking/steps-config.tsx';
+import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
+import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 
 const AppointmentsTitle = styled.h4`
   margin: 0;
@@ -27,23 +30,6 @@ const AppointmentsTitle = styled.h4`
 const AppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
   width: 100%;
   gap: ${props => props.theme.spacing.sm};
-`;
-
-const AppointmentCard = styled.div<{ $isSelected?: boolean }>`
-  width: 100%;
-  padding: ${props => props.theme.spacing.md};
-  border: ${props =>
-    props.$isSelected ? `1px solid ${props.theme.colors.blueHighlight}` : 'none'};
-  border-radius: ${props => props.theme.borderRadius.medium};
-  background: ${props =>
-    props.$isSelected ? props.theme.colors.blueLight : props.theme.colors.white};
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-`;
-
-const AppointmentDetails = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.sm};
 `;
 
 const AppointmentRoom = styled.span`
@@ -73,12 +59,7 @@ const formatDateToDisplay = (dateString: string): string => {
 };
 
 export const Step4: React.FC = () => {
-  const {
-    register,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useFormContext();
+  const { register, watch, setValue } = useFormContext();
   const stepFields = STEPS_CONFIG[3].fields;
   const [appointment, date] = stepFields;
 
@@ -173,23 +154,57 @@ export const Step4: React.FC = () => {
         ) : (
           <AppointmentsList>
             {selectedDateAppointments.map(appointment => (
-              <AppointmentCard
+              <Flex
                 key={appointment.id}
-                $isSelected={selectedAppointment === appointment.id}
-                onClick={() => handleAppointmentSelect(appointment.id)}
+                $direction={'column'}
+                $align={'flex-start'}
+                style={{ width: '100%' }}
+                $gap={0}
               >
-                <SpecialtyName>
-                  {formatAppointmentTime(appointment.visitStart, appointment.visitEnd)}
-                </SpecialtyName>
-                <AppointmentDetails>
-                  {appointment.room && (
-                    <span>
-                      Кабинет: <AppointmentRoom>{appointment.room}</AppointmentRoom>
-                    </span>
-                  )}
-                  {appointment.number && <span>Номер: {appointment.number}</span>}
-                </AppointmentDetails>
-              </AppointmentCard>
+                <Flex
+                  key={appointment.id}
+                  onClick={() => handleAppointmentSelect(appointment.id)}
+                  $direction={'row'}
+                  $align={'center'}
+                  $justifyContent={'flex-start'}
+                  $gap={12}
+                  style={{ width: '100%' }}
+                >
+                  <RadioButton
+                    value={appointment.id}
+                    register={register('doctor', { required: 'Выберите врача' })}
+                    checked={selectedAppointment === appointment.id}
+                    onChange={() => handleAppointmentSelect(appointment.id)}
+                  />
+                  <Flex
+                    $direction={'column'}
+                    style={{ width: '100%', flex: 1 }}
+                    $align={'flex-start'}
+                    $gap={4}
+                  >
+                    <CheckCardName>
+                      {formatAppointmentTime(appointment.visitStart, appointment.visitEnd)}
+                    </CheckCardName>
+
+                    <Flex
+                      $direction={'column'}
+                      $align={'flex-start'}
+                      $justifyContent={'flex-start'}
+                      style={{ width: '100%' }}
+                    >
+                      <CheckCardDescription>
+                        {appointment.room && (
+                          <span>
+                            Кабинет: <AppointmentRoom>{appointment.room}</AppointmentRoom>
+                          </span>
+                        )}
+                        {appointment.number && <StatValue>Номер: {appointment.number}</StatValue>}
+                      </CheckCardDescription>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <Line marginBottom={0} />
+              </Flex>
             ))}
           </AppointmentsList>
         )}
@@ -198,14 +213,6 @@ export const Step4: React.FC = () => {
       {/* Скрытые поля для формы */}
       <input type="hidden" {...register('date', { required: 'Выберите дату' })} />
       <input type="hidden" {...register('appointment', { required: 'Выберите время записи' })} />
-
-      {(errors.date || errors.appointment) && (
-        <ValidationError>
-          {(errors.date?.message as string) ||
-            (errors.appointment?.message as string) ||
-            'Выберите дату и время записи'}
-        </ValidationError>
-      )}
     </Section>
   );
 };

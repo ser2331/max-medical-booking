@@ -57,8 +57,8 @@ const MonthYearSection = styled(Flex)`
 
 const ArrowButton = styled(Flex)<{ $disabled?: boolean }>`
   cursor: ${props => (props.$disabled ? 'default' : 'pointer')};
-  padding: ${props => props.theme.spacing.sm};
-  border-radius: ${props => props.theme.borderRadius.small};
+  //padding: ${props => props.theme.spacing.sm};
+  border-radius: ${props => props.theme.borderRadius.medium};
   transition: background-color 0.2s ease;
   flex-shrink: 0;
 `;
@@ -92,21 +92,21 @@ const DatePickerStyles = styled.div`
     }
 
     &__day-name {
-      font-size: ${props => props.theme.typography.fontSize.xs};
+      font-size: ${props => props.theme.typography.fontSize.sm};
       font-weight: ${props => props.theme.typography.fontWeight.semibold};
       color: ${props => props.theme.colors.black};
       width: 45px;
       line-height: 45px;
       margin: 2px;
       ${media.sm} {
-        width: 35px;
-        line-height: 35px;
+        width: 36px;
+        line-height: 36px;
       }
     }
 
     &__month {
       margin: 0;
-      padding: ${props => props.theme.spacing.xs} ${props => props.theme.spacing.sm};
+      padding: ${props => `0 ${props.theme.spacing.xsm} ${props.theme.spacing.xs}`};
       background: ${props => props.theme.colors.white};
       border-radius: 0 0 ${props => props.theme.borderRadius.xl}
         ${props => props.theme.borderRadius.xl};
@@ -122,43 +122,32 @@ const DatePickerStyles = styled.div`
       border-radius: 50%;
       transition: all 0.2s ease;
       ${media.sm} {
-        width: 35px;
-        height: 35px;
-        line-height: 35px;
-      }
-      &--outside-month {
-        color: ${props => props.theme.colors.grey3};
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
       }
 
       &--today {
         font-weight: ${props => props.theme.typography.fontWeight.semibold};
-        color: ${props => props.theme.colors.blueDark};
+        color: ${props => props.theme.colors.blueLight};
       }
 
       &--selected,
       &--keyboard-selected {
-        background: ${props => props.theme.colors.blue} !important;
-        color: ${props => props.theme.colors.white} !important;
+        background: ${props => props.theme.colors.blueLight} !important;
+        color: ${props => props.theme.colors.blue} !important;
         font-weight: ${props => props.theme.typography.fontWeight.semibold};
-      }
-
-      &:hover {
-        background: ${props => props.theme.colors.blueLight};
         border-radius: 50%;
       }
 
-      &--weekend {
-        color: ${props => props.theme.colors.red};
+      &:hover {
+        background: ${props => props.theme.colors.blueLight} !important;
+        border-radius: 50%;
       }
 
       &--disabled {
         color: ${props => props.theme.colors.grey3} !important;
-        background: ${props => props.theme.colors.grey1} !important;
         cursor: not-allowed;
-
-        &:hover {
-          background: ${props => props.theme.colors.grey1} !important;
-        }
       }
     }
 
@@ -234,7 +223,7 @@ export const CustomDatePicker = (props: IProps) => {
   }, [years]);
 
   const monthOptions = useMemo(() => {
-    return months.map((x, key) => ({ value: key, label: x }));
+    return months.map((x, key) => ({ value: key, label: x.slice(0, 3) }));
   }, []);
 
   const availableDatesSet = useMemo(() => {

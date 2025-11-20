@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
+import { Stepper } from '@/components/stepper/Stepper.tsx';
 import {
   AppointmentFormData,
   getDefaultValues,
   STEPS_CONFIG,
-} from '@/components/Booking/DistrictBooking/steps-config.tsx';
-import { Stepper } from '@/components/stepper/Stepper.tsx';
+} from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
 
 const defaultValues: AppointmentFormData = getDefaultValues();
 

@@ -12,7 +12,7 @@ const InputContainer = styled.div`
 
 const InputTitle = styled.span<{ $hasError?: boolean }>`
   font-size: ${props => props.theme.typography.fontSize.sm};
-  margin-bottom: ${props => props.theme.spacing.sm};
+  margin-bottom: ${props => props.theme.spacing.xsm};
   color: ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.grey2)};
   font-weight: ${props => props.theme.typography.fontWeight.normal};
 `;
@@ -32,7 +32,7 @@ const StyledInput = styled.input<{
   $hasSearch?: boolean;
   $hasValue?: boolean;
 }>`
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.xsm};
+  padding: ${props => props.theme.spacing.xsm} ${props => props.theme.spacing.sm};
   padding-right: ${props =>
     props.$hasSearch && props.$hasValue
       ? '60px'

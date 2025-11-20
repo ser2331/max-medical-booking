@@ -37,8 +37,11 @@ const ButtonContainer = styled.button<{
   ${props =>
     props.$size === 'small' &&
     css`
+      width: 24px;
+      min-width: 24px;
+      height: 24px;
       font-size: ${props.theme.typography.fontSize.sm};
-      padding: ${props.theme.spacing.xs} ${props.theme.spacing.sm};
+      padding: 2px;
     `}
 
   /* Round кнопки */
@@ -53,9 +56,9 @@ const ButtonContainer = styled.button<{
 
       ${props.$size === 'small' &&
       css`
-        width: 26px;
-        min-width: 26px;
-        height: 26px;
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
       `}
     `}
 

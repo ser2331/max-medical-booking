@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/redux-hooks.ts';
+import { onChangeStep } from '@/store/slices/stepperSlice.ts';
 
 export const useStepper = (totalSteps: number) => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const dispatch = useAppDispatch();
+  const { step: currentStep } = useAppSelector(state => state.stepper);
 
+  const setCurrentStep = (step: number) => {
+    dispatch(onChangeStep(step));
+  };
   const next = () => {
     if (currentStep < totalSteps - 1) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep(currentStep + 1);
     }
   };
 
   const prev = () => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -26,7 +31,7 @@ export const useStepper = (totalSteps: number) => {
     next,
     prev,
     goToStep,
-    isFirstStep: currentStep === 0,
+    isFirstStep: !currentStep,
     isLastStep: currentStep === totalSteps - 1,
     totalSteps,
   };

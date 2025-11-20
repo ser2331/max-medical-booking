@@ -15,6 +15,7 @@ import { SelectedIcon } from '@/assets/icons/SelectedIcon.tsx';
 import { DatePickerArrowRight } from '@/assets/icons/DatePickerArrowRight.tsx';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { getErrorMessage } from '@/helpers/heplers.tsx';
+import { SelectArrowIcon } from '@/assets/icons/SelectArrowIcon.tsx';
 
 const FormSelectContainer = styled.div<{
   $withoutDescriptionMargin?: boolean;
@@ -137,6 +138,14 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, false>) =
         <DatePickerArrowRight />
       </CustomIndicatorContainer>
     </components.DropdownIndicator>
+  );
+};
+// Кастомный компонент для индикатора
+const DownChevron = (props: any) => {
+  return (
+    <components.DownChevron {...props}>
+      <SelectArrowIcon />
+    </components.DownChevron>
   );
 };
 
@@ -357,6 +366,7 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
           Option: props.withAddBtn ? OptionWithAdd : Option,
           SingleValue: CustomSingleValue,
           DropdownIndicator,
+          DownChevron,
         }}
         isDisabled={props.disabled ?? false}
         onFocus={props.onFocus}

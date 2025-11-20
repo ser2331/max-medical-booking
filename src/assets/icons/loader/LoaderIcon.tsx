@@ -6,7 +6,8 @@ const FullLinePath =
 export const LoaderIcon = React.memo(() => {
   return (
     <svg
-      width="182"
+      width="102"
+      // width="182"
       height="163"
       viewBox="0 0 182 163"
       fill="none"

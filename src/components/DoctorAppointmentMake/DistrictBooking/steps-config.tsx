@@ -1,8 +1,8 @@
-import { Step1 } from '@/components/Booking/DistrictBooking/steps/Step1.tsx';
-import { Step2 } from '@/components/Booking/DistrictBooking/steps/Step2.tsx';
-import { Step3 } from '@/components/Booking/DistrictBooking/steps/Step3.tsx';
-import { Step4 } from '@/components/Booking/DistrictBooking/steps/Step4.tsx';
-import { Step5 } from '@/components/Booking/DistrictBooking/steps/Step5.tsx';
+import { Step1 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step1.tsx';
+import { Step2 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step2.tsx';
+import { Step3 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step3.tsx';
+import { Step4 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step4.tsx';
+import { Step5 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step5.tsx';
 export interface AppointmentFormData {
   district: string;
   lpu: string;

@@ -1,0 +1,9 @@
+import React from 'react';
+
+export const SelectArrowIcon = React.memo(({ color = '--widget-blue' }: { color?: string }) => {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 11.25L5.25 7.5H12.75L9 11.25Z" fill={color} />
+    </svg>
+  );
+});
