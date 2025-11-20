@@ -4,7 +4,7 @@ import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-cont
 
 import {
   CheckCardDescription,
-  CheckCardName,
+  CheckCardName2,
   Flex,
   Line,
   StatValue,
@@ -66,13 +66,14 @@ export const Step2: React.FC = () => {
               $align={'flex-start'}
               $gap={4}
             >
-              <CheckCardName>{specialty.name}</CheckCardName>
+              <CheckCardName2>{specialty.name}</CheckCardName2>
 
               <Flex
                 $direction={'column'}
                 $align={'flex-start'}
                 $justifyContent={'flex-start'}
                 style={{ width: '100%' }}
+                $gap={4}
               >
                 <CheckCardDescription>
                   <span>Доступно врачей:</span>

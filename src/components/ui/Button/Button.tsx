@@ -31,7 +31,7 @@ const ButtonContainer = styled.button<{
   font-size: ${props => props.theme.typography.fontSize.md};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   transition: all 0.2s ease;
-  opacity: ${props => (props.$disabled ? 0.5 : 1)};
+  // opacity: ${props => (props.$disabled ? 0.5 : 1)};
 
   /* Размеры */
   ${props =>
@@ -83,9 +83,9 @@ const ButtonContainer = styled.button<{
     switch (props.$variant) {
       case 'primary':
         return css`
-          color: ${props.theme.colors.white};
-          background-color: ${props.theme.colors.blue};
-          border: 1px solid ${props.theme.colors.blue};
+          background-color: ${props.$disabled ? '#89BEE0' : props.theme.colors.blue};
+          border: 1px solid ${props.$disabled ? '#89BEE0' : props.theme.colors.blue};
+          color: ${props.$disabled ? '#C4DEEF' : props.theme.colors.white};
 
           &:hover {
             background-color: ${props.theme.colors.blueHover};

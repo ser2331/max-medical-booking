@@ -9,9 +9,9 @@ import {
 
 import {
   CheckCardDescription,
+  CheckCardName2,
   Flex,
   Line,
-  SpecialtyName,
   StatValue,
 } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
@@ -48,7 +48,7 @@ export const AvailabilityText = styled.div`
 export const AvailabilityStatus = styled.div<WithAvailability>`
   padding: 2px 12px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   background: ${props =>
     props.$isAvailable ? props.theme.colors.greenLight : props.theme.colors.redLight};
@@ -114,7 +114,7 @@ const NoSlotsMessage = styled.div`
 const ScheduleContainer = styled.div`
   width: 100%;
   height: 124px;
-  margin-top: ${props => props.theme.spacing.md};
+  margin-bottom: ${props => props.theme.spacing.md};
 `;
 
 // Вспомогательные функции
@@ -216,13 +216,14 @@ export const Step3: React.FC = () => {
                 $align={'flex-start'}
                 $gap={4}
               >
-                <SpecialtyName>{doctor.name}</SpecialtyName>
+                <CheckCardName2>{doctor.name}</CheckCardName2>
 
                 <Flex
                   $direction={'column'}
                   $align={'flex-start'}
                   $justifyContent={'flex-start'}
                   style={{ width: '100%' }}
+                  $gap={4}
                 >
                   <CheckCardDescription>
                     <span>Доступно врачей:</span>
@@ -296,7 +297,7 @@ export const Step3: React.FC = () => {
               </ScheduleContainer>
             )}
 
-            <Line marginBottom={0} />
+            <Line marginBottom={0} marginTop={0} />
           </Flex>
         );
       })}

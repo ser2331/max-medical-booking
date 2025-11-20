@@ -3,28 +3,28 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
-import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
+// import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomTextarea } from '@/components/ui/CustomTextarea/CustomTextarea.tsx';
 import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
 
-const CheckboxContainer = styled(Flex).attrs({ $align: 'flex-start' })`
-  gap: ${props => props.theme.spacing.sm};
-  padding: ${props => props.theme.spacing.md};
-  background: ${props => props.theme.colors.white};
-  border-radius: ${props => props.theme.borderRadius.medium};
-  border: 1px solid ${props => props.theme.colors.grey3};
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: ${props => props.theme.colors.blueHover};
-  }
-
-  &:focus-within {
-    border-color: ${props => props.theme.colors.blue};
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.blueLight};
-  }
-`;
+// const CheckboxContainer = styled(Flex).attrs({ $align: 'flex-start' })`
+//   gap: ${props => props.theme.spacing.sm};
+//   padding: ${props => props.theme.spacing.md};
+//   background: ${props => props.theme.colors.white};
+//   border-radius: ${props => props.theme.borderRadius.medium};
+//   border: 1px solid ${props => props.theme.colors.grey3};
+//   transition: all 0.2s ease;
+//
+//   &:hover {
+//     border-color: ${props => props.theme.colors.blueHover};
+//   }
+//
+//   &:focus-within {
+//     border-color: ${props => props.theme.colors.blue};
+//     box-shadow: 0 0 0 2px ${props => props.theme.colors.blueLight};
+//   }
+// `;
 
 const PageTitle = styled.span`
   width: 100%;
@@ -37,7 +37,7 @@ const PageTitle = styled.span`
 export const Step5: React.FC = () => {
   const { register, setValue, control } = useFormContext();
   const stepFields = STEPS_CONFIG[4].fields;
-  const [lastName, firstName, birthdate, phoneField, mail, consentAgreement] = stepFields;
+  const [lastName, firstName, birthdate, phoneField, mail /*, consentAgreement*/] = stepFields;
   const phoneValue = useWatch({
     control,
     name: phoneField,
@@ -166,23 +166,23 @@ export const Step5: React.FC = () => {
       />
 
       {/* Согласие на обработку данных */}
-      <CheckboxContainer>
-        <Checkbox
-          register={{
-            ...register(consentAgreement, {
-              required: 'Необходимо согласие на обработку персональных данных',
-            }),
-          }}
-          title={
-            <>
-              Я даю согласие на обработку моих персональных данных в соответствии с{' '}
-              <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
-                политикой конфиденциальности
-              </a>
-            </>
-          }
-        />
-      </CheckboxContainer>
+      {/*<CheckboxContainer>*/}
+      {/*  <Checkbox*/}
+      {/*    register={{*/}
+      {/*      ...register(consentAgreement, {*/}
+      {/*        required: 'Необходимо согласие на обработку персональных данных',*/}
+      {/*      }),*/}
+      {/*    }}*/}
+      {/*    title={*/}
+      {/*      <>*/}
+      {/*        Я даю согласие на обработку моих персональных данных в соответствии с{' '}*/}
+      {/*        <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">*/}
+      {/*          политикой конфиденциальности*/}
+      {/*        </a>*/}
+      {/*      </>*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*</CheckboxContainer>*/}
     </Flex>
   );
 };

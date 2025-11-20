@@ -59,7 +59,7 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'makingRecord',
     title: 'Оформление записи',
     component: Step5,
-    fields: ['lastName', 'firstName', 'birthdate', 'phone', 'mail', 'consentAgreement'],
+    fields: ['lastName', 'firstName', 'birthdate', 'phone', 'mail' /*, 'consentAgreement'*/],
     required: false,
   },
 ];

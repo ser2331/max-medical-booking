@@ -11,7 +11,7 @@ import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
 
-const LpuCard = styled(Flex).attrs({ $align: 'flex-start' })`
+const LpuCard = styled(Flex).attrs({ $align: 'center' })`
   &:nth-child(1) {
     margin-top: 16px;
   }

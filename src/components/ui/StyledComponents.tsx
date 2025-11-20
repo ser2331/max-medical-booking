@@ -55,6 +55,10 @@ export const CheckCardName = styled.div`
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
+export const CheckCardName2 = styled.div`
+  font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+`;
 export const CheckCardDescription = styled(CheckCardName)`
   font-weight: ${props => props.theme.typography.fontWeight.normal};
   color: ${props => props.theme.colors.grey2};
