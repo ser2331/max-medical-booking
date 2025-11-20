@@ -9,10 +9,13 @@ import {
   STEPS_CONFIG,
 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
 import { Stepper } from '@/components/stepper/Stepper.tsx';
+import { useAppDispatch } from '@/store/redux-hooks.ts';
+import { onChangeBookingType, onChangeStep } from '@/store/slices/stepperSlice.ts';
 
 const defaultValues: AppointmentFormData = getDefaultValues();
 
 export const DistrictBooking: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const messageToast = useMessageToast();
 
@@ -20,6 +23,8 @@ export const DistrictBooking: FC = () => {
     console.log('Форма отправлена:', data);
     messageToast('Форма заполнена успешно');
     navigate('/');
+    dispatch(onChangeStep(0));
+    dispatch(onChangeBookingType(''));
   };
 
   const handleStepChange = (currentStep: number, previousStep: number) => {
