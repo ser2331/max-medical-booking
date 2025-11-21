@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography } from '@maxhub/max-ui';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
@@ -28,17 +27,13 @@ const HeaderFlex = styled(Card)`
   }
 `;
 
-const HeaderTitle = styled(Typography.Headline)`
-  flex: 1;
+const HeaderTitle = styled('h1')`
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0;
-
-  @media (max-width: ${props => props.theme.breakpoints.sm}) {
-    font-size: 18px;
-  }
+  width: 100%;
+  font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  color: ${props => props.theme.colors.black};
+  line-height: ${props => props.theme.typography.fontSize.xxl};
 `;
 
 const HeaderActions = styled.div`

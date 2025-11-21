@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { PageLayout } from '@/components/layout/PageLayout.tsx';
-import { Home } from '@/components/Home/Home.tsx';
+import { Agreement } from '@/components/Agreement/Agreement.tsx';
 
-export const HomePage: React.FC = () => {
+export const AgreementPage: React.FC = () => {
   return (
     <PageLayout>
-      <Home />
+      <Agreement />
     </PageLayout>
   );
 };

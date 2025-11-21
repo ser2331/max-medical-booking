@@ -53,8 +53,6 @@ const RadioInput = styled.span<{
     border-radius: 50%;
     position: absolute;
     transition: all 0.2s ease;
-    background: ${props =>
-      props.$isError ? props.theme.colors.redLight : props.theme.colors.blueLight};
   }
 
   &:after {

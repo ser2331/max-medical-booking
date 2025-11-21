@@ -222,7 +222,6 @@ export const MaxDemo: React.FC = () => {
         <h3
           style={{
             color: '${props => props.theme.colors.black}',
-            marginBottom: '${props => props.theme.spacing.md}',
             fontSize: '${props => props.theme.typography.fontSize.lg}',
           }}
         >

@@ -7,18 +7,12 @@ import {
   useGetTimetableQuery,
 } from '@/api/services/lpus-controller/lpus-controller.ts';
 
-import {
-  CheckCardDescription,
-  CheckCardName2,
-  Flex,
-  Line,
-  StatValue,
-} from '@/components/ui/StyledComponents.tsx';
+import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
-import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 import { HorizontalSlider } from '@/components/HorizontalSlider.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
 
 interface WithAvailability {
   $isAvailable: boolean;
@@ -58,52 +52,6 @@ export const AvailabilityStatus = styled.div<WithAvailability>`
   text-align: center;
 `;
 
-// Секция с записями
-// export const AppointmentsSection = styled.div`
-//   margin-top: ${props => props.theme.spacing.xs};
-//   padding-top: ${props => props.theme.spacing.xs};
-//   border-top: 1px solid ${props => props.theme.colors.grey1};
-//   width: 100%;
-// `;
-//
-// export const AppointmentsTitle = styled.div`
-//   font-size: 9px;
-//   font-weight: ${props => props.theme.typography.fontWeight.medium};
-//   color: ${props => props.theme.colors.grey2};
-//   text-align: center;
-//   margin-bottom: 4px;
-// `;
-//
-// export const AppointmentList = styled(Flex).attrs({
-//   $direction: 'column',
-// })`
-//   gap: 2px;
-//   height: 60px;
-//   overflow-y: auto;
-// `;
-//
-// export const AppointmentItem = styled(Flex).attrs({
-//   $justifyContent: 'space-between',
-// })`
-//   padding: 2px 4px;
-//   border-radius: 4px;
-//   background: ${props => props.theme.colors.greenLight};
-//   font-size: 8px;
-//   line-height: 1;
-//   width: 100%;
-// `;
-//
-// export const AppointmentTime = styled.span`
-//   color: ${props => props.theme.colors.green};
-//   font-weight: ${props => props.theme.typography.fontWeight.medium};
-// `;
-//
-// export const AppointmentRoom = styled.span`
-//   color: ${props => props.theme.colors.grey2};
-//   font-size: 7px;
-// `;
-
-// Локальные стили только для этого компонента
 const NoSlotsMessage = styled.div`
   text-align: center;
   padding: ${props => props.theme.spacing.lg};
@@ -117,7 +65,6 @@ const ScheduleContainer = styled.div`
   margin-bottom: ${props => props.theme.spacing.md};
 `;
 
-// Вспомогательные функции
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
   const day = date.getDate();
@@ -137,15 +84,6 @@ const getTimeRange = (start: string, end: string): string => {
 
   return `${formatTime(startTime)}-${formatTime(endTime)}`;
 };
-
-// const getFormatedTime = (time: string) => {
-//   const dateTime = new Date(time);
-//   return `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
-// };
-
-// const formatAppointmentTime = (start: string, end: string): string => {
-//   return `${getFormatedTime(start)} - ${getFormatedTime(end)}`;
-// };
 
 export const Step3: React.FC = () => {
   const { register, watch, setValue } = useFormContext();
@@ -195,53 +133,15 @@ export const Step3: React.FC = () => {
             style={{ width: '100%' }}
             $gap={16}
           >
-            <Flex
-              key={doctor.id}
-              onClick={() => handleDoctorSelect(doctor.id)}
-              $direction={'row'}
-              $align={'center'}
-              $justifyContent={'flex-start'}
-              $gap={12}
-              style={{ width: '100%' }}
-            >
-              <RadioButton
-                value={doctor.id}
-                register={register('doctor', { required: 'Выберите врача' })}
-                checked={isSelected}
-                onChange={() => handleDoctorSelect(doctor.id)}
-              />
-              <Flex
-                $direction={'column'}
-                style={{ width: '100%', flex: 1 }}
-                $align={'flex-start'}
-                $gap={4}
-              >
-                <CheckCardName2>{doctor.name}</CheckCardName2>
-
-                <Flex
-                  $direction={'column'}
-                  $align={'flex-start'}
-                  $justifyContent={'flex-start'}
-                  style={{ width: '100%' }}
-                  $gap={4}
-                >
-                  <CheckCardDescription>
-                    <span>Доступно врачей:</span>
-                    <StatValue $available={!!doctor.freeParticipantCount}>
-                      {' '}
-                      {doctor.freeParticipantCount}
-                    </StatValue>
-                  </CheckCardDescription>
-                  <CheckCardDescription>
-                    <span>Свободных талонов:</span>
-                    <StatValue $available={!!doctor.freeTicketCount}>
-                      {' '}
-                      {doctor.freeTicketCount}
-                    </StatValue>
-                  </CheckCardDescription>
-                </Flex>
-              </Flex>
-            </Flex>
+            <RadioBtnCard
+              id={doctor.id}
+              name={doctor.name}
+              availableTop={{ label: 'Записей', value: doctor.freeParticipantCount }}
+              availableBottom={{ label: 'Талонов', value: doctor.freeTicketCount }}
+              onClick={handleDoctorSelect}
+              checked={isSelected}
+              register={register('doctor', { required: 'Выберите врача' })}
+            />
 
             {/* Расписание врача */}
             {isSelected && (
@@ -263,33 +163,6 @@ export const Step3: React.FC = () => {
                         <AvailabilityStatus $isAvailable={day.recordableDay}>
                           {day.recordableDay ? 'Доступно' : 'Недоступно'}
                         </AvailabilityStatus>
-                        {/*{day.denyCause && (*/}
-                        {/*  <AvailabilityText $isAvailable={day.recordableDay}>*/}
-                        {/*    {day.denyCause}*/}
-                        {/*  </AvailabilityText>*/}
-                        {/*)}*/}
-
-                        {/* Блок с записями */}
-                        {/*{day.recordableDay && day.appointments.length > 0 && (*/}
-                        {/*  <AppointmentsSection>*/}
-                        {/*    <AppointmentsTitle>Доступные записи:</AppointmentsTitle>*/}
-                        {/*    <AppointmentList>*/}
-                        {/*      {day.appointments.map(appointment => (*/}
-                        {/*        <AppointmentItem key={appointment.id}>*/}
-                        {/*          <AppointmentTime>*/}
-                        {/*            {formatAppointmentTime(*/}
-                        {/*              appointment.visitStart,*/}
-                        {/*              appointment.visitEnd,*/}
-                        {/*            )}*/}
-                        {/*          </AppointmentTime>*/}
-                        {/*          {appointment.room && (*/}
-                        {/*            <AppointmentRoom>каб. {appointment.room}</AppointmentRoom>*/}
-                        {/*          )}*/}
-                        {/*        </AppointmentItem>*/}
-                        {/*      ))}*/}
-                        {/*    </AppointmentList>*/}
-                        {/*  </AppointmentsSection>*/}
-                        {/*)}*/}
                       </DayCard>
                     ))}
                   </HorizontalSlider>
@@ -297,7 +170,7 @@ export const Step3: React.FC = () => {
               </ScheduleContainer>
             )}
 
-            <Line marginBottom={0} marginTop={0} />
+            <Line $marginBottom={0} $marginTop={0} />
           </Flex>
         );
       })}

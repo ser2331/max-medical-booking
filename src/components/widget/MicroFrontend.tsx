@@ -345,7 +345,7 @@ export const MicroFrontend = () => {
       {/*    }}*/}
       {/*  >*/}
       {/*    <AppSpin />*/}
-      {/*    <div style={{ marginTop: '10px', color: '#666' }}>*/}
+      {/*    <div style={{ $marginTop: '10px', color: '#666' }}>*/}
       {/*      {loadPhase === 'fetching' && 'Загрузка манифеста...'}*/}
       {/*      {loadPhase === 'loading' && 'Загрузка виджета...'}*/}
       {/*      {loadPhase === 'rendering' && 'Рендеринг...'}*/}

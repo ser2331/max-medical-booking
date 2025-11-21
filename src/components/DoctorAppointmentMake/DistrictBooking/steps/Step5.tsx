@@ -3,28 +3,15 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
-// import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomTextarea } from '@/components/ui/CustomTextarea/CustomTextarea.tsx';
 import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
-
-// const CheckboxContainer = styled(Flex).attrs({ $align: 'flex-start' })`
-//   gap: ${props => props.theme.spacing.sm};
-//   padding: ${props => props.theme.spacing.md};
-//   background: ${props => props.theme.colors.white};
-//   border-radius: ${props => props.theme.borderRadius.medium};
-//   border: 1px solid ${props => props.theme.colors.grey3};
-//   transition: all 0.2s ease;
-//
-//   &:hover {
-//     border-color: ${props => props.theme.colors.blueHover};
-//   }
-//
-//   &:focus-within {
-//     border-color: ${props => props.theme.colors.blue};
-//     box-shadow: 0 0 0 2px ${props => props.theme.colors.blueLight};
-//   }
-// `;
+import {
+  CustomSelect,
+  SelectOption,
+  SelectValue,
+} from '@/components/ui/CustomSelect/CustomSelect.tsx';
+type GenderOption = SelectOption & { value: 'm' | 'f' };
 
 const PageTitle = styled.span`
   width: 100%;
@@ -34,13 +21,24 @@ const PageTitle = styled.span`
   text-align: left;
 `;
 
+const genderOptions: GenderOption[] = [
+  { label: 'Мужской', value: 'm' },
+  { label: 'Женский', value: 'f' },
+];
+
 export const Step5: React.FC = () => {
   const { register, setValue, control } = useFormContext();
   const stepFields = STEPS_CONFIG[4].fields;
-  const [lastName, firstName, birthdate, phoneField, mail /*, consentAgreement*/] = stepFields;
+  const [lastName, firstName, birthdate, snils, policeNumber, phoneField, mail] = stepFields;
+
   const phoneValue = useWatch({
     control,
     name: phoneField,
+  });
+
+  const genderValue = useWatch({
+    control,
+    name: 'gender',
   });
 
   const handlePhoneChange = (value: string) => {
@@ -68,6 +66,9 @@ export const Step5: React.FC = () => {
       setValue(phoneField, '', { shouldValidate: true });
     }
   };
+  const handleChangeGender = (value: SelectValue | null) => {
+    setValue('gender', value, { shouldValidate: true });
+  };
 
   const phonePattern = {
     value: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
@@ -81,6 +82,7 @@ export const Step5: React.FC = () => {
       {/* Основные поля пациента */}
       <CustomInput
         title="Фамилия"
+        placeholder="Иванов"
         required
         showErrorText
         register={register(lastName, {
@@ -94,6 +96,7 @@ export const Step5: React.FC = () => {
 
       <CustomInput
         title="Имя"
+        placeholder="Иван"
         required
         showErrorText
         register={register(firstName, {
@@ -124,6 +127,42 @@ export const Step5: React.FC = () => {
         })}
       />
 
+      <CustomSelect
+        title="Пол"
+        options={genderOptions}
+        value={genderValue}
+        onChange={handleChangeGender}
+        isClearable={false}
+        cyName="gender-select"
+      />
+
+      <CustomInput
+        title="СНИЛС"
+        placeholder=""
+        required
+        showErrorText
+        register={register(snils, {
+          required: 'Введите СНИЛС',
+          minLength: {
+            value: 2,
+            message: 'СНИЛС должен содержать минимум 2 символа',
+          },
+        })}
+      />
+      <CustomInput
+        title="Номер полиса ОМС"
+        placeholder=""
+        required
+        showErrorText
+        register={register(policeNumber, {
+          required: 'Введите Номер полиса ОМС',
+          minLength: {
+            value: 2,
+            message: 'Номер полиса ОМС должен содержать минимум 2 символа',
+          },
+        })}
+      />
+      <CustomInput title="Серия полиса ОМС" register={register('policeSeria')} />
       {/* Контактные данные */}
       <CustomInput
         title="Телефон"
@@ -143,7 +182,7 @@ export const Step5: React.FC = () => {
       />
 
       <CustomInput
-        title="Email"
+        title="Электронная почта"
         type="email"
         placeholder="example@mail.ru"
         required
@@ -164,25 +203,6 @@ export const Step5: React.FC = () => {
         rows={3}
         register={register('comments')}
       />
-
-      {/* Согласие на обработку данных */}
-      {/*<CheckboxContainer>*/}
-      {/*  <Checkbox*/}
-      {/*    register={{*/}
-      {/*      ...register(consentAgreement, {*/}
-      {/*        required: 'Необходимо согласие на обработку персональных данных',*/}
-      {/*      }),*/}
-      {/*    }}*/}
-      {/*    title={*/}
-      {/*      <>*/}
-      {/*        Я даю согласие на обработку моих персональных данных в соответствии с{' '}*/}
-      {/*        <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">*/}
-      {/*          политикой конфиденциальности*/}
-      {/*        </a>*/}
-      {/*      </>*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*</CheckboxContainer>*/}
     </Flex>
   );
 };

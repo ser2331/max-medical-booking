@@ -203,7 +203,7 @@ export const Step4: React.FC = () => {
                     </Flex>
                   </Flex>
                 </Flex>
-                <Line marginBottom={0} />
+                <Line $marginBottom={0} />
               </Flex>
             ))}
           </AppointmentsList>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Container, Flex, Panel, Typography } from '@maxhub/max-ui';
 import { useMaxBridgeContext } from '../providers/MaxBridgeProvider';
+import { Flex, Section } from '@/components/ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 export const NotFoundPage: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
@@ -11,32 +12,22 @@ export const NotFoundPage: React.FC = () => {
   }, [hapticFeedback]);
 
   return (
-    <Container>
-      <Flex
-        direction="column"
-        gap={24}
-        align="center"
-        justify="center"
-        style={{ minHeight: '100dvh' }}
-      >
-        <Panel>
-          <Flex direction="column" gap={16} align="center">
-            <Typography.Display color="danger">404</Typography.Display>
+    <Section>
+      <Flex $direction="column" $gap={24} style={{ minHeight: '100dvh' }}>
+        <Flex $direction="column" $gap={16}>
+          <span>404</span>
 
-            <Typography.Headline>Страница не найдена</Typography.Headline>
+          <span>Страница не найдена</span>
 
-            <Typography.Body color="secondary">
-              Запрашиваемая страница не существует или была перемещена
-            </Typography.Body>
+          <span color="secondary">Запрашиваемая страница не существует или была перемещена</span>
 
-            <Link to="/" style={{ textDecoration: 'none' }}>
-              <Button onClick={() => hapticFeedback('impact', 'medium')} size="large">
-                На главную
-              </Button>
-            </Link>
-          </Flex>
-        </Panel>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <CustomButton onClick={() => hapticFeedback('impact', 'medium')}>
+              На главную
+            </CustomButton>
+          </Link>
+        </Flex>
       </Flex>
-    </Container>
+    </Section>
   );
 };

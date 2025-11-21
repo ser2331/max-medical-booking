@@ -91,7 +91,7 @@ export const Accordion: FC<AccordionProps> = ({
               <AccordionBody>{item.children}</AccordionBody>
             </AccordionContent>
 
-            <Line marginBottom={0} />
+            <Line $marginBottom={0} />
           </div>
         );
       })}

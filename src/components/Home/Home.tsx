@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/Cart.tsx';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { TeleMedIcon } from '@/assets/icons/TeleMedIcon.tsx';
 import { BookingIcon } from '@/assets/icons/BookingIcon.tsx';
+import { useNavigate } from 'react-router-dom';
 
 export const PageContainer = styled(Card).attrs({ $vertical: true })`
   flex: 1;
@@ -36,13 +37,13 @@ const mainMenuItems: MenuItemType[] = [
   {
     name: 'Телемедицинские услуги',
     description: '',
-    icon: <TeleMedIcon />,
+    icon: <TeleMedIcon color={'white'} />,
     path: '/booking',
   },
   {
     name: 'Запись на прием к врачу',
     description: '',
-    icon: <BookingIcon />,
+    icon: <BookingIcon color={'white'} />,
     path: '/doctor-appointment-make',
   },
 ];
@@ -69,12 +70,15 @@ const devMenuItems: MenuItemType[] = [
 ];
 
 export const Home: React.FC = () => {
+  const navigator = useNavigate();
   const { user, hapticFeedback } = useMaxBridgeContext();
   const messageToast = useMessageToast();
   const [showDevTools, setShowDevTools] = useState(false);
 
-  const handleMenuClick = () => {
-    hapticFeedback('impact', 'light');
+  const handleMenuClick = (path: string) => {
+    hapticFeedback('impact', 'light').then(() => {
+      navigator(path);
+    });
   };
 
   const handleShowToast = () => {
@@ -118,7 +122,9 @@ export const Home: React.FC = () => {
               onClick={handleMenuClick}
             />
           ))}
-          <CustomButton onClick={handleShowToast}>Show TOAST</CustomButton>
+          <CustomButton variant={'primary'} onClick={handleShowToast}>
+            Show TOAST
+          </CustomButton>
         </Menu>
       )}
     </PageContainer>

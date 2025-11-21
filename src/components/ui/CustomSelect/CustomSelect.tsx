@@ -1,7 +1,8 @@
-import { forwardRef } from 'react';
+import { ReactElement, useRef } from 'react';
 import Select, {
   ActionMeta,
   components,
+  ControlProps,
   CSSObjectWithLabel,
   DropdownIndicatorProps,
   GroupBase,
@@ -11,11 +12,12 @@ import Select, {
   StylesConfig,
 } from 'react-select';
 import styled, { useTheme } from 'styled-components';
+
 import { SelectedIcon } from '@/assets/icons/SelectedIcon.tsx';
-import { DatePickerArrowRight } from '@/assets/icons/DatePickerArrowRight.tsx';
+import { SelectArrowIcon } from '@/assets/icons/SelectArrowIcon.tsx';
+
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { getErrorMessage } from '@/helpers/heplers.tsx';
-import { SelectArrowIcon } from '@/assets/icons/SelectArrowIcon.tsx';
 
 const FormSelectContainer = styled.div<{
   $withoutDescriptionMargin?: boolean;
@@ -83,35 +85,41 @@ const OptionAddButton = styled.span`
 `;
 
 const CustomIndicatorContainer = styled(Flex)<{ $isFocused?: boolean }>`
+  padding: 8px 12px;
   transition: transform 0.2s ease;
   transform: ${props => (props.$isFocused ? 'rotate(180deg)' : 'rotate(0deg)')};
 
   svg {
     width: 18px;
     height: 18px;
-
-    path {
-      fill: ${props => props.theme.colors.grey2};
-    }
   }
 `;
 
-export type IValue = Date | string | number | null;
+const SingleValueContainer = styled('div')`
+  padding: 0 10px;
+`;
+
+export type SelectValue = string | number;
 
 export interface SelectOption {
-  value: IValue;
+  value: SelectValue;
   label: string;
   subLabel?: string;
   extraLabel?: string;
 }
 
-interface CustomSelectProps {
+export type StringSelectOption = SelectOption & { value: string };
+export type NumberSelectOption = SelectOption & { value: number };
+
+interface CustomSelectPropsGeneric<T extends SelectValue> {
+  options: SelectOption[];
+  onChange: (value: T | null) => void;
+  value?: T | null;
+  cyName: string;
+  isCalendar?: boolean;
   title?: string;
   description?: string;
   placeholder?: string;
-  options: SelectOption[];
-  value?: SelectOption | null;
-  onChange: (newValue: SingleValue<SelectOption>, actionMeta: ActionMeta<SelectOption>) => void;
   onSearch?: (value: string) => void;
   loadOptions?: boolean;
   disabled?: boolean;
@@ -122,7 +130,6 @@ interface CustomSelectProps {
   isClearable?: boolean;
   greyMode?: boolean;
   isSearchable?: boolean;
-  cyName: string;
   withAddBtn?: boolean;
   showErrorText?: boolean;
   isYearSelect?: boolean;
@@ -135,17 +142,26 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, false>) =
   return (
     <components.DropdownIndicator {...props}>
       <CustomIndicatorContainer $isFocused={props.selectProps.menuIsOpen}>
-        <DatePickerArrowRight />
+        <SelectArrowIcon color={'var(--widget-blue)'} />
       </CustomIndicatorContainer>
     </components.DropdownIndicator>
   );
 };
-// Кастомный компонент для индикатора
-const DownChevron = (props: any) => {
+
+const StyledControl = styled(Flex)<{ $isCalendar?: boolean }>`
+  width: ${props => (props.$isCalendar ? '100%' : '100%')};
+`;
+
+// Кастомный компонент для Control
+interface CustomControlProps extends ControlProps<SelectOption, false> {
+  isCalendar?: boolean;
+}
+
+const Control = (props: CustomControlProps) => {
   return (
-    <components.DownChevron {...props}>
-      <SelectArrowIcon />
-    </components.DownChevron>
+    <components.Control {...props}>
+      <StyledControl $isCalendar={props.isCalendar}>{props.children}</StyledControl>
+    </components.Control>
   );
 };
 
@@ -186,19 +202,21 @@ const Option = (props: OptionProps<SelectOption, false>) => {
 const CustomSingleValue = (props: SingleValueProps<SelectOption, false>) => {
   return (
     <components.SingleValue {...props}>
-      {props.data.label}
-      {props.data.subLabel && (
-        <>
-          {' '}
-          | <SubOption className="tm-sub-option">{props.data.subLabel}</SubOption>
-        </>
-      )}
-      {props.data.extraLabel && (
-        <>
-          {' '}
-          | <SubOption className="tm-sub-option">{props.data.extraLabel}</SubOption>
-        </>
-      )}
+      <SingleValueContainer>
+        {props.data.label}
+        {props.data.subLabel && (
+          <>
+            {' '}
+            | <SubOption className="tm-sub-option">{props.data.subLabel}</SubOption>
+          </>
+        )}
+        {props.data.extraLabel && (
+          <>
+            {' '}
+            | <SubOption className="tm-sub-option">{props.data.extraLabel}</SubOption>
+          </>
+        )}
+      </SingleValueContainer>
     </components.SingleValue>
   );
 };
@@ -220,10 +238,22 @@ const OptionWithAdd = (props: OptionProps<SelectOption, false>) => {
   );
 };
 
-export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props, ref) => {
+export const CustomSelect = <T extends SelectValue>(
+  props: CustomSelectPropsGeneric<T>,
+): ReactElement => {
   const theme = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Правильная типизация стилей для React Select
+  const selectedOption = props.options.find(option => option.value === props.value) || null;
+
+  const handleChange = (
+    newValue: SingleValue<SelectOption>,
+    _actionMeta: ActionMeta<SelectOption>,
+  ) => {
+    // Используем type assertion здесь
+    props.onChange(newValue ? (newValue.value as T) : null);
+  };
+
   const customStyles: StylesConfig<SelectOption, false> = {
     menuPortal: (base: CSSObjectWithLabel) => ({
       ...base,
@@ -232,10 +262,11 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
     control: (base: CSSObjectWithLabel) =>
       ({
         ...base,
-        borderRadius: theme.borderRadius.small,
-        minHeight: 44,
+        justifyContent: 'center',
+        width: '100%',
+        borderRadius: theme.borderRadius.medium,
+        minHeight: 40,
         color: theme.colors.black,
-        paddingLeft: theme.spacing.xs,
         backgroundColor: props.isYearSelect
           ? 'transparent'
           : props.error
@@ -341,7 +372,7 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
       data-cy={props.cyName}
       $withoutDescriptionMargin={props.withoutDescriptionMargin}
       $hasDescription={!!props.description}
-      ref={ref}
+      ref={containerRef}
     >
       {props.title && (
         <Title $hasError={!!props.error}>
@@ -353,8 +384,8 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
       <Select<SelectOption, false>
         options={props.options}
         placeholder={props.placeholder ?? ''}
-        onChange={props.onChange}
-        value={props.value ?? null}
+        onChange={handleChange}
+        value={selectedOption}
         onInputChange={props.onSearch}
         isSearchable={props.isSearchable !== undefined ? props.isSearchable : true}
         isClearable={props.isClearable !== undefined ? props.isClearable : true}
@@ -366,7 +397,7 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
           Option: props.withAddBtn ? OptionWithAdd : Option,
           SingleValue: CustomSingleValue,
           DropdownIndicator,
-          DownChevron,
+          Control: _props => <Control {..._props} isCalendar={props.isCalendar} />,
         }}
         isDisabled={props.disabled ?? false}
         onFocus={props.onFocus}
@@ -380,6 +411,4 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>((props
       {props.description && <Description>{props.description}</Description>}
     </FormSelectContainer>
   );
-});
-
-CustomSelect.displayName = 'CustomSelect';
+};

@@ -2,56 +2,55 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { useAppSelector } from '@/store/redux-hooks.ts';
+import { Card } from '@/components/ui/Cart.tsx';
+import { CheckIcon } from '@/assets/icons/CheckIcon.tsx';
 
-const StepperHeader = styled(Flex)`
-  height: auto;
-  padding: ${props => props.theme.spacing.lg};
-`;
-const CurrentStepTitle = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  color: ${props => props.theme.colors.black};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
-  text-align: center;
-  margin-bottom: ${props => props.theme.spacing.sm};
-`;
-const StepsContainer = styled(Flex)`
+const connectorGap = 4;
+const StepsContainer = styled(Flex).attrs({ $gap: connectorGap })`
   width: 100%;
+  position: relative;
 `;
-const StepDot = styled.div<{ $isActive: boolean; $isCompleted: boolean; $isClickable: boolean }>`
-  width: 8px;
-  height: 8px;
+
+const StepWrapper = styled(Flex).attrs({ $gap: connectorGap })`
+  position: relative;
+  z-index: 1;
+`;
+
+const StyledConnector = styled.div<{ $isCompleted: boolean }>`
+  flex: 1;
+  height: 0;
+  border: 2px solid
+    ${props => (props.$isCompleted ? props.theme.colors.blue : props.theme.colors.grey1)};
+  border-radius: 8px;
+  margin: 0 8px;
+  transition: border-color 0.3s ease;
+`;
+
+const StepDot = styled(Flex)<{
+  $isActive: boolean;
+  $isCompleted: boolean;
+}>`
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: ${props => {
-    if (props.$isCompleted) return props.theme.colors.green;
-    if (props.$isActive) return props.theme.colors.blue;
-    return props.theme.colors.grey3;
+    if (props.$isCompleted) return props.theme.colors.blue;
+    return props.theme.colors.white;
   }};
-  cursor: ${props => (props.$isClickable ? 'pointer' : 'default')};
+  border: 2px solid
+    ${props => {
+      if (props.$isCompleted) return props.theme.colors.blue;
+      if (props.$isActive) return props.theme.colors.blue;
+      return props.theme.colors.grey3;
+    }};
+  color: ${props => {
+    if (props.$isCompleted) return props.theme.colors.white;
+    if (props.$isActive) return props.theme.colors.blue;
+    return props.theme.colors.grey2;
+  }};
+  font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
   transition: all 0.3s ease;
-  position: relative;
-
-  ${props =>
-    props.$isActive &&
-    `
-    transform: scale(1.5);
-    box-shadow: ${props.theme.shadows.medium};
-  `}
-
-  ${props =>
-    props.$isCompleted &&
-    `
-    transform: scale(1.2);
-  `}
-
-  &:hover {
-    ${props =>
-      props.$isClickable &&
-      !props.$isActive &&
-      `
-      transform: scale(1.3);
-      background: ${props.theme.colors.blueHover};
-    `}
-  }
 `;
 
 interface IStepperDotsProps {
@@ -65,26 +64,26 @@ export const StepperDots: FC<IStepperDotsProps> = ({ steps }) => {
   const { step: currentStep } = useAppSelector(state => state.stepper);
 
   return (
-    <StepperHeader $direction="column">
-      <CurrentStepTitle>{steps[currentStep].title}</CurrentStepTitle>
-      <StepsContainer $align="center" $justifyContent="space-between">
+    <Card>
+      <StepsContainer $justifyContent="space-between">
         {steps.map((step, index) => {
           const isActive = index === currentStep;
           const isCompleted = index < currentStep;
-          const isClickable = index <= currentStep;
 
           return (
-            <StepDot
+            <StepWrapper
               key={step.id}
-              $isActive={isActive}
-              $isCompleted={isCompleted}
-              $isClickable={isClickable}
-              // onClick={() => handleStepClick(index)}
-              title={step.title}
-            />
+              style={{ flex: index === steps.length - 1 ? '0 0 auto' : '1' }}
+            >
+              <StepDot $isActive={isActive} $isCompleted={isCompleted} title={step.title}>
+                {isCompleted ? <CheckIcon /> : index + 1}
+              </StepDot>
+
+              {index < steps.length - 1 && <StyledConnector $isCompleted={isCompleted} />}
+            </StepWrapper>
           );
         })}
       </StepsContainer>
-    </StepperHeader>
+    </Card>
   );
 };

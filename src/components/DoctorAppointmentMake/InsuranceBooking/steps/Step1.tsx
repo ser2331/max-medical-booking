@@ -14,7 +14,7 @@ export const Step1: React.FC = () => {
 
   return (
     <div>
-      <h3 style={{ marginBottom: '16px' }}>Выберите услугу</h3>
+      <h3>Выберите услугу</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {services.map(service => (
           <label

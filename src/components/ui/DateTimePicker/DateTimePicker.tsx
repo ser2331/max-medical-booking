@@ -1,15 +1,18 @@
+import { useMemo } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { ru } from 'date-fns/locale/ru';
-import { useMemo } from 'react';
-import styled from 'styled-components';
+import { Locale } from 'date-fns';
 import moment from 'moment';
+import styled from 'styled-components';
+
+import { media } from '@/assets/style/mixins.ts';
 import { DatePickerArrowLeft } from '@/assets/icons/DatePickerArrowLeft.tsx';
 import { DatePickerArrowRight } from '@/assets/icons/DatePickerArrowRight.tsx';
-import { CustomSelect } from '@/components/ui/CustomSelect/CustomSelect.tsx';
-import 'react-datepicker/dist/react-datepicker.css';
+
 import { Flex } from '@/components/ui/StyledComponents.tsx';
-import { Locale } from 'date-fns';
-import { media } from '@/assets/style/mixins.ts';
+import { DateSelect } from '@/components/ui/DateTimePicker/DateSelect.tsx';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const FormFieldContainer = styled.div`
   width: 100%;
@@ -44,6 +47,7 @@ const ErrorText = styled.span`
 `;
 
 const HeaderContainer = styled(Flex).attrs({ $justifyContent: 'space-between' })`
+  height: 40px;
   width: 100%;
   align-items: center;
 `;
@@ -52,12 +56,11 @@ const MonthYearSection = styled(Flex)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  min-width: 0; // Важно для корректного сжатия
+  min-width: 0;
 `;
 
 const ArrowButton = styled(Flex)<{ $disabled?: boolean }>`
   cursor: ${props => (props.$disabled ? 'default' : 'pointer')};
-  //padding: ${props => props.theme.spacing.sm};
   border-radius: ${props => props.theme.borderRadius.medium};
   transition: background-color 0.2s ease;
   flex-shrink: 0;
@@ -67,9 +70,9 @@ const SelectWrapper = styled.div`
   min-width: 70px;
   flex: 1;
   max-width: 120px;
+  position: relative;
 `;
 
-// Стили для календаря
 const DatePickerStyles = styled.div`
   .react-datepicker {
     box-shadow: ${props => props.theme.shadows.large};
@@ -273,41 +276,43 @@ export const CustomDatePicker = (props: IProps) => {
   };
 
   return (
-    <>
-      <DatePickerStyles>
-        <FormFieldContainer>
-          {restProps.title && restProps.title.length > 0 && (
-            <Title $hasError={!!restProps.error}>
-              {restProps.title}
-              {restProps.required && <Required>*</Required>}
-            </Title>
-          )}
+    <DatePickerStyles>
+      <FormFieldContainer>
+        {restProps.title && restProps.title.length > 0 && (
+          <Title $hasError={!!restProps.error}>
+            {restProps.title}
+            {restProps.required && <Required>*</Required>}
+          </Title>
+        )}
 
-          <ReactDatePicker
-            selected={dateValue}
-            disabled={restProps.disabled}
-            dateFormat="dd.MM.yyyy"
-            locale={ru as Locale}
-            placeholderText={restProps.placeholder ?? ''}
-            onChange={handleDateChange}
-            maxDate={maxDate}
-            minDate={minDate}
-            inline={true}
-            filterDate={filterDate}
-            dayClassName={dayClassName}
-            renderCustomHeader={({
-              date,
-              changeYear,
-              decreaseMonth,
-              increaseMonth,
-              decreaseYear,
-              increaseYear,
-              prevMonthButtonDisabled,
-              nextMonthButtonDisabled,
-              prevYearButtonDisabled,
-              nextYearButtonDisabled,
-              changeMonth,
-            }) => (
+        <ReactDatePicker
+          selected={dateValue}
+          disabled={restProps.disabled}
+          dateFormat="dd.MM.yyyy"
+          locale={ru as Locale}
+          placeholderText={restProps.placeholder ?? ''}
+          onChange={handleDateChange}
+          maxDate={maxDate}
+          minDate={minDate}
+          inline={true}
+          filterDate={filterDate}
+          dayClassName={dayClassName}
+          renderCustomHeader={({
+            date,
+            changeYear,
+            decreaseMonth,
+            increaseMonth,
+            decreaseYear,
+            increaseYear,
+            prevMonthButtonDisabled,
+            nextMonthButtonDisabled,
+            prevYearButtonDisabled,
+            nextYearButtonDisabled,
+            changeMonth,
+          }) => {
+            const currentDate = date || new Date();
+
+            return (
               <HeaderContainer>
                 {/* Секция месяца */}
                 <MonthYearSection>
@@ -319,19 +324,11 @@ export const CustomDatePicker = (props: IProps) => {
                   </ArrowButton>
 
                   <SelectWrapper>
-                    <CustomSelect
-                      isYearSelect={true}
-                      isPositionAbsolute={true}
-                      isSearchable={false}
-                      cyName={'datepicker-select-month'}
-                      isClearable={false}
-                      value={
-                        date instanceof Date
-                          ? monthOptions.find(x => x.value === date.getMonth())
-                          : monthOptions.find(x => x.value === new Date().getMonth())
-                      }
-                      onChange={value => changeMonth(+(value?.value ?? 0))}
+                    <DateSelect
                       options={monthOptions}
+                      value={currentDate.getMonth()}
+                      onChange={changeMonth}
+                      placeholder="Месяц"
                     />
                   </SelectWrapper>
 
@@ -353,19 +350,11 @@ export const CustomDatePicker = (props: IProps) => {
                   </ArrowButton>
 
                   <SelectWrapper>
-                    <CustomSelect
-                      isYearSelect={true}
-                      isPositionAbsolute={true}
-                      isSearchable={false}
-                      cyName={'datepicker-select-year'}
-                      isClearable={false}
-                      value={
-                        date instanceof Date
-                          ? yearsOptions.find(x => x.value === date?.getFullYear())
-                          : yearsOptions.find(x => x.value === new Date().getFullYear())
-                      }
-                      onChange={value => changeYear(+(value?.value ?? 0))}
+                    <DateSelect
                       options={yearsOptions}
+                      value={currentDate.getFullYear()}
+                      onChange={changeYear}
+                      placeholder="Год"
                     />
                   </SelectWrapper>
 
@@ -377,12 +366,12 @@ export const CustomDatePicker = (props: IProps) => {
                   </ArrowButton>
                 </MonthYearSection>
               </HeaderContainer>
-            )}
-          />
+            );
+          }}
+        />
 
-          {(restProps?.errorText?.length || 0) > 0 && <ErrorText>{restProps.errorText}</ErrorText>}
-        </FormFieldContainer>
-      </DatePickerStyles>
-    </>
+        {(restProps?.errorText?.length || 0) > 0 && <ErrorText>{restProps.errorText}</ErrorText>}
+      </FormFieldContainer>
+    </DatePickerStyles>
   );
 };

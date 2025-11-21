@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
+import { AgreementPage } from '@/pages/AgreementPage.tsx';
 
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { DebugPage } from '../pages/DebugPage.tsx';
@@ -13,6 +14,9 @@ import { DoctorAppointmentMakePage } from '@/pages/DoctorAppointmentMake.tsx';
 export const AppRouter: React.FC = () => {
   return (
     <Routes>
+      {/*Страница согласий*/}
+      <Route path="/agreement" element={<AgreementPage />} />
+      {/*Домашняя страница*/}
       <Route path="/" element={<HomePage />} />
 
       {/* Widget записи */}

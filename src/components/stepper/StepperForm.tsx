@@ -6,18 +6,19 @@ import { useStepValidation } from '@/components/stepper/useStepValidation.tsx';
 
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import { StepperProps } from '@/components/stepper/Stepper.types.ts';
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { media } from '@/assets/style/mixins.ts';
 
-const NavigationContainer = styled.div`
+const NavigationContainer = styled(Flex)`
   position: fixed;
   bottom: 16px;
   left: 16px;
   opacity: 1;
   z-index: 99;
   width: calc(100% - 32px);
-  display: flex;
-  flex-direction: column;
   gap: ${props => props.theme.spacing.xs};
   padding: 0;
+  flex-direction: row-reverse;
 
   ${props => props.theme.breakpoints.md} {
     margin-top: ${props => props.theme.spacing.lg};
@@ -29,6 +30,9 @@ const NavigationContainer = styled.div`
     margin-top: ${props => props.theme.spacing.md};
     padding: ${props => props.theme.spacing.xs};
     gap: ${props => props.theme.spacing.xs};
+  }
+
+  ${media.md} {
     flex-direction: column;
   }
 `;

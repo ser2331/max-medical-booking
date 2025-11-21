@@ -1,7 +1,8 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import React from 'react';
+import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 
 const InputContainer = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ const StyledInput = styled.input<{
   $hasError?: boolean;
   $hasSearch?: boolean;
   $hasValue?: boolean;
+  $hasDateIcon?: boolean;
 }>`
   padding: ${props => props.theme.spacing.xsm} ${props => props.theme.spacing.sm};
   padding-right: ${props =>
@@ -38,7 +40,9 @@ const StyledInput = styled.input<{
       ? '60px'
       : props.$hasSearch
         ? '40px'
-        : props.theme.spacing.lg};
+        : props.$hasDateIcon
+          ? '40px'
+          : props.theme.spacing.lg};
   border: 1px solid
     ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.grey3)};
   border-radius: ${props => props.theme.borderRadius.medium};
@@ -50,6 +54,22 @@ const StyledInput = styled.input<{
   width: 100%;
   transition: all 0.2s ease;
   box-sizing: border-box;
+
+  /* Стили для date input */
+  &[type='date'] {
+    &::-webkit-calendar-picker-indicator {
+      background: transparent;
+      bottom: 0;
+      color: transparent;
+      cursor: pointer;
+      height: auto;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: auto;
+    }
+  }
 
   &:hover:enabled {
     border-color: ${props =>
@@ -74,6 +94,23 @@ const StyledInput = styled.input<{
   }
 `;
 
+const DateIconWrapper = styled.div`
+  position: absolute;
+  right: ${props => props.theme.spacing.sm};
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: ${props => props.theme.colors.grey3};
+  }
+`;
+
 const DescriptionText = styled.span`
   font-size: ${props => props.theme.typography.fontSize.xs};
   color: ${props => props.theme.colors.grey2};
@@ -92,11 +129,22 @@ interface CustomInputProps {
   type?: string;
   showErrorText?: boolean;
   register?: UseFormRegisterReturn;
+  showDateIcon?: boolean;
 }
 
-export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(props => {
-  const { value, title, description, required, disabled, placeholder, onChange, type, register } =
-    props;
+export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
+  const {
+    value,
+    title,
+    description,
+    required,
+    disabled,
+    placeholder,
+    onChange,
+    type,
+    register,
+    showDateIcon = type === 'date', // автоматически показывать иконку для date
+  } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -117,16 +165,21 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
 
       <InputWrapper>
         <StyledInput
+          ref={ref}
           disabled={disabled}
           placeholder={placeholder}
           type={type || 'text'}
           value={value}
+          $hasDateIcon={showDateIcon}
           {...register}
           onChange={handleChange}
         />
+        {showDateIcon && (
+          <DateIconWrapper>
+            <CalendarIcon />
+          </DateIconWrapper>
+        )}
       </InputWrapper>
-
-      {/*{showErrorText && error && <ErrorText>{getErrorMessage(error)}</ErrorText>}*/}
 
       {description && <DescriptionText>{description}</DescriptionText>}
     </InputContainer>
@@ -135,14 +188,4 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
 
 CustomInput.displayName = 'CustomInput';
 
-export const GlobalInputStyles = css`
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  input[type='number'] {
-    -moz-appearance: textfield;
-  }
-`;
+CustomInput.displayName = 'CustomInput';

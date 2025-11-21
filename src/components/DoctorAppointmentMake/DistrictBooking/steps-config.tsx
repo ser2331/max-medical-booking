@@ -13,6 +13,8 @@ export interface AppointmentFormData {
   lastName: string;
   firstName: string;
   birthdate: string;
+  snils: string;
+  policeNumber: string;
   phone: string;
   mail: string;
   consentAgreement: string;
@@ -59,7 +61,15 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'makingRecord',
     title: 'Оформление записи',
     component: Step5,
-    fields: ['lastName', 'firstName', 'birthdate', 'phone', 'mail' /*, 'consentAgreement'*/],
+    fields: [
+      'lastName',
+      'firstName',
+      'birthdate',
+      'snils',
+      'policeNumber',
+      'phone',
+      'mail' /*, 'consentAgreement'*/,
+    ],
     required: false,
   },
 ];

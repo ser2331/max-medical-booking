@@ -19,7 +19,6 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@maxhub/max-ui": "^0.1.12",
     "@reduxjs/toolkit": "^2.10.1",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",

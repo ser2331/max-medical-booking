@@ -1,8 +1,36 @@
 import styled, { css } from 'styled-components';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
-import { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
+import { media } from '@/assets/style/mixins.ts';
 
-// Styled компоненты для кнопки
+const BtnWrapper = styled.div`
+  width: 100%;
+  height: 40px;
+  max-width: ${props => props.theme.breakpoints.xs};
+
+  ${media.md} {
+    max-width: 100%;
+  }
+  position: relative;
+`;
+const Background = styled.div`
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  position: absolute;
+  border-radius: ${props => props.theme.components.button.borderRadius};
+  background: white;
+  width: 100%;
+  height: 100%;
+  border: none;
+  max-width: ${props => props.theme.breakpoints.xs};
+  ${media.md} {
+    max-width: 100%;
+  }
+`;
+
 const ButtonContainer = styled.button<{
   $disabled?: boolean;
   $loading?: boolean;
@@ -20,19 +48,30 @@ const ButtonContainer = styled.button<{
   $withoutBorder?: boolean;
   $noPaddingMobile?: boolean;
 }>`
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
+  z-index: 99;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: ${props => props.theme.components.button.borderRadius};
   cursor: ${props => (props.$disabled || props.$loading ? 'default' : 'pointer')};
   border-radius: ${props => props.theme.components.button.borderRadius};
+  border: none !important;
+  padding: ${props => `${props.theme.spacing.xsm} ${props.theme.spacing.md}`};
+
   display: flex;
   justify-content: center;
   align-items: center;
   gap: ${props => props.theme.spacing.sm};
   text-decoration: none;
+  line-height: ${props => props.theme.typography.fontSize.xxl};
   font-size: ${props => props.theme.typography.fontSize.md};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   transition: all 0.2s ease;
-  // opacity: ${props => (props.$disabled ? 0.5 : 1)};
-
+  opacity: ${props => (props.$disabled ? 0.5 : 1)};
+  max-width: ${props => props.theme.breakpoints.xs};
+  ${media.md} {
+    max-width: 100%;
+  }
   /* Размеры */
   ${props =>
     props.$size === 'small' &&
@@ -83,13 +122,15 @@ const ButtonContainer = styled.button<{
     switch (props.$variant) {
       case 'primary':
         return css`
-          background-color: ${props.$disabled ? '#89BEE0' : props.theme.colors.blue};
-          border: 1px solid ${props.$disabled ? '#89BEE0' : props.theme.colors.blue};
+          //background-color: ${props.$disabled ? '#89BEE0' : props.theme.colors.blue};
+          background-color: ${props => props.theme.colors.blue};
+          outline: 1px solid ${props.$disabled ? 'none' : props.theme.colors.blue};
+          // outline: 1px solid ${props => props.theme.colors.blue};
           color: ${props.$disabled ? '#C4DEEF' : props.theme.colors.white};
 
           &:hover {
             background-color: ${props.theme.colors.blueHover};
-            border-color: ${props.theme.colors.blueHover};
+            outline-color: ${props.theme.colors.blueHover};
           }
         `;
 
@@ -97,7 +138,7 @@ const ButtonContainer = styled.button<{
         return css`
           color: ${props.theme.colors.black};
           background-color: transparent;
-          border: 1px solid transparent;
+          outline: 1px solid transparent;
 
           &:hover {
             background-color: ${props.theme.colors.white};
@@ -108,19 +149,19 @@ const ButtonContainer = styled.button<{
       case 'danger':
         return css`
           color: ${props.theme.colors.white};
-          border: 1px solid ${props.theme.colors.red};
+          outline: 1px solid ${props.theme.colors.red};
           background: ${props.theme.colors.red};
 
           &:hover {
             background: ${props.theme.colors.redExtra};
-            border-color: ${props.theme.colors.redExtra};
+            outline-color: ${props.theme.colors.redExtra};
           }
         `;
 
       case 'danger-outline':
         return css`
           color: ${props.theme.colors.red};
-          border: 1px solid ${props.theme.colors.red};
+          outline: 1px solid ${props.theme.colors.red};
           background: transparent;
 
           &:hover {
@@ -131,7 +172,7 @@ const ButtonContainer = styled.button<{
       case 'danger-outline-canceled':
         return css`
           color: ${props.theme.colors.statusCanceled};
-          border: 1px solid ${props.theme.colors.statusCanceled};
+          outline: 1px solid ${props.theme.colors.statusCanceled};
           background: ${props.theme.colors.white};
 
           &:hover {
@@ -142,7 +183,7 @@ const ButtonContainer = styled.button<{
       case 'outline-primary-finished':
         return css`
           color: ${props.theme.colors.statusFinished};
-          border: 1px solid ${props.theme.colors.statusFinished};
+          outline: 1px solid ${props.theme.colors.statusFinished};
           background: ${props.theme.colors.white};
 
           &:hover {
@@ -154,7 +195,6 @@ const ButtonContainer = styled.button<{
         return css`
           color: ${props.theme.colors.blue};
           background-color: transparent;
-          border: 1px solid transparent;
 
           &:hover {
             color: ${props.theme.colors.blueHover};
@@ -165,12 +205,12 @@ const ButtonContainer = styled.button<{
         return css`
           color: ${props.theme.colors.blue};
           background-color: ${props.theme.colors.white};
-          border: 1px solid ${props.theme.colors.blue};
+          outline: 1px solid ${props.theme.colors.blue};
 
           &:hover {
             color: ${props.theme.colors.blueHover};
             background-color: ${props.theme.colors.blueLight};
-            border-color: ${props.theme.colors.blueHover};
+            outline-color: ${props.theme.colors.blueHover};
           }
         `;
 
@@ -178,7 +218,7 @@ const ButtonContainer = styled.button<{
         return css`
           color: ${props.theme.colors.blue};
           background-color: ${props.theme.colors.white};
-          border: 1px solid ${props.theme.colors.grey3};
+          outline: 1px solid ${props.theme.colors.grey3};
         `;
     }
   }}
@@ -195,7 +235,7 @@ const ButtonContainer = styled.button<{
 `;
 
 interface CustomButtonProps {
-  onClick?: (event?: never) => void;
+  onClick?: (event?: MouseEvent | undefined) => void;
   className?: string;
   style?: { width?: string; height?: string };
   loading?: boolean;
@@ -223,14 +263,14 @@ interface CustomButtonProps {
 }
 
 export const CustomButton = (props: CustomButtonProps) => {
-  const handleClick = (event: any) => {
+  const handleClick = (event: MouseEvent | undefined) => {
     if (!props.disabled && !props.loading && props.onClick) {
       props.onClick(event);
     }
   };
 
   return (
-    <>
+    <BtnWrapper>
       <ButtonContainer
         onClick={handleClick}
         className={props.className}
@@ -257,36 +297,7 @@ export const CustomButton = (props: CustomButtonProps) => {
         )}
         {props.onlyLoader && props.loading ? <></> : props.children}
       </ButtonContainer>
-    </>
+      <Background />
+    </BtnWrapper>
   );
 };
-
-// Дополнительный компонент для контейнера кнопок
-export const ButtonContainerGroup = styled.div`
-  display: flex;
-  gap: ${props => props.theme.spacing.sm};
-  align-items: center;
-`;
-
-// Компонент для кнопки возврата
-export const ReturnBackButton = styled.button`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  width: fit-content;
-  background: none;
-  border: none;
-  color: ${props => props.theme.colors.blue};
-  padding: 0;
-
-  span {
-    font-size: ${props => props.theme.typography.fontSize.lg};
-    margin-right: ${props => props.theme.spacing.sm};
-    width: 10px;
-  }
-
-  &:hover {
-    color: ${props => props.theme.colors.blueHover};
-  }
-`;

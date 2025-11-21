@@ -2,21 +2,47 @@ import styled from 'styled-components';
 import { ChangeEvent, forwardRef, ReactNode } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
-const StyledCheckbox = styled.input`
-  margin-top: 2px;
-  width: 16px;
-  height: 16px;
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { CheckBoxIcon } from '@/assets/icons/CheckBoxIcon.tsx';
+
+const CheckboxContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+const StyledCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  width: 24px;
+  height: 24px;
   cursor: pointer;
+  border-radius: ${({ theme }) => theme.borderRadius.small || '4px'};
+  border: 1px solid ${({ theme }) => theme.colors.blue};
+  outline: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
   &:checked {
-    accent-color: ${props => props.theme.colors.blue};
+    background-color: ${props => props.theme.colors.blue};
   }
 `;
+const CheckIconWrapper = styled.div<{ $checked: boolean }>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: ${props => (props.$checked ? 1 : 0)};
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 
+  svg {
+    width: 16px;
+    height: 16px;
+    color: white;
+  }
+`;
 const CheckboxLabel = styled.label`
-  color: ${props => props.theme.colors.black};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  line-height: 1.4;
+  font-size: ${props => props.theme.typography.fontSize.md};
+  line-height: ${props => props.theme.typography.fontSize.xxl};
   cursor: pointer;
   flex: 1;
 
@@ -27,7 +53,6 @@ const CheckboxLabel = styled.label`
 
     &:hover {
       color: ${props => props.theme.colors.blueHover};
-      text-decoration: none;
     }
   }
 `;
@@ -44,8 +69,10 @@ interface CheckboxProps {
   showErrorText?: boolean;
   register?: UseFormRegisterReturn;
 }
-export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(props => {
+
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
   const { checked, title, disabled, onChange, register } = props;
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(event.target.value);
@@ -55,15 +82,20 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(props => {
   };
 
   return (
-    <>
-      <StyledCheckbox
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        {...register}
-        onChange={handleChange}
-      />
+    <Flex $gap={12} style={{ width: '100%' }}>
+      <CheckboxContainer>
+        <StyledCheckbox
+          ref={ref}
+          checked={checked}
+          disabled={disabled}
+          {...register}
+          onChange={handleChange}
+        />
+        <CheckIconWrapper $checked={!!checked}>
+          <CheckBoxIcon />
+        </CheckIconWrapper>
+      </CheckboxContainer>
       {!!title && <CheckboxLabel htmlFor={register?.name}>{title}</CheckboxLabel>}
-    </>
+    </Flex>
   );
 });

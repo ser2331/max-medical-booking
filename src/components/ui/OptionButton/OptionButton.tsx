@@ -1,7 +1,8 @@
+import { ReactElement } from 'react';
 import styled from 'styled-components';
+
 import { Flex } from '@/components/ui/StyledComponents';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
-import { ReactElement } from 'react';
 
 const SelectionContainer = styled(Flex)`
   width: 100%;
@@ -28,7 +29,7 @@ const Btn = styled(CustomButton).attrs({ variant: 'outline-default' })<{
     background: ${props =>
       props.$isSelected ? props.theme.colors.white : props.theme.colors.grey1};
     color: ${props => props.theme.colors.black};
-    border: none;
+    outline: none;
 
     &:active {
       transform: none;

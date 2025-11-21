@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { media } from '@/assets/style/mixins.ts';
-
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import authBackground from '@/assets/images/auth/authBack.png';
@@ -38,14 +36,6 @@ const Subtitle = styled(Text)`
   line-height: ${props => props.theme.spacing.lg};
 `;
 
-const AuthBtn = styled(CustomButton)`
-  width: 100%;
-  max-width: ${props => props.theme.breakpoints.xs};
-  ${media.md} {
-    max-width: 100%;
-  }
-`;
-
 const Icon = styled.img`
   width: 20px;
   height: 20px;
@@ -61,10 +51,10 @@ const AuthContent: React.FC = () => {
         Для записи к врачу или на телемедицинские услуги, пожалуйста, авторизуйтесь через ГОСУСЛУГИ
       </Subtitle>
 
-      <AuthBtn onClick={() => navigate('/')}>
+      <CustomButton onClick={() => navigate('/agreement')}>
         <Icon src={authIcon} alt="Госуслуги" />
         Войти через ГОСУСЛУГИ
-      </AuthBtn>
+      </CustomButton>
     </Container>
   );
 };

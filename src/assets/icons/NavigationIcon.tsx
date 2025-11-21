@@ -6,9 +6,9 @@ export const NavigationIcon = React.memo(({ color = 'var(--widget-blue)' }: { co
       <path
         d="M6.5 18L14 10.5L6.5 3"
         stroke={color}
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
