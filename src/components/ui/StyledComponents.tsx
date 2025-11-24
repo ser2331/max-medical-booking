@@ -71,7 +71,7 @@ export const ContactLink = styled.a`
   }
 `;
 
-export const NavigationContainer = styled(Flex)<{ $vertical: boolean }>`
+export const NavigationContainer = styled(Flex)<{ $vertical?: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;

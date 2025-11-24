@@ -74,7 +74,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
     }
 
     dispatch(onChangeStep(0));
-    dispatch(onChangeBookingType(''));
+    dispatch(onChangeBookingType(false));
   };
 
   return (
