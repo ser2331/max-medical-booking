@@ -1,45 +1,10 @@
 import { FieldValues, useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
 
 import { useStepper } from '@/components/stepper/useStepper.tsx';
 import { useStepValidation } from '@/components/stepper/useStepValidation.tsx';
 
-import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import { StepperProps } from '@/components/stepper/Stepper.types.ts';
-import { Flex } from '@/components/ui/StyledComponents.tsx';
-
-const NavigationContainer = styled(Flex)`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  opacity: 1;
-  z-index: 99;
-  width: 100%;
-  padding: ${props => props.theme.spacing.md};
-  background: ${props => props.theme.colors.white};
-  gap: ${props => props.theme.spacing.md};
-  border-radius: 0 0
-    ${props => `${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
-  flex-direction: row-reverse;
-
-  ${props => props.theme.breakpoints.md} {
-    margin-top: ${props => props.theme.spacing.lg};
-    padding: ${props => props.theme.spacing.sm};
-    gap: ${props => props.theme.spacing.sm};
-  }
-
-  ${props => props.theme.breakpoints.xs} {
-    margin-top: ${props => props.theme.spacing.md};
-    padding: ${props => props.theme.spacing.xs};
-    gap: ${props => props.theme.spacing.xs};
-  }
-`;
-
-const NavigationBtn = styled(CustomButton)`
-  width: 100%;
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
-`;
+import { NavigationBtn, NavigationContainer } from '@/components/ui/StyledComponents.tsx';
 
 export const StepperForm = <TFieldValues extends FieldValues>({
   steps,
@@ -84,7 +49,7 @@ export const StepperForm = <TFieldValues extends FieldValues>({
           variant="primary"
           onClick={handleSubmit(onSubmit)}
         >
-          Завершить
+          Записаться
         </NavigationBtn>
       )}
 

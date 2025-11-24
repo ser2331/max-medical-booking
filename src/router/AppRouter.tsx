@@ -7,9 +7,9 @@ import { NotFoundPage } from '../pages/NotFoundPage';
 import { DebugPage } from '../pages/DebugPage.tsx';
 import { MaxDemoPage } from '../pages/MaxDemoPage.tsx';
 
-import { BookingPage } from '../pages/BookingPage.tsx';
+import { TelemedicineServicesPage } from '../pages/TelemedicineServicesPage.tsx';
 import { EsiaAuthPage } from '@/pages/EsiaAuthPage.tsx';
-import { DoctorAppointmentMakePage } from '@/pages/DoctorAppointmentMake.tsx';
+import { BookingPage } from '@/pages/BookingPage.tsx';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -20,9 +20,9 @@ export const AppRouter: React.FC = () => {
       <Route path="/" element={<HomePage />} />
 
       {/* Widget записи */}
-      <Route path="/booking" element={<BookingPage />} />
+      <Route path="/booking" element={<TelemedicineServicesPage />} />
       {/*Steps demo*/}
-      <Route path="/doctor-appointment-make" element={<DoctorAppointmentMakePage />} />
+      <Route path="/doctor-appointment-make" element={<BookingPage />} />
       {/*ESSIA*/}
       <Route path="/auth" element={<EsiaAuthPage />} />
 

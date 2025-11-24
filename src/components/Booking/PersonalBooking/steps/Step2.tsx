@@ -4,10 +4,11 @@ import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-cont
 
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
-import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import styled from 'styled-components';
 import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
+import { ISpecialty } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
 const Wrapper = styled(Flex).attrs({
   $direction: 'column',
@@ -21,16 +22,25 @@ const Wrapper = styled(Flex).attrs({
 export const Step2: React.FC = () => {
   const { register, watch, setValue } = useFormContext();
   const selectedSpecialty = watch('specialty');
-  const { data: specialties, error, isLoading } = useGetSpecialtiesQuery({ lpuId: '' });
+  const selectedLpu = watch('lpu');
+
+  const {
+    data: specialties,
+    error,
+    isLoading,
+  } = useGetSpecialtiesQuery({ lpuId: selectedLpu }, { skip: !selectedLpu });
+
   const stepFields = STEPS_CONFIG[1].fields;
   const [specialty] = stepFields;
-  const handleDoctorSelect = (specialtyId: string) => {
-    setValue(specialty, specialtyId, {
+
+  const handleDoctorSelect = (currentSpecialty: ISpecialty) => {
+    setValue(specialty, currentSpecialty, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     });
   };
+
   if (isLoading) {
     return <AppSpin />;
   }
@@ -48,8 +58,8 @@ export const Step2: React.FC = () => {
             name={specialty.name}
             availableTop={{ label: 'Доступно врачей', value: specialty.countFreeParticipant }}
             availableBottom={{ label: 'Свободно талонов', value: specialty.countFreeTicket }}
-            onClick={handleDoctorSelect}
-            checked={specialty.id === selectedSpecialty}
+            onClick={() => handleDoctorSelect(specialty)}
+            checked={specialty.id === selectedSpecialty?.id}
             register={register('specialty', { required: 'Выберите специальность врача' })}
           />
           <Line $marginBottom={0} $marginTop={0} />

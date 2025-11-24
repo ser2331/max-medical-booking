@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/StyledComponents.tsx';
 import { CustomDatePicker } from '@/components/ui/DateTimePicker/DateTimePicker.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
-import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 
 const AppointmentsTitle = styled.h4`
@@ -61,8 +61,9 @@ const formatDateToDisplay = (dateString: string): string => {
 export const Step4: React.FC = () => {
   const { register, watch, setValue } = useFormContext();
   const stepFields = STEPS_CONFIG[3].fields;
-  const [appointment, date] = stepFields;
+  const [appointment] = stepFields;
 
+  const selectedLpu = watch('lpu');
   const selectedDoctor = watch('doctor');
   const selectedDate = watch('date');
   const selectedAppointment = watch('appointment');
@@ -74,7 +75,7 @@ export const Step4: React.FC = () => {
     isLoading,
   } = useGetAppointmentsQuery(
     {
-      lpuId: '1',
+      lpuId: selectedLpu.id,
       doctorId: selectedDoctor,
     },
     {
@@ -111,12 +112,12 @@ export const Step4: React.FC = () => {
 
   const handleDateSelect = (_date: Date | string | null) => {
     const formattedDate = moment(_date).format('YYYY-MM-DD') as string;
-    setValue(appointment, '', { shouldValidate: true });
-    setValue(date, formattedDate, { shouldValidate: true });
+    setValue(appointment, null, { shouldValidate: true });
+    setValue('date', formattedDate, { shouldValidate: false });
   };
 
-  const handleAppointmentSelect = (appointmentId: string) => {
-    setValue('appointment', appointmentId, { shouldValidate: true });
+  const handleAppointmentSelect = (appointment: IAppointment) => {
+    setValue('appointment', appointment, { shouldValidate: true });
   };
 
   if (isLoading) {
@@ -163,7 +164,7 @@ export const Step4: React.FC = () => {
               >
                 <Flex
                   key={appointment.id}
-                  onClick={() => handleAppointmentSelect(appointment.id)}
+                  onClick={() => handleAppointmentSelect(appointment)}
                   $direction={'row'}
                   $align={'center'}
                   $justifyContent={'flex-start'}
@@ -173,8 +174,8 @@ export const Step4: React.FC = () => {
                   <RadioButton
                     value={appointment.id}
                     register={register('doctor', { required: 'Выберите врача' })}
-                    checked={selectedAppointment === appointment.id}
-                    onChange={() => handleAppointmentSelect(appointment.id)}
+                    checked={selectedAppointment?.id === appointment.id}
+                    onChange={() => handleAppointmentSelect(appointment)}
                   />
                   <Flex
                     $direction={'column'}

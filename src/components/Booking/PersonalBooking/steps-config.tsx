@@ -1,20 +1,26 @@
-import { Step1 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step1/Step1.tsx';
-import { Step2 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step2.tsx';
-import { Step3 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step3.tsx';
-import { Step4 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step4.tsx';
-import { Step5 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step5.tsx';
+import { ComponentType } from 'react';
+import { Step1 } from '@/components/Booking/PersonalBooking/steps/Step1/Step1.tsx';
+import { Step2 } from '@/components/Booking/PersonalBooking/steps/Step2.tsx';
+import { Step3 } from '@/components/Booking/PersonalBooking/steps/Step3.tsx';
+import { Step4 } from '@/components/Booking/PersonalBooking/steps/Step4.tsx';
+import { Step5 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
+import {
+  IAppointment,
+  IDoctor,
+  ILpus,
+  ISpecialty,
+} from '@/api/services/lpus-controller/lpus-controller.types.ts';
 export interface AppointmentFormData {
-  district: string;
-  lpu: string;
-  specialty: string;
-  doctor: string;
-  date: string;
-  appointment: string;
+  lpu: ILpus | null;
+  specialty: ISpecialty | null;
+  doctor: IDoctor | null;
+  appointment: IAppointment | null;
+
   lastName: string;
   firstName: string;
-  birthdate: string;
+  birthDate: string;
   snils: string;
-  policeNumber: string;
+  polisN: string;
   phone: string;
   mail: string;
   consentAgreement: string;
@@ -23,7 +29,7 @@ export interface AppointmentFormData {
 export interface StepConfig {
   id: string;
   title: string;
-  component: React.ComponentType;
+  component: ComponentType;
   fields: (keyof AppointmentFormData)[];
   required?: boolean;
 }
@@ -33,7 +39,7 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'medicalOrganization',
     title: 'Выбор медучреждения',
     component: Step1,
-    fields: ['district', 'lpu'],
+    fields: ['lpu'],
     required: true,
   },
   {
@@ -54,7 +60,7 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'datetime',
     title: 'Выбор времени',
     component: Step4,
-    fields: ['appointment', 'date'],
+    fields: ['appointment'],
     required: true,
   },
   {
@@ -64,9 +70,9 @@ export const STEPS_CONFIG: StepConfig[] = [
     fields: [
       'lastName',
       'firstName',
-      'birthdate',
+      'birthDate',
       'snils',
-      'policeNumber',
+      'polisN',
       'phone',
       'mail' /*, 'consentAgreement'*/,
     ],
@@ -80,7 +86,17 @@ export const getDefaultValues = (): AppointmentFormData => {
 
   STEPS_CONFIG.forEach(step => {
     step.fields.forEach(field => {
-      defaultValues[field] = '';
+      if (field === 'lpu') {
+        defaultValues[field] = null;
+      } else if (field === 'specialty') {
+        defaultValues[field] = null;
+      } else if (field === 'doctor') {
+        defaultValues[field] = null;
+      } else if (field === 'appointment') {
+        defaultValues[field] = null;
+      } else {
+        defaultValues[field] = '';
+      }
     });
   });
 

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomTextarea } from '@/components/ui/CustomTextarea/CustomTextarea.tsx';
-import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import {
   CustomSelect,
   SelectOption,
@@ -29,7 +29,7 @@ const genderOptions: GenderOption[] = [
 export const Step5: React.FC = () => {
   const { register, setValue, control } = useFormContext();
   const stepFields = STEPS_CONFIG[4].fields;
-  const [lastName, firstName, birthdate, snils, policeNumber, phoneField, mail] = stepFields;
+  const [lastName, firstName, birthDate, snils, polisN, phoneField, mail] = stepFields;
 
   const phoneValue = useWatch({
     control,
@@ -115,7 +115,7 @@ export const Step5: React.FC = () => {
         required
         type="date"
         showErrorText
-        register={register(birthdate, {
+        register={register(birthDate, {
           required: 'Введите дату рождения',
           validate: value => {
             if (!value) return true;
@@ -154,7 +154,7 @@ export const Step5: React.FC = () => {
         placeholder=""
         required
         showErrorText
-        register={register(policeNumber, {
+        register={register(polisN, {
           required: 'Введите Номер полиса ОМС',
           minLength: {
             value: 2,
@@ -162,7 +162,7 @@ export const Step5: React.FC = () => {
           },
         })}
       />
-      <CustomInput title="Серия полиса ОМС" register={register('policeSeria')} />
+      <CustomInput title="Серия полиса ОМС" register={register('polisS')} />
       {/* Контактные данные */}
       <CustomInput
         title="Телефон"

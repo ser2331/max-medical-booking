@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 export const Main = styled('div')`
   position: fixed;
   overflow: hidden;
@@ -14,7 +15,7 @@ export const Main = styled('div')`
 export const Flex = styled('div')<{
   $direction?: 'row' | 'column';
   $align?: 'center' | 'flex-start' | 'flex-end' | 'stretch';
-  $justifyContent?: 'space-between' | 'space-around' | 'flex-start';
+  $justifyContent?: 'space-between' | 'space-around' | 'flex-start' | 'flex-end';
   $gap?: number;
 }>`
   display: flex;
@@ -54,4 +55,51 @@ export const CheckCardName = styled.div`
 export const CheckCardDescription = styled(CheckCardName)`
   font-weight: ${props => props.theme.typography.fontWeight.normal};
   color: ${props => props.theme.colors.grey2};
+`;
+
+export const ContactLink = styled.a`
+  color: ${props => props.theme.colors.grey2};
+  font-weight: ${props => props.theme.typography.fontWeight.normal};
+  font-size: ${props => props.theme.typography.fontSize.md};
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${props => props.theme.colors.grey2};
+    text-decoration: underline;
+  }
+`;
+
+export const NavigationContainer = styled(Flex)<{ $vertical: boolean }>`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  opacity: 1;
+  z-index: 99;
+  width: 100%;
+  padding: ${props => props.theme.spacing.md};
+  background: ${props => props.theme.colors.white};
+  gap: ${props => props.theme.spacing.xsm};
+  border-radius: 0 0
+    ${props => `${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
+  flex-direction: ${props => (props.$vertical ? 'column' : 'row-reverse')};
+
+  ${props => props.theme.breakpoints.md} {
+    margin-top: ${props => props.theme.spacing.lg};
+    padding: ${props => props.theme.spacing.sm};
+    gap: ${props => props.theme.spacing.sm};
+  }
+
+  ${props => props.theme.breakpoints.xs} {
+    margin-top: ${props => props.theme.spacing.md};
+    padding: ${props => props.theme.spacing.xs};
+    gap: ${props => props.theme.spacing.xs};
+  }
+`;
+
+export const NavigationBtn = styled(CustomButton)`
+  width: 100%;
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  font-weight: ${props => props.theme.typography.fontWeight.medium};
 `;

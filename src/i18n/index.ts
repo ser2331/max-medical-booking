@@ -26,7 +26,7 @@ const resources = {
         invalidSnils: 'Неверный формат СНИЛС',
       },
 
-      //widget
+      //TelemedicineServices
       widget: {
         title: 'Медицинские заявки',
         initializing: 'Инициализация виджета...',
@@ -65,10 +65,10 @@ const resources = {
         invalidSnils: 'Invalid SNILS format',
       },
 
-      //widget
+      //TelemedicineServices
       widget: {
         title: 'Medical Requests',
-        initializing: 'Initializing widget...',
+        initializing: 'Initializing TelemedicineServices...',
         authError: 'Widget authentication error',
         loadError: 'Widget loading error',
       },

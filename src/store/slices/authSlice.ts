@@ -15,7 +15,7 @@ const initialState: WidgetState = {
 };
 
 export const authenticateWidget = createAsyncThunk(
-  'widget/authenticate',
+  'TelemedicineServices/authenticate',
   async ({ authData, roleContext }: { authData: AuthData; roleContext: RoleContext }) => {
     const WIDGET_API_BASE = getUrl().api;
 

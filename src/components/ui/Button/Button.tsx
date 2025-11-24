@@ -3,7 +3,7 @@ import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { ReactNode, MouseEvent } from 'react';
 import { media } from '@/assets/style/mixins.ts';
 
-const BtnWrapper = styled.div<{ $size?: 'small' | 'normal' }>`
+const BtnWrapper = styled.div<{ $size?: 'small' | 'normal'; $round?: boolean }>`
   position: relative;
   width: 100%;
   height: 40px;
@@ -21,6 +21,24 @@ const BtnWrapper = styled.div<{ $size?: 'small' | 'normal' }>`
       height: 24px;
       font-size: ${props.theme.typography.fontSize.sm};
       padding: 2px;
+    `}
+
+  /* Round кнопки */
+  ${props =>
+    props.$round &&
+    css`
+      border-radius: 50%;
+      width: 34px;
+      min-width: 34px;
+      height: 34px;
+      padding: 0;
+
+      ${props.$size === 'small' &&
+      css`
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+      `}
     `}
 `;
 const Background = styled.div`
@@ -280,7 +298,7 @@ export const CustomButton = (props: CustomButtonProps) => {
   };
 
   return (
-    <BtnWrapper $size={props.size}>
+    <BtnWrapper $round={props.round} $size={props.size}>
       <ButtonContainer
         onClick={handleClick}
         className={props.className}

@@ -11,8 +11,9 @@ import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { HorizontalSlider } from '@/components/HorizontalSlider.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
-import { STEPS_CONFIG } from '@/components/DoctorAppointmentMake/DistrictBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
+import { IDoctor } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
 interface WithAvailability {
   $isAvailable: boolean;
@@ -90,16 +91,28 @@ export const Step3: React.FC = () => {
   const stepFields = STEPS_CONFIG[2].fields;
   const [doctor] = stepFields;
   const selectedDoctor = watch('doctor');
+  const selectedLpu = watch('lpu');
+  const selectedSpeciality = watch('specialty');
 
-  const { data: doctors, error, isLoading } = useGetDoctorsQuery({ lpuId: '', specialityId: '' });
+  const {
+    data: doctors = [],
+    error,
+    isLoading,
+  } = useGetDoctorsQuery(
+    { lpuId: selectedLpu?.id, specialityId: selectedSpeciality?.id },
+    { skip: !selectedSpeciality?.id || !selectedLpu?.id },
+  );
   const {
     data: timeData = [],
     isLoading: isLoadingSchedule,
     error: scheduleError,
-  } = useGetTimetableQuery({ lpuId: '', doctorId: selectedDoctor }, { skip: !selectedDoctor });
+  } = useGetTimetableQuery(
+    { lpuId: selectedLpu, doctorId: selectedDoctor },
+    { skip: !selectedDoctor },
+  );
 
-  const handleDoctorSelect = async (doctorId: string) => {
-    setValue(doctor, doctorId, {
+  const handleDoctorSelect = async (currentDoctor: IDoctor) => {
+    setValue(doctor, currentDoctor, {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
@@ -113,6 +126,7 @@ export const Step3: React.FC = () => {
   if (error) {
     return <ErrorMessage>Ошибка загрузки данных врачей</ErrorMessage>;
   }
+  console.log('selectedDoctor', selectedDoctor);
 
   return (
     <Flex
@@ -123,7 +137,7 @@ export const Step3: React.FC = () => {
       style={{ width: '100%' }}
     >
       {doctors?.map(doctor => {
-        const isSelected = selectedDoctor === doctor.id;
+        const isSelected = selectedDoctor?.id === doctor.id;
 
         return (
           <Flex
@@ -138,7 +152,7 @@ export const Step3: React.FC = () => {
               name={doctor.name}
               availableTop={{ label: 'Записей', value: doctor.freeParticipantCount }}
               availableBottom={{ label: 'Талонов', value: doctor.freeTicketCount }}
-              onClick={handleDoctorSelect}
+              onClick={() => handleDoctorSelect(doctor)}
               checked={isSelected}
               register={register('doctor', { required: 'Выберите врача' })}
             />

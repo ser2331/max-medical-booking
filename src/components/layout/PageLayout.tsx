@@ -18,7 +18,7 @@ const ScrollableContent = styled.div<{ $main: boolean }>`
   overflow-y: auto;
   overflow-x: hidden;
   padding: ${props =>
-    props.$main ? props.theme.spacing.md : `72px ${props.theme.spacing.md} 126px`};
+    props.$main ? props.theme.spacing.md : `72px ${props.theme.spacing.md} 88px`};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
