@@ -1,4 +1,4 @@
-import { Step1 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step1.tsx';
+import { Step1 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step1/Step1.tsx';
 import { Step2 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step2.tsx';
 import { Step3 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step3.tsx';
 import { Step4 } from '@/components/DoctorAppointmentMake/DistrictBooking/steps/Step4.tsx';
@@ -31,14 +31,14 @@ export interface StepConfig {
 export const STEPS_CONFIG: StepConfig[] = [
   {
     id: 'medicalOrganization',
-    title: 'Выбор медорганизации',
+    title: 'Выбор медучреждения',
     component: Step1,
     fields: ['district', 'lpu'],
     required: true,
   },
   {
     id: 'specialty',
-    title: 'Выбор специальности',
+    title: 'Выбор специальности врача',
     component: Step2,
     fields: ['specialty'],
     required: true,

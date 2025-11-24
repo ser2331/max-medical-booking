@@ -3,6 +3,7 @@ import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import React from 'react';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
+import { SearchIcon } from '@/assets/icons/SearchIcon.tsx';
 
 const InputContainer = styled.div`
   display: flex;
@@ -33,7 +34,10 @@ const StyledInput = styled.input<{
   $hasSearch?: boolean;
   $hasValue?: boolean;
   $hasDateIcon?: boolean;
+  $clearable?: boolean;
 }>`
+  width: 100%;
+  height: 44px;
   padding: ${props => props.theme.spacing.xsm} ${props => props.theme.spacing.sm};
   padding-right: ${props =>
     props.$hasSearch && props.$hasValue
@@ -43,17 +47,29 @@ const StyledInput = styled.input<{
         : props.$hasDateIcon
           ? '40px'
           : props.theme.spacing.lg};
-  border: 1px solid
+  border: none;
+  outline: 1px solid
     ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.grey3)};
   border-radius: ${props => props.theme.borderRadius.medium};
   font-size: ${props => props.theme.typography.fontSize.sm};
   line-height: ${props => props.theme.typography.fontSize.xl};
-  outline: none;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${props => (props.$hasError ? '#FF4D4F' : props.theme.colors.white)};
   color: ${props => props.theme.colors.black};
-  width: 100%;
   transition: all 0.2s ease;
   box-sizing: border-box;
+
+  /* Скрываем крестик очистки в разных браузерах */
+  &::-webkit-search-cancel-button,
+  &::-webkit-clear-button {
+    display: ${props => (props.$clearable ? 'block' : 'none')};
+    appearance: none;
+  }
+
+  &::-ms-clear {
+    display: ${props => (props.$clearable ? 'block' : 'none')};
+    width: 0;
+    height: 0;
+  }
 
   /* Стили для date input */
   &[type='date'] {
@@ -71,22 +87,32 @@ const StyledInput = styled.input<{
     }
   }
 
+  /* Стили для search input */
+  &[type='search'] {
+    &::-webkit-search-cancel-button {
+      display: ${props => (props.$clearable ? 'block' : 'none')};
+    }
+
+    &::-ms-clear {
+      display: ${props => (props.$clearable ? 'block' : 'none')};
+    }
+  }
+
   &:hover:enabled {
-    border-color: ${props =>
-      props.$hasError ? props.theme.colors.red : props.theme.colors.blueHover};
+    outline-color: 1px solid
+      ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.blue)};
   }
 
   &:focus:enabled {
-    border-color: ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.blue)};
+    outline-color: ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.blue)};
     box-shadow: 0 0 0 2px
-      ${props => (props.$hasError ? props.theme.colors.redLight : props.theme.colors.blueLight)};
+      ${props => (props.$hasError ? props.theme.colors.redLight : props.theme.colors.blue)};
   }
 
   &:disabled {
-    background-color: ${props => props.theme.colors.grey1};
     color: ${props => props.theme.colors.grey2};
     cursor: not-allowed;
-    border-color: ${props => props.theme.colors.grey3};
+    outline-color: ${props => props.theme.colors.grey3};
   }
 
   &::placeholder {
@@ -130,6 +156,8 @@ interface CustomInputProps {
   showErrorText?: boolean;
   register?: UseFormRegisterReturn;
   showDateIcon?: boolean;
+  showSearchIcon?: boolean;
+  clearable?: boolean;
 }
 
 export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
@@ -143,7 +171,9 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     onChange,
     type,
     register,
-    showDateIcon = type === 'date', // автоматически показывать иконку для date
+    showDateIcon = type === 'date',
+    showSearchIcon = type === 'search',
+    clearable = false, // по умолчанию отключаем крестик
   } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,6 +201,8 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
           type={type || 'text'}
           value={value}
           $hasDateIcon={showDateIcon}
+          $hasSearch={showSearchIcon}
+          $clearable={clearable}
           {...register}
           onChange={handleChange}
         />
@@ -179,13 +211,16 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
             <CalendarIcon />
           </DateIconWrapper>
         )}
+        {showSearchIcon && (
+          <DateIconWrapper>
+            <SearchIcon />
+          </DateIconWrapper>
+        )}
       </InputWrapper>
 
       {description && <DescriptionText>{description}</DescriptionText>}
     </InputContainer>
   );
 });
-
-CustomInput.displayName = 'CustomInput';
 
 CustomInput.displayName = 'CustomInput';

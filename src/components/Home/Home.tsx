@@ -13,14 +13,23 @@ import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { TeleMedIcon } from '@/assets/icons/TeleMedIcon.tsx';
 import { BookingIcon } from '@/assets/icons/BookingIcon.tsx';
 import { useNavigate } from 'react-router-dom';
+import authBackground from '@/assets/images/auth/authBack.png';
+import { ImageLoader } from '@/components/ImageLoader.tsx';
 
-export const PageContainer = styled(Card).attrs({ $vertical: true })`
-  flex: 1;
+export const PageContainer = styled(Flex)`
+  width: 100%;
   height: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
+  background: url(${authBackground}) no-repeat center center;
+  background-size: cover;
+  padding: ${props => props.theme.spacing.md};
+  transition: opacity 0.3s ease;
+  position: relative;
 `;
+export const PageContent = styled(Card).attrs({ $vertical: true })`
+  align-items: center;
+  gap: 16px;
+`;
+
 export const Menu = styled(Flex).attrs({ $direction: 'column' })`
   gap: ${props => props.theme.spacing.md};
   width: 100%;
@@ -69,7 +78,7 @@ const devMenuItems: MenuItemType[] = [
   },
 ];
 
-export const Home: React.FC = () => {
+export const HomeContent: React.FC = () => {
   const navigator = useNavigate();
   const { user, hapticFeedback } = useMaxBridgeContext();
   const messageToast = useMessageToast();
@@ -92,27 +101,13 @@ export const Home: React.FC = () => {
 
   return (
     <PageContainer className="page-container">
-      {/* Карточка пользователя */}
-      {user && <UserCard user={user} />}
+      <PageContent>
+        {/* Карточка пользователя */}
+        {user && <UserCard user={user} />}
 
-      {/* Основные действия */}
-      <Menu>
-        {mainMenuItems.map(item => (
-          <MenuItem
-            key={item.path}
-            name={item.name}
-            description={item.description}
-            icon={item.icon}
-            path={item.path}
-            onClick={handleMenuClick}
-          />
-        ))}
-      </Menu>
-
-      <SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>
-      {showDevTools && (
+        {/* Основные действия */}
         <Menu>
-          {devMenuItems.map(item => (
+          {mainMenuItems.map(item => (
             <MenuItem
               key={item.path}
               name={item.name}
@@ -122,11 +117,35 @@ export const Home: React.FC = () => {
               onClick={handleMenuClick}
             />
           ))}
-          <CustomButton variant={'primary'} onClick={handleShowToast}>
-            Show TOAST
-          </CustomButton>
         </Menu>
-      )}
+
+        <SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>
+        {showDevTools && (
+          <Menu>
+            {devMenuItems.map(item => (
+              <MenuItem
+                key={item.path}
+                name={item.name}
+                description={item.description}
+                icon={item.icon}
+                path={item.path}
+                onClick={handleMenuClick}
+              />
+            ))}
+            <CustomButton variant={'primary'} onClick={handleShowToast}>
+              Show TOAST
+            </CustomButton>
+          </Menu>
+        )}
+      </PageContent>
     </PageContainer>
+  );
+};
+
+export const Home: React.FC = () => {
+  return (
+    <ImageLoader images={[authBackground]}>
+      <HomeContent />
+    </ImageLoader>
   );
 };

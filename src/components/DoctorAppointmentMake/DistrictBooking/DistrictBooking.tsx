@@ -24,7 +24,7 @@ export const DistrictBooking: FC = () => {
     messageToast('Форма заполнена успешно');
     navigate('/');
     dispatch(onChangeStep(0));
-    dispatch(onChangeBookingType(''));
+    dispatch(onChangeBookingType(false));
   };
 
   const handleStepChange = (currentStep: number, previousStep: number) => {

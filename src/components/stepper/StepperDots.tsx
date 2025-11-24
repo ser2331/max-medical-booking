@@ -34,10 +34,11 @@ const StepDot = styled(Flex)<{
   height: 32px;
   border-radius: 50%;
   background: ${props => {
+    if (props.$isActive) return props.theme.colors.blueLight;
     if (props.$isCompleted) return props.theme.colors.blue;
     return props.theme.colors.white;
   }};
-  border: 2px solid
+  border: 1px solid
     ${props => {
       if (props.$isCompleted) return props.theme.colors.blue;
       if (props.$isActive) return props.theme.colors.blue;

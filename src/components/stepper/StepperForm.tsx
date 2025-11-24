@@ -7,17 +7,19 @@ import { useStepValidation } from '@/components/stepper/useStepValidation.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import { StepperProps } from '@/components/stepper/Stepper.types.ts';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
-import { media } from '@/assets/style/mixins.ts';
 
 const NavigationContainer = styled(Flex)`
   position: fixed;
-  bottom: 16px;
-  left: 16px;
+  bottom: 0;
+  left: 0;
   opacity: 1;
   z-index: 99;
-  width: calc(100% - 32px);
-  gap: ${props => props.theme.spacing.xs};
-  padding: 0;
+  width: 100%;
+  padding: ${props => props.theme.spacing.md};
+  background: ${props => props.theme.colors.white};
+  gap: ${props => props.theme.spacing.md};
+  border-radius: 0 0
+    ${props => `${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
   flex-direction: row-reverse;
 
   ${props => props.theme.breakpoints.md} {
@@ -30,10 +32,6 @@ const NavigationContainer = styled(Flex)`
     margin-top: ${props => props.theme.spacing.md};
     padding: ${props => props.theme.spacing.xs};
     gap: ${props => props.theme.spacing.xs};
-  }
-
-  ${media.md} {
-    flex-direction: column;
   }
 `;
 
@@ -99,7 +97,7 @@ export const StepperForm = <TFieldValues extends FieldValues>({
   );
 
   return (
-    <form>
+    <form style={{ height: '100%' }}>
       <CurrentStepComponent />
 
       {renderNavigation()}

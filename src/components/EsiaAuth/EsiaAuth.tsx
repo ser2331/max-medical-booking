@@ -8,13 +8,17 @@ import authBackground from '@/assets/images/auth/authBack.png';
 import authIcon from '@/assets/images/auth/Icon.png';
 import { ImageLoader } from '@/components/ImageLoader.tsx';
 
-const Container = styled(Flex).attrs({ $direction: 'column', $gap: 32 })`
+export const PageContainer = styled(Flex)`
   width: 100%;
   height: 100%;
   background: url(${authBackground}) no-repeat center center;
   background-size: cover;
   padding: ${props => props.theme.spacing.md};
   transition: opacity 0.3s ease;
+`;
+
+export const PageContent = styled(Flex).attrs({ $direction: 'column' })`
+  gap: 32px;
 `;
 
 const Text = styled.span`
@@ -45,17 +49,20 @@ const AuthContent: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Container>
-      <Title>Запись к врачу</Title>
-      <Subtitle>
-        Для записи к врачу или на телемедицинские услуги, пожалуйста, авторизуйтесь через ГОСУСЛУГИ
-      </Subtitle>
+    <PageContainer>
+      <PageContent>
+        <Title>Запись к врачу</Title>
+        <Subtitle>
+          Для записи к врачу или на телемедицинские услуги, пожалуйста, авторизуйтесь через
+          ГОСУСЛУГИ
+        </Subtitle>
 
-      <CustomButton onClick={() => navigate('/agreement')}>
-        <Icon src={authIcon} alt="Госуслуги" />
-        Войти через ГОСУСЛУГИ
-      </CustomButton>
-    </Container>
+        <CustomButton onClick={() => navigate('/agreement')}>
+          <Icon src={authIcon} alt="Госуслуги" />
+          Войти через ГОСУСЛУГИ
+        </CustomButton>
+      </PageContent>
+    </PageContainer>
   );
 };
 

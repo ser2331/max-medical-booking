@@ -6,6 +6,8 @@ import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CheckBoxIcon } from '@/assets/icons/CheckBoxIcon.tsx';
 
 const CheckboxContainer = styled.div`
+  width: 24px;
+  height: 24px;
   position: relative;
   display: inline-block;
 `;
@@ -26,6 +28,7 @@ const StyledCheckbox = styled.input.attrs({ type: 'checkbox' })`
   }
 `;
 const CheckIconWrapper = styled.div<{ $checked: boolean }>`
+  line-height: 16px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -58,24 +61,26 @@ const CheckboxLabel = styled.label`
 `;
 
 interface CheckboxProps {
+  id?: string;
+  name?: string;
   checked?: boolean;
   title?: string | ReactNode;
   description?: string;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: boolean) => void;
   type?: string;
   showErrorText?: boolean;
   register?: UseFormRegisterReturn;
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
-  const { checked, title, disabled, onChange, register } = props;
+  const { id, name, checked, title, disabled, onChange, register } = props;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(event.target.value);
+      onChange(event.target.checked);
     } else if (register?.onChange) {
       register.onChange(event);
     }
@@ -86,16 +91,22 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref)
       <CheckboxContainer>
         <StyledCheckbox
           ref={ref}
+          id={id}
           checked={checked}
           disabled={disabled}
           {...register}
           onChange={handleChange}
+          name={name || register?.name}
         />
         <CheckIconWrapper $checked={!!checked}>
           <CheckBoxIcon />
         </CheckIconWrapper>
       </CheckboxContainer>
-      {!!title && <CheckboxLabel htmlFor={register?.name}>{title}</CheckboxLabel>}
+      {!!title && (
+        <CheckboxLabel key={name || register?.name} htmlFor={id || name || register?.name}>
+          {title}
+        </CheckboxLabel>
+      )}
     </Flex>
   );
 });

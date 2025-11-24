@@ -7,13 +7,22 @@ import { UserCard } from '@/components/ui/User/UserCard.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
+import authBackground from '@/assets/images/auth/authBack.png';
+import { ImageLoader } from '@/components/ImageLoader.tsx';
 
-export const PageContainer = styled(Card).attrs({ $vertical: true })`
-  flex: 1;
+export const PageContainer = styled(Flex)`
+  width: 100%;
   height: 100%;
+  background: url(${authBackground}) no-repeat center center;
+  background-size: cover;
+  padding: ${props => props.theme.spacing.md};
+  transition: opacity 0.3s ease;
+  position: relative;
+`;
+
+export const PageContent = styled(Card).attrs({ $vertical: true })`
   align-items: center;
-  justify-content: center;
-  gap: 32px;
+  gap: 16px;
 `;
 
 const Text = styled.span`
@@ -65,7 +74,7 @@ const AgreementCheckbox: React.FC<AgreementCheckboxProps> = ({
   );
 };
 
-export const Agreement: React.FC = () => {
+const AgreementContent: React.FC = () => {
   const navigator = useNavigate();
   const { user, hapticFeedback } = useMaxBridgeContext();
   const [checkedAgreements, setCheckedAgreements] = React.useState<string[]>([]);
@@ -95,8 +104,6 @@ export const Agreement: React.FC = () => {
     },
   ];
 
-  console.log(checkedAgreements);
-
   useEffect(() => {
     if (checkedAgreements.length === 2) {
       navigator('/');
@@ -104,27 +111,37 @@ export const Agreement: React.FC = () => {
   }, [navigator, checkedAgreements]);
   return (
     <PageContainer className="page-container">
-      {/* Карточка пользователя */}
-      {user && <UserCard user={user} />}
+      <PageContent>
+        {/* Карточка пользователя */}
+        {user && <UserCard user={user} />}
 
-      <Subtitle>
-        Для записи к врачу или на телемедицинские услуги, необходимо дать согласие на обработку
-        персональных данных.
-      </Subtitle>
+        <Subtitle>
+          Для записи к врачу или на телемедицинские услуги, необходимо дать согласие на обработку
+          персональных данных.
+        </Subtitle>
 
-      <CheckboxesContainer>
-        {agreementCheckboxes.map(checkbox => (
-          <AgreementCheckbox
-            key={checkbox.id}
-            id={checkbox.id}
-            checked={checkedAgreements.includes(checkbox.id)}
-            onChange={handleCheckAgreement}
-            text={checkbox.text}
-            linkText={checkbox.linkText}
-            linkTo={checkbox.linkTo}
-          />
-        ))}
-      </CheckboxesContainer>
+        <CheckboxesContainer>
+          {agreementCheckboxes.map(checkbox => (
+            <AgreementCheckbox
+              key={checkbox.id}
+              id={checkbox.id}
+              checked={checkedAgreements.includes(checkbox.id)}
+              onChange={handleCheckAgreement}
+              text={checkbox.text}
+              linkText={checkbox.linkText}
+              linkTo={checkbox.linkTo}
+            />
+          ))}
+        </CheckboxesContainer>
+      </PageContent>
     </PageContainer>
+  );
+};
+
+export const Agreement: React.FC = () => {
+  return (
+    <ImageLoader images={[authBackground]}>
+      <AgreementContent />
+    </ImageLoader>
   );
 };

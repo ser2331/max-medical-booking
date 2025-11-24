@@ -2,20 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface StepperState {
   step: number;
-  type: string;
+  isAnotherPerson: boolean;
 }
 
 const initialState: StepperState = {
   step: 0,
-  type: '',
+  isAnotherPerson: false,
 };
 
 const stepperSlice = createSlice({
   name: 'stepper',
   initialState,
   reducers: {
-    onChangeBookingType: (state, action: PayloadAction<string>) => {
-      state.type = action.payload;
+    onChangeBookingType: (state, action: PayloadAction<boolean>) => {
+      state.isAnotherPerson = action.payload;
       state.step = 0;
     },
     onChangeStep: (state, action: PayloadAction<number>) => {
