@@ -28,12 +28,7 @@ interface UserCardProps {
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
     <UserCardContainer $align="center">
-      <Avatar
-        src={user.photo_url}
-        alt={user.first_name}
-        size={'large'}
-        showFallbackOnError={false}
-      />
+      <Avatar src={user.photo_url} alt={user.first_name} size={'large'} />
 
       <Flex $direction="column" $gap={8}>
         <UserName>

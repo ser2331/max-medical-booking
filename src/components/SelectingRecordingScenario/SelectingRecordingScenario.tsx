@@ -67,7 +67,6 @@ export const SelectingRecordingScenarioContent: React.FC = () => {
                   icon={point.icon}
                   alt={point.title}
                   size={'large'}
-                  showFallbackOnError={false}
                   iconProps={{ width: 50, height: 50 }}
                 />
                 <CustomButton
