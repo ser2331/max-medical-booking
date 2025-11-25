@@ -1,4 +1,24 @@
 @use './_variables.scss';
+// Запрещаем выделение по умолчанию для всех элементов
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Разрешаем выделение для контента, который должен быть доступен для копирования
+.allow-selection,
+input,
+textarea,
+[contenteditable="true"],
+.code-block,
+.text-content {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
 
 html {
   font-family: 'Open Sans', Arial, Helvetica, sans-serif; // Добавлен Open Sans
