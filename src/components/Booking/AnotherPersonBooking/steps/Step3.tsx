@@ -1,99 +1,81 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+import { useGetDoctorsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 
-const Title = styled.h3`
-  margin-bottom: 16px;
-`;
-
-const DateContainer = styled.div`
-  margin-bottom: 16px;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-`;
-
-const DateInput = styled.input`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 14px;
-
-  &:focus {
-    outline: none;
-    border-color: #2d5bff;
-    box-shadow: 0 0 0 2px rgba(45, 91, 255, 0.1);
-  }
-`;
-
-const TimeGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-`;
-
-const TimeLabel = styled.label`
-  padding: 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: #2d5bff;
-    background-color: #f8f9ff;
-  }
-
-  input:checked + & {
-    border-color: #2d5bff;
-    background-color: #2d5bff;
-    color: white;
-  }
-`;
-
-const RadioInput = styled.input`
-  display: none;
-`;
+import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
+import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
+import { IDoctor } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
 export const Step3: React.FC = () => {
-  const { register } = useFormContext();
+  const { register, watch, setValue } = useFormContext();
+  const stepFields = STEPS_CONFIG[2].fields;
+  const [doctor] = stepFields;
+  const selectedDoctor = watch('doctor');
+  const selectedLpu = watch('lpu');
+  const selectedSpeciality = watch('specialty');
 
-  const timeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+  const {
+    data: doctors = [],
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetDoctorsQuery(
+    { lpuId: selectedLpu?.id, specialityId: selectedSpeciality?.id },
+    { skip: !selectedSpeciality?.id || !selectedLpu?.id },
+  );
 
+  const handleDoctorSelect = async (currentDoctor: IDoctor) => {
+    setValue(doctor, currentDoctor, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  if (isLoading || isFetching) {
+    return <AppSpin />;
+  }
+
+  if (error) {
+    return <ErrorMessage onTryAgain={() => refetch()}>Ошибка загрузки данных врачей</ErrorMessage>;
+  }
   return (
-    <Container>
-      <Title>Выберите дату и время</Title>
+    <Flex
+      $direction={'column'}
+      $align={'flex-start'}
+      $justifyContent={'flex-start'}
+      $gap={16}
+      style={{ width: '100%' }}
+    >
+      {doctors?.map(doctor => {
+        const isSelected = selectedDoctor?.id === doctor.id;
 
-      <DateContainer>
-        <Label>Дата приема:</Label>
-        <DateInput type="date" {...register('date', { required: 'Выберите дату' })} />
-      </DateContainer>
-
-      <div>
-        <Label>Время приема:</Label>
-        <TimeGrid>
-          {timeSlots.map(time => (
-            <TimeLabel key={time}>
-              <RadioInput
-                type="radio"
-                value={time}
-                {...register('time', { required: 'Выберите время' })}
-              />
-              {time}
-            </TimeLabel>
-          ))}
-        </TimeGrid>
-      </div>
-    </Container>
+        return (
+          <Flex
+            key={doctor.id}
+            $direction={'column'}
+            $align={'flex-start'}
+            style={{ width: '100%' }}
+            $gap={16}
+          >
+            <RadioBtnCard
+              id={doctor.id}
+              name={doctor.name}
+              availableTop={{ label: 'Записей', value: doctor.freeParticipantCount }}
+              availableBottom={{ label: 'Талонов', value: doctor.freeTicketCount }}
+              onClick={() => handleDoctorSelect(doctor)}
+              checked={isSelected}
+              register={register('doctor', { required: 'Выберите врача' })}
+            />
+            <Line $marginBottom={0} $marginTop={0} />
+          </Flex>
+        );
+      })}
+    </Flex>
   );
 };

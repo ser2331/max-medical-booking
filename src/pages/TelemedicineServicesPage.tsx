@@ -19,9 +19,7 @@ export const TelemedicineServicesPage: React.FC = () => {
   if (error) {
     return (
       <PageLayout title={t('error')} onBack={handleBack}>
-        <ErrorMessage>
-          {t('TelemedicineServices.authError')}: {error}
-        </ErrorMessage>
+        <ErrorMessage>Телемедицинские услуги: {error}</ErrorMessage>
       </PageLayout>
     );
   }
@@ -35,7 +33,7 @@ export const TelemedicineServicesPage: React.FC = () => {
   }
 
   return (
-    <PageLayout title={t('TelemedicineServices.title')} onBack={handleBack}>
+    <PageLayout title={'Телемедицинские услуги'} onBack={handleBack}>
       <MicroFrontend />
     </PageLayout>
   );

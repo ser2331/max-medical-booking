@@ -212,9 +212,10 @@ export const range = (from: number, to: number) => {
   }
   return result;
 };
+const FORMAT = 'DD.MM.YYYY';
 
 export const CustomDatePicker = (props: IProps) => {
-  const { onChange, value, outputFormat = 'DD.MM.YYYY', availableDates = [], ...restProps } = props;
+  const { onChange, value, outputFormat = FORMAT, availableDates = [], ...restProps } = props;
 
   const maxDate: Date = new Date(new Date().getFullYear() + 50, 11, 31);
   const minDate: Date = new Date(1900, 0, 1);
@@ -230,11 +231,7 @@ export const CustomDatePicker = (props: IProps) => {
   }, []);
 
   const availableDatesSet = useMemo(() => {
-    return new Set(
-      availableDates.map(date => {
-        return moment(date).format('YYYY-MM-DD');
-      }),
-    );
+    return new Set(availableDates);
   }, [availableDates]);
 
   const getArrowColor = (disabled: boolean) => {
@@ -249,7 +246,6 @@ export const CustomDatePicker = (props: IProps) => {
       onChange(null);
     }
   };
-
   const dateValue = useMemo(() => {
     if (!value) return null;
 
@@ -257,13 +253,14 @@ export const CustomDatePicker = (props: IProps) => {
       return value;
     }
 
-    const momentDate = moment(value, outputFormat);
+    // Всегда указываем формат при парсинге строки
+    const momentDate = moment(value, FORMAT, true); // strict mode
     return momentDate.isValid() ? momentDate.toDate() : null;
-  }, [value, outputFormat]);
+  }, [value]);
 
   const isDateAvailable = (date: Date) => {
     if (availableDates.length === 0) return true;
-    const dateString = moment(date).format('YYYY-MM-DD');
+    const dateString = moment(date).format(FORMAT);
     return availableDatesSet.has(dateString);
   };
 
@@ -288,7 +285,7 @@ export const CustomDatePicker = (props: IProps) => {
         <ReactDatePicker
           selected={dateValue}
           disabled={restProps.disabled}
-          dateFormat="dd.MM.yyyy"
+          dateFormat={FORMAT}
           locale={ru as Locale}
           placeholderText={restProps.placeholder ?? ''}
           onChange={handleDateChange}
@@ -297,6 +294,8 @@ export const CustomDatePicker = (props: IProps) => {
           inline={true}
           filterDate={filterDate}
           dayClassName={dayClassName}
+          todayButton={null} // убираем кнопку "Сегодня"
+          shouldCloseOnSelect={false} // если нужно оставить календарь открытым после выбора
           renderCustomHeader={({
             date,
             changeYear,

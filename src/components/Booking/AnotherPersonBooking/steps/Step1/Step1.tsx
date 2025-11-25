@@ -40,8 +40,7 @@ export const Step1: React.FC = () => {
       .filter(
         lpu =>
           lpu.lpuFullName.toLowerCase().includes(searchLower) ||
-          lpu.districtName.toLowerCase().includes(searchLower) ||
-          lpu.address.toLowerCase().includes(searchLower),
+          lpu.districtName.toLowerCase().includes(searchLower),
       )
       .sort();
   }, [lpusData, debouncedSearchText]);
@@ -62,7 +61,7 @@ export const Step1: React.FC = () => {
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
   }, []);
-  console.log('LOADING', isLoading);
+
   if (isLoading || isFetching) {
     return <AppSpin />;
   }

@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { PageHeader } from './PageHeader/PageHeader.tsx';
-import { PageFooter } from './PageFooter';
 const LayoutContainer = styled.div`
   position: fixed;
   top: 0;
@@ -11,69 +10,53 @@ const LayoutContainer = styled.div`
   bottom: 0;
   display: flex;
   flex-direction: column;
+  padding: ${props => props.theme.spacing.md};
 `;
 
 const ScrollableContent = styled.div<{ $main: boolean }>`
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: ${props =>
-    props.$main ? props.theme.spacing.md : `72px ${props.theme.spacing.md} 88px`};
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: ${props => props.theme.spacing.md};
+  margin-top: ${props => props.theme.spacing.md};
+  border-radius: ${props => props.theme.borderRadius.large};
 `;
 
 interface PageLayoutProps {
   children: React.ReactNode;
   title?: string;
+  headerComponent?: React.ReactNode;
   showBackButton?: boolean;
   showCloseButton?: boolean;
   showLanguageSwitcher?: boolean;
   onBack?: () => void;
   onClose?: () => void;
-  submitButton?: {
-    text: string;
-    onClick: () => void;
-    disabled?: boolean;
-    variant?: 'primary' | 'accent' | 'outline';
-  };
-  backButton?: {
-    text: string;
-    onClick: () => void;
-    variant?: 'outline' | 'secondary';
-  };
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
   children,
   title,
+  headerComponent,
   showBackButton = true,
   showCloseButton = true,
   onBack,
   onClose,
-  submitButton,
-  backButton,
 }) => {
   return (
     <LayoutContainer>
       {!!title && (
         <PageHeader
           title={title}
+          headerComponent={headerComponent}
           showBackButton={showBackButton}
           showCloseButton={showCloseButton}
           onBack={onBack}
           onClose={onClose}
         />
       )}
-      <ScrollableContent $main={!title}>
-        {children}
-
-        {(submitButton || backButton) && (
-          <PageFooter submitButton={submitButton} backButton={backButton} />
-        )}
-      </ScrollableContent>
+      <ScrollableContent $main={!title}>{children}</ScrollableContent>
     </LayoutContainer>
   );
 };

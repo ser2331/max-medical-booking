@@ -39,7 +39,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
         <UserName>
           {user.first_name} {user.last_name}
         </UserName>
-        <UserStatus>Готовы к записи к врачу</UserStatus>
+        <UserStatus>Запишитесь к врачу</UserStatus>
       </Flex>
     </UserCardContainer>
   );

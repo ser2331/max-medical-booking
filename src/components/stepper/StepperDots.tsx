@@ -2,7 +2,6 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { useAppSelector } from '@/store/redux-hooks.ts';
-import { Card } from '@/components/ui/Cart.tsx';
 import { CheckIcon } from '@/assets/icons/CheckIcon.tsx';
 
 const connectorGap = 4;
@@ -65,26 +64,24 @@ export const StepperDots: FC<IStepperDotsProps> = ({ steps }) => {
   const { step: currentStep } = useAppSelector(state => state.stepper);
 
   return (
-    <Card>
-      <StepsContainer $justifyContent="space-between">
-        {steps.map((step, index) => {
-          const isActive = index === currentStep;
-          const isCompleted = index < currentStep;
+    <StepsContainer $justifyContent="space-between">
+      {steps.map((step, index) => {
+        const isActive = index === currentStep;
+        const isCompleted = index < currentStep;
 
-          return (
-            <StepWrapper
-              key={step.id}
-              style={{ flex: index === steps.length - 1 ? '0 0 auto' : '1' }}
-            >
-              <StepDot $isActive={isActive} $isCompleted={isCompleted} title={step.title}>
-                {isCompleted ? <CheckIcon /> : index + 1}
-              </StepDot>
+        return (
+          <StepWrapper
+            key={step.id}
+            style={{ flex: index === steps.length - 1 ? '0 0 auto' : '1' }}
+          >
+            <StepDot $isActive={isActive} $isCompleted={isCompleted} title={step.title}>
+              {isCompleted ? <CheckIcon /> : index + 1}
+            </StepDot>
 
-              {index < steps.length - 1 && <StyledConnector $isCompleted={isCompleted} />}
-            </StepWrapper>
-          );
-        })}
-      </StepsContainer>
-    </Card>
+            {index < steps.length - 1 && <StyledConnector $isCompleted={isCompleted} />}
+          </StepWrapper>
+        );
+      })}
+    </StepsContainer>
   );
 };

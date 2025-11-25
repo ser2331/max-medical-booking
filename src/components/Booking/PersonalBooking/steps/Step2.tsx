@@ -28,6 +28,8 @@ export const Step2: React.FC = () => {
     data: specialties,
     error,
     isLoading,
+    isFetching,
+    refetch,
   } = useGetSpecialtiesQuery({ lpuId: selectedLpu }, { skip: !selectedLpu });
 
   const stepFields = STEPS_CONFIG[1].fields;
@@ -41,12 +43,12 @@ export const Step2: React.FC = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <AppSpin />;
   }
 
   if (error) {
-    return <ErrorMessage>Ошибка загрузки специальностей</ErrorMessage>;
+    return <ErrorMessage onTryAgain={() => refetch()}>Ошибка загрузки специальностей</ErrorMessage>;
   }
 
   return (

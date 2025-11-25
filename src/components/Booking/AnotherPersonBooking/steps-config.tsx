@@ -1,9 +1,9 @@
 import { ComponentType } from 'react';
-import { Step1 as Step2 } from '@/components/Booking/PersonalBooking/steps/Step1/Step1.tsx';
-import { Step2 as Step3 } from '@/components/Booking/PersonalBooking/steps/Step2.tsx';
-import { Step3 as Step4 } from '@/components/Booking/PersonalBooking/steps/Step3.tsx';
-import { Step4 as Step5 } from '@/components/Booking/PersonalBooking/steps/Step4.tsx';
-import { Step5 as Step1 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
+import { Step1 as Step2 } from '@/components/Booking/AnotherPersonBooking/steps/Step1/Step1.tsx';
+import { Step2 as Step3 } from '@/components/Booking/AnotherPersonBooking/steps/Step2.tsx';
+import { Step3 as Step4 } from '@/components/Booking/AnotherPersonBooking/steps/Step3.tsx';
+import { Step4 as Step5 } from '@/components/Booking/AnotherPersonBooking/steps/Step4/Step4.tsx';
+import { Step5 as Step1 } from '@/components/Booking/AnotherPersonBooking/steps/Step5.tsx';
 import { AppointmentFormData } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 
 export interface StepConfig {

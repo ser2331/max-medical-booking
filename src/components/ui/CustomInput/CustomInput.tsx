@@ -158,6 +158,8 @@ interface CustomInputProps {
   showDateIcon?: boolean;
   showSearchIcon?: boolean;
   clearable?: boolean;
+  onBlur?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
@@ -174,6 +176,8 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     showDateIcon = type === 'date',
     showSearchIcon = type === 'search',
     clearable = false, // по умолчанию отключаем крестик
+    onBlur,
+    onKeyDown,
   } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,6 +207,8 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
           $hasDateIcon={showDateIcon}
           $hasSearch={showSearchIcon}
           $clearable={clearable}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
           {...register}
           onChange={handleChange}
         />

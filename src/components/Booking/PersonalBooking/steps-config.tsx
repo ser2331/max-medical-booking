@@ -2,8 +2,7 @@ import { ComponentType } from 'react';
 import { Step1 } from '@/components/Booking/PersonalBooking/steps/Step1/Step1.tsx';
 import { Step2 } from '@/components/Booking/PersonalBooking/steps/Step2.tsx';
 import { Step3 } from '@/components/Booking/PersonalBooking/steps/Step3.tsx';
-import { Step4 } from '@/components/Booking/PersonalBooking/steps/Step4.tsx';
-import { Step5 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
+import { Step4 } from '@/components/Booking/PersonalBooking/steps/Step4/Step4.tsx';
 import {
   IAppointment,
   IDoctor,
@@ -23,7 +22,6 @@ export interface AppointmentFormData {
   polisN: string;
   phone: string;
   mail: string;
-  consentAgreement: string;
 }
 
 export interface StepConfig {
@@ -44,7 +42,7 @@ export const STEPS_CONFIG: StepConfig[] = [
   },
   {
     id: 'specialty',
-    title: 'Выбор специальности врача',
+    title: 'Выбор специальности',
     component: Step2,
     fields: ['specialty'],
     required: true,
@@ -62,21 +60,6 @@ export const STEPS_CONFIG: StepConfig[] = [
     component: Step4,
     fields: ['appointment'],
     required: true,
-  },
-  {
-    id: 'makingRecord',
-    title: 'Оформление записи',
-    component: Step5,
-    fields: [
-      'lastName',
-      'firstName',
-      'birthDate',
-      'snils',
-      'polisN',
-      'phone',
-      'mail' /*, 'consentAgreement'*/,
-    ],
-    required: false,
   },
 ];
 
@@ -101,21 +84,4 @@ export const getDefaultValues = (): AppointmentFormData => {
   });
 
   return defaultValues as AppointmentFormData;
-};
-
-// Хелперы для работы со steps
-export const getStepFields = (stepIndex: number): (keyof AppointmentFormData)[] => {
-  return STEPS_CONFIG[stepIndex]?.fields || [];
-};
-
-export const getFieldsUpToStep = (stepIndex: number): (keyof AppointmentFormData)[] => {
-  const fields: (keyof AppointmentFormData)[] = [];
-  for (let i = 0; i <= stepIndex; i++) {
-    fields.push(...getStepFields(i));
-  }
-  return fields;
-};
-
-export const getStepByField = (field: keyof AppointmentFormData): number => {
-  return STEPS_CONFIG.findIndex(step => step.fields.includes(field));
 };

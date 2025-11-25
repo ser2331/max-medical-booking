@@ -15,6 +15,8 @@ export const StyledErrorMessage = styled(Section)`
 `;
 
 const StyledMessage = styled('span')`
+  width: 100%;
+  text-align: left;
   font-size: ${({ theme }) => theme.typography.fontSize.md};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   line-height: ${({ theme }) => theme.typography.fontSize.xxl};
@@ -23,21 +25,30 @@ const StyledDescription = styled(StyledMessage)`
   font-weight: ${({ theme }) => theme.typography.fontWeight.normal};
 `;
 
-export const ErrorMessage: FC<{ children?: ReactNode; hiddenBtn?: boolean }> = ({
-  children,
-  hiddenBtn,
-}) => {
+export const ErrorMessage: FC<{
+  children?: ReactNode;
+  hiddenBtn?: boolean;
+  onTryAgain?: () => void;
+}> = ({ children, hiddenBtn, onTryAgain }) => {
   const navigate = useNavigate();
+  const handleClick = () => {
+    if (onTryAgain) {
+      return onTryAgain();
+    }
+    navigate('/');
+  };
   return (
     <StyledErrorMessage>
-      <Flex $gap={12} style={{ width: '100%' }}>
+      <Flex $gap={12} $align={'flex-start'} style={{ width: '100%' }}>
         <CircleAlertIcon />
-        <StyledMessage>{children || 'Мы не смогли получить информацию с сервера'}</StyledMessage>
+        <Flex $direction={'column'}>
+          <StyledMessage>{children || 'Мы не смогли получить информацию с сервера'}</StyledMessage>
+          <StyledDescription>Попробуйте повторить попытку позже</StyledDescription>
+        </Flex>
       </Flex>
-      <StyledDescription>Попробуйте повторить попытку позже</StyledDescription>
       {!hiddenBtn && (
-        <CustomButton onClick={() => navigate('/')} variant={'primary'} style={{ width: '100%' }}>
-          На главную
+        <CustomButton onClick={handleClick} variant={'outline-default'} style={{ width: '100%' }}>
+          Попробовать еще раз
         </CustomButton>
       )}
     </StyledErrorMessage>

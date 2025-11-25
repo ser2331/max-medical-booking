@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-export const Card = styled.div<{ $vertical?: boolean }>`
+export const Card = styled.div<{ $vertical?: boolean; $gap?: number }>`
   display: flex;
   flex-direction: ${props => (props.$vertical ? 'column' : 'row')};
-  gap: ${props => props.theme.spacing.sm};
+  gap: ${props => (props.$gap ? `${props.$gap}px` : props.theme.spacing.sm)};
   width: 100%;
   box-sizing: border-box;
   padding: ${props => props.theme.spacing.md};

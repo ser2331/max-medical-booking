@@ -1,80 +1,72 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+
+import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
+import { AppSpin } from '@/components/ui/AppSpin.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
+import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import styled from 'styled-components';
+import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
+import { ISpecialty } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Title = styled.h3`
-  margin-bottom: 16px;
-`;
-
-const DoctorsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const DoctorLabel = styled.label<{ $isSelected: boolean }>`
-  padding: 16px;
-  border: 2px solid ${props => (props.$isSelected ? '#2d5bff' : '#e9ecef')};
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: ${props => (props.$isSelected ? '#f0f4ff' : 'white')};
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: #2d5bff;
-    background-color: #f8f9ff;
-  }
-`;
-
-const RadioInput = styled.input`
-  margin-right: 12px;
-`;
-
-const DoctorName = styled.div`
-  font-weight: bold;
-  margin-bottom: 4px;
-`;
-
-const DoctorInfo = styled.div`
-  font-size: 14px;
-  color: #666;
+const Wrapper = styled(Flex).attrs({
+  $direction: 'column',
+  $align: 'flex-start',
+  $justifyContent: 'flex-start',
+  $gap: 16,
+})`
+  width: 100%;
 `;
 
 export const Step2: React.FC = () => {
-  const { register, watch } = useFormContext();
-  const selectedDoctor = watch('doctor');
+  const { register, watch, setValue } = useFormContext();
+  const selectedSpecialty = watch('specialty');
+  const selectedLpu = watch('lpu');
 
-  const doctors = [
-    { id: 'ivanov', name: 'Иванов А.П.', specialty: 'Терапевт', experience: '15 лет' },
-    { id: 'petrova', name: 'Петрова М.В.', specialty: 'Хирург', experience: '10 лет' },
-    { id: 'sidorov', name: 'Сидоров И.С.', specialty: 'Педиатр', experience: '8 лет' },
-  ];
+  const {
+    data: specialties,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetSpecialtiesQuery({ lpuId: selectedLpu }, { skip: !selectedLpu });
+
+  const stepFields = STEPS_CONFIG[1].fields;
+  const [specialty] = stepFields;
+
+  const handleDoctorSelect = (currentSpecialty: ISpecialty) => {
+    setValue(specialty, currentSpecialty, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  if (isLoading || isFetching) {
+    return <AppSpin />;
+  }
+
+  if (error) {
+    return <ErrorMessage onTryAgain={() => refetch()}>Ошибка загрузки специальностей</ErrorMessage>;
+  }
 
   return (
-    <Container>
-      <Title>Выберите специалиста</Title>
-      <DoctorsList>
-        {doctors.map(doctor => (
-          <DoctorLabel key={doctor.id} $isSelected={selectedDoctor === doctor.id}>
-            <RadioInput
-              type="radio"
-              value={doctor.id}
-              {...register('doctor', { required: 'Выберите врача' })}
-            />
-            <div>
-              <DoctorName>{doctor.name}</DoctorName>
-              <DoctorInfo>
-                {doctor.specialty} • {doctor.experience}
-              </DoctorInfo>
-            </div>
-          </DoctorLabel>
-        ))}
-      </DoctorsList>
-    </Container>
+    <Wrapper>
+      {specialties?.map(specialty => (
+        <Wrapper key={specialty.id}>
+          <RadioBtnCard
+            id={specialty.id}
+            name={specialty.name}
+            availableTop={{ label: 'Доступно врачей', value: specialty.countFreeParticipant }}
+            availableBottom={{ label: 'Свободно талонов', value: specialty.countFreeTicket }}
+            onClick={() => handleDoctorSelect(specialty)}
+            checked={specialty.id === selectedSpecialty?.id}
+            register={register('specialty', { required: 'Выберите специальность врача' })}
+          />
+          <Line $marginBottom={0} $marginTop={0} />
+        </Wrapper>
+      ))}
+    </Wrapper>
   );
 };

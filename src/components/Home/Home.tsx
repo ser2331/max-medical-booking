@@ -1,13 +1,13 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
-import { useMessageToast } from '@/hooks/useMessageToast.ts';
+// import { useMessageToast } from '@/hooks/useMessageToast.ts';
 
 import { UserCard } from '@/components/ui/User/UserCard.tsx';
 import { MenuItem } from '@/components/ui/Menu/MenuItem.tsx';
-import { SectionTitle } from '@/components/ui/Typography/SectionTitle.tsx';
-import { CustomButton } from '@/components/ui/Button/Button.tsx';
+// import { SectionTitle } from '@/components/ui/Typography/SectionTitle.tsx';
+// import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import { Card } from '@/components/ui/Cart.tsx';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { TeleMedIcon } from '@/assets/icons/TeleMedIcon.tsx';
@@ -53,36 +53,36 @@ const mainMenuItems: MenuItemType[] = [
     name: 'Запись на прием к врачу',
     description: '',
     icon: <BookingIcon color={'white'} />,
-    path: '/doctor-appointment-make',
+    path: '/selecting-recording-scenario',
   },
 ];
 // Скрытые пункты для разработчиков
-const devMenuItems: MenuItemType[] = [
-  {
-    name: 'DEMO AUTH',
-    description: 'AUTH',
-    icon: '🔐',
-    path: '/auth',
-  },
-  {
-    name: 'DEBUG',
-    description: 'DEBUG',
-    icon: '🐛',
-    path: '/debug',
-  },
-  {
-    name: 'maxDemo',
-    description: 'maxDemo',
-    icon: '⚡',
-    path: '/maxDemo',
-  },
-];
+// const devMenuItems: MenuItemType[] = [
+//   {
+//     name: 'DEMO AUTH',
+//     description: 'AUTH',
+//     icon: '🔐',
+//     path: '/auth',
+//   },
+//   {
+//     name: 'DEBUG',
+//     description: 'DEBUG',
+//     icon: '🐛',
+//     path: '/debug',
+//   },
+//   {
+//     name: 'maxDemo',
+//     description: 'maxDemo',
+//     icon: '⚡',
+//     path: '/maxDemo',
+//   },
+// ];
 
 export const HomeContent: React.FC = () => {
   const navigator = useNavigate();
   const { user, hapticFeedback } = useMaxBridgeContext();
-  const messageToast = useMessageToast();
-  const [showDevTools, setShowDevTools] = useState(false);
+  // const messageToast = useMessageToast();
+  // const [showDevTools, setShowDevTools] = useState(false);
 
   const handleMenuClick = (path: string) => {
     hapticFeedback('impact', 'light').then(() => {
@@ -90,18 +90,18 @@ export const HomeContent: React.FC = () => {
     });
   };
 
-  const handleShowToast = () => {
-    messageToast('TOAST ', 'success');
-  };
+  // const handleShowToast = () => {
+  //   messageToast('TOAST ', 'success');
+  // };
 
-  const toggleDevTools = () => {
-    hapticFeedback('impact', 'light');
-    setShowDevTools(!showDevTools);
-  };
+  // const toggleDevTools = () => {
+  //   hapticFeedback('impact', 'light');
+  //   setShowDevTools(!showDevTools);
+  // };
 
   return (
     <PageContainer className="page-container">
-      <PageContent>
+      <PageContent className="page-content">
         {/* Карточка пользователя */}
         {user && <UserCard user={user} />}
 
@@ -119,24 +119,24 @@ export const HomeContent: React.FC = () => {
           ))}
         </Menu>
 
-        <SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>
-        {showDevTools && (
-          <Menu>
-            {devMenuItems.map(item => (
-              <MenuItem
-                key={item.path}
-                name={item.name}
-                description={item.description}
-                icon={item.icon}
-                path={item.path}
-                onClick={handleMenuClick}
-              />
-            ))}
-            <CustomButton variant={'primary'} onClick={handleShowToast}>
-              Show TOAST
-            </CustomButton>
-          </Menu>
-        )}
+        {/*<SectionTitle onClick={toggleDevTools}>Инструменты разработчика</SectionTitle>*/}
+        {/*{showDevTools && (*/}
+        {/*  <Menu>*/}
+        {/*    {devMenuItems.map(item => (*/}
+        {/*      <MenuItem*/}
+        {/*        key={item.path}*/}
+        {/*        name={item.name}*/}
+        {/*        description={item.description}*/}
+        {/*        icon={item.icon}*/}
+        {/*        path={item.path}*/}
+        {/*        onClick={handleMenuClick}*/}
+        {/*      />*/}
+        {/*    ))}*/}
+        {/*    <CustomButton variant={'primary'} onClick={handleShowToast}>*/}
+        {/*      Show TOAST*/}
+        {/*    </CustomButton>*/}
+        {/*  </Menu>*/}
+        {/*)}*/}
       </PageContent>
     </PageContainer>
   );

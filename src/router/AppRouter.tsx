@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomePage } from '../pages/HomePage';
+import { SelectingRecordingScenarioPage } from '@/pages/SelectingRecordingScenarioPage.tsx';
 import { AgreementPage } from '@/pages/AgreementPage.tsx';
 
 import { NotFoundPage } from '../pages/NotFoundPage';
@@ -11,6 +12,9 @@ import { TelemedicineServicesPage } from '../pages/TelemedicineServicesPage.tsx'
 import { EsiaAuthPage } from '@/pages/EsiaAuthPage.tsx';
 import { BookingPage } from '@/pages/BookingPage.tsx';
 
+import { PersonalBookingPage } from '@/pages/PersonalBookingPage.tsx';
+import { AnotherBookingPage } from '@/pages/AnotherBookingPage.tsx';
+
 export const AppRouter: React.FC = () => {
   return (
     <Routes>
@@ -18,6 +22,11 @@ export const AppRouter: React.FC = () => {
       <Route path="/agreement" element={<AgreementPage />} />
       {/*Домашняя страница*/}
       <Route path="/" element={<HomePage />} />
+      <Route path="/selecting-recording-scenario" element={<SelectingRecordingScenarioPage />} />
+
+      {/* запись */}
+      <Route path="/personal-booking" element={<PersonalBookingPage />} />
+      <Route path="/another-booking" element={<AnotherBookingPage />} />
 
       {/* Widget записи */}
       <Route path="/booking" element={<TelemedicineServicesPage />} />

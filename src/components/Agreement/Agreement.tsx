@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
 import authBackground from '@/assets/images/auth/authBack.png';
 import { ImageLoader } from '@/components/ImageLoader.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 export const PageContainer = styled(Flex)`
   width: 100%;
@@ -27,7 +28,6 @@ export const PageContent = styled(Card).attrs({ $vertical: true })`
 
 const Text = styled.span`
   width: 100%;
-  text-align: center;
   max-width: ${props => props.theme.breakpoints.sm};
 `;
 
@@ -89,6 +89,14 @@ const AgreementContent: React.FC = () => {
     });
   };
 
+  const handleConfirm = () => {
+    hapticFeedback('impact', 'light').then(() => {
+      if (checkedAgreements.length === 2) {
+        navigator('/');
+      }
+    });
+  };
+
   const agreementCheckboxes = [
     {
       id: 'personal-data',
@@ -104,11 +112,6 @@ const AgreementContent: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    if (checkedAgreements.length === 2) {
-      navigator('/');
-    }
-  }, [navigator, checkedAgreements]);
   return (
     <PageContainer className="page-container">
       <PageContent>
@@ -133,6 +136,14 @@ const AgreementContent: React.FC = () => {
             />
           ))}
         </CheckboxesContainer>
+
+        <CustomButton
+          disabled={checkedAgreements.length !== 2}
+          variant={'primary'}
+          onClick={handleConfirm}
+        >
+          Подтвердить
+        </CustomButton>
       </PageContent>
     </PageContainer>
   );

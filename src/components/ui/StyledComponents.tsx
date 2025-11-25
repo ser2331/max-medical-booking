@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { Card } from '@/components/ui/Cart.tsx';
 export const Main = styled('div')`
   position: fixed;
   overflow: hidden;
@@ -73,33 +74,36 @@ export const ContactLink = styled.a`
 
 export const NavigationContainer = styled(Flex)<{ $vertical?: boolean }>`
   position: fixed;
-  bottom: 0;
-  left: 0;
+  bottom: 16px;
+  left: 16px;
   opacity: 1;
   z-index: 99;
-  width: 100%;
+  width: calc(100% - 32px);
   padding: ${props => props.theme.spacing.md};
   background: ${props => props.theme.colors.white};
   gap: ${props => props.theme.spacing.xsm};
   border-radius: 0 0
     ${props => `${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
   flex-direction: ${props => (props.$vertical ? 'column' : 'row-reverse')};
-
-  ${props => props.theme.breakpoints.md} {
-    margin-top: ${props => props.theme.spacing.lg};
-    padding: ${props => props.theme.spacing.sm};
-    gap: ${props => props.theme.spacing.sm};
-  }
-
-  ${props => props.theme.breakpoints.xs} {
-    margin-top: ${props => props.theme.spacing.md};
-    padding: ${props => props.theme.spacing.xs};
-    gap: ${props => props.theme.spacing.xs};
-  }
+  background-color: ${props => props.theme.colors.white};
 `;
 
 export const NavigationBtn = styled(CustomButton)`
   width: 100%;
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
+`;
+
+export const StepContentCard = styled(Card)`
+  min-height: 100%;
+  height: auto;
+  flex: 1;
+  border-radius: ${props =>
+    `${props.theme.borderRadius.medium} ${props.theme.borderRadius.medium} 0 0`};
+`;
+
+export const StepContent = styled.div<{ $withPadding: boolean }>`
+  flex: 1;
+  overflow: auto;
+  padding-bottom: ${props => (props.$withPadding ? '56px' : 0)};
 `;

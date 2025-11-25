@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomTextarea } from '@/components/ui/CustomTextarea/CustomTextarea.tsx';
-import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/AnotherPersonBooking/steps-config.tsx';
 import {
   CustomSelect,
   SelectOption,
@@ -28,7 +28,7 @@ const genderOptions: GenderOption[] = [
 
 export const Step5: React.FC = () => {
   const { register, setValue, control } = useFormContext();
-  const stepFields = STEPS_CONFIG[4].fields;
+  const stepFields = STEPS_CONFIG[0].fields;
   const [lastName, firstName, birthDate, snils, polisN, phoneField, mail] = stepFields;
 
   const phoneValue = useWatch({

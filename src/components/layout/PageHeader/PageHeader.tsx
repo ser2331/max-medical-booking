@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
@@ -8,17 +8,10 @@ import { Card } from '@/components/ui/Cart.tsx';
 import { BackArrowIcon } from '@/assets/icons/BackArrowIcon.tsx';
 import { useAppDispatch } from '@/store/redux-hooks.ts';
 import { onChangeBookingType, onChangeStep } from '@/store/slices/stepperSlice.ts';
+import { Flex } from '@/components/ui/AppSpin.tsx';
 
-const HeaderContainer = styled.header`
-  width: calc(100% - 32px);
-  position: fixed;
-  margin: 0 16px;
-  top: 0;
-  z-index: 99;
-  opacity: 1;
-`;
-
-const HeaderFlex = styled(Card)`
+const HeaderFlex = styled(Flex)`
+  position: relative;
   display: flex;
   gap: ${props => props.theme.spacing.sm};
 
@@ -54,13 +47,19 @@ const Spacer = styled.div<{ $width?: string }>`
 
 interface PageHeaderProps {
   title: string;
+  headerComponent?: ReactNode;
   showBackButton?: boolean;
   showCloseButton?: boolean;
   onBack?: () => void;
   onClose?: () => void;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = true, onBack }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({
+  title,
+  headerComponent,
+  showBackButton = true,
+  onBack,
+}) => {
   const dispatch = useAppDispatch();
   const { hapticFeedback } = useMaxBridgeContext();
   // const settingsModal = useModal();
@@ -78,7 +77,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
   };
 
   return (
-    <HeaderContainer className="header">
+    <Card $vertical $gap={16}>
       <HeaderFlex>
         {/* Левая часть */}
         <HeaderActions>
@@ -94,18 +93,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, showBackButton = 
         {/* Заголовок */}
         <HeaderTitle>{title}</HeaderTitle>
 
-        <div style={{ width: '10px' }} />
-
         {/* Правая часть */}
-        {/*<HeaderActions>*/}
-        {/*  <IconButton onClick={handleSettingsClick}>*/}
-        {/*    <GearIcon size={24} />*/}
-        {/*  </IconButton>*/}
-        {/*</HeaderActions>*/}
-
-        {/* Модальное окно настроек */}
-        {/*<SettingsModal isOpen={settingsModal.isOpen} onClose={settingsModal.close} />*/}
+        <div style={{ width: '10px' }} />
       </HeaderFlex>
-    </HeaderContainer>
+      {headerComponent}
+    </Card>
   );
 };

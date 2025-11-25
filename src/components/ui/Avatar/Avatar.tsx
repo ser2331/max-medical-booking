@@ -1,10 +1,14 @@
+// Обновленный Avatar компонент
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { UserIcon } from '@/assets/icons/UserIcon.tsx';
 
 const AvatarContainer = styled.div<{
   $size: 'small' | 'medium' | 'large' | 'xlarge';
   $shape: 'circle' | 'square';
   $border?: boolean;
+  $iconWidth?: number;
+  $iconHeight?: number;
 }>`
   display: flex;
   align-items: center;
@@ -49,65 +53,62 @@ const AvatarContainer = styled.div<{
     }
   }}
 
-  /* Форма */
   ${props => (props.$shape === 'circle' ? 'border-radius: 50%;' : 'border-radius: 8px;')}
-  
-  /* Граница */
+
   ${props =>
     props.$border &&
     `
     border: 2px solid ${props.theme.colors.mainBackgroundColor};
     box-shadow: ${props.theme.shadows.small};
   `}
-  
-  /* Изображение */
-  img {
+
+  img, svg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    ${props => {
+      if (props.$iconWidth && props.$iconHeight) {
+        return `
+          width: ${props.$iconWidth}px;
+          height: ${props.$iconHeight}px;
+        `;
+      }
+    }}
   }
 `;
 
 export interface AvatarProps {
   src?: string;
+  icon?: React.ComponentType<any>; // Добавляем поддержку React компонентов
   size?: 'small' | 'medium' | 'large' | 'xlarge';
   shape?: 'circle' | 'square';
   border?: boolean;
   alt?: string;
   className?: string;
   onClick?: () => void;
-  fallbackSrc?: string; // Дополнительная кастомная картинка для fallback
-  showFallbackOnError?: boolean; // Показывать ли fallback при ошибке
+  iconProps?: {
+    width?: number;
+    height?: number;
+  }; // Дополнительные props для иконки
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
   src,
+  icon: IconComponent, // React компонент
   size = 'medium',
   shape = 'circle',
   border = false,
   alt = 'Avatar',
   className,
   onClick,
-  fallbackSrc,
-  showFallbackOnError = true,
+  iconProps,
 }) => {
   const [imageError, setImageError] = useState(false);
-  const [currentSrc, setCurrentSrc] = useState(src);
 
   const handleImageError = () => {
-    if (fallbackSrc && showFallbackOnError) {
-      setCurrentSrc(fallbackSrc);
-      setImageError(false); // Сбрасываем ошибку для попытки загрузки fallback
-    } else {
-      setImageError(true);
-    }
+    setImageError(true);
   };
-
-  // Сбрасываем состояние при изменении src
-  React.useEffect(() => {
-    setCurrentSrc(src);
-    setImageError(false);
-  }, [src]);
 
   return (
     <AvatarContainer
@@ -118,13 +119,17 @@ export const Avatar: React.FC<AvatarProps> = ({
       onClick={onClick}
       role={onClick ? 'button' : 'img'}
       aria-label={alt}
+      $iconWidth={iconProps?.width}
+      $iconHeight={iconProps?.height}
     >
-      {currentSrc && !imageError ? (
-        <img src={currentSrc} alt={alt} onError={handleImageError} loading="lazy" />
-      ) : // Показываем кастомную иконку или ничего
-      fallbackSrc && showFallbackOnError ? (
-        <img src={fallbackSrc} alt={alt} onError={() => setImageError(true)} />
-      ) : null}
+      {/* Приоритет: иконка > изображение > fallback */}
+      {IconComponent ? (
+        <IconComponent {...iconProps} />
+      ) : src && !imageError ? (
+        <img src={src} alt={alt} onError={handleImageError} loading="lazy" />
+      ) : (
+        <UserIcon />
+      )}
     </AvatarContainer>
   );
 };

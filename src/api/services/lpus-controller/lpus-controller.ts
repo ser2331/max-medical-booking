@@ -18,39 +18,40 @@ import {
 const controllerUrl = 'api/v2/shared';
 console.log('controllerUrl', controllerUrl);
 
-const errorRate = 0;
+const errorRate = 0.1;
+const delay = 3000;
 export const bookingDictionaryController = commonApi.injectEndpoints({
   endpoints: builder => ({
     getLpus: builder.query<ILpus[], { districtId: string }>({
       // query: ({ districtId }) =>
       // `${controllerUrl}/district/${districtId}/lpus`,
       queryFn: () => {
-        return handleApiResponse('lpus', mockLpusData, { delay: 3, errorRate });
+        return handleApiResponse('lpus', mockLpusData, { delay, errorRate });
       },
     }),
     getSpecialties: builder.query<ISpecialty[], { lpuId: string }>({
       // query: ({ lpuId }) => `${controllerUrl}/lpu/${lpuId}/specialties`,
       queryFn: () => {
-        return handleApiResponse('specialties', mockSpecialtiesData, { delay: 3, errorRate });
+        return handleApiResponse('specialties', mockSpecialtiesData, { delay, errorRate });
       },
     }),
     getDoctors: builder.query<IDoctor[], { lpuId: string; specialityId: string }>({
       // query: ({ lpuId, specialityId }) => `${controllerUrl}/lpu/${lpuId}/speciality/${specialityId}/doctors`,
       queryFn: () => {
-        return handleApiResponse('doctors', mockDoctorsData, { delay: 3, errorRate });
+        return handleApiResponse('doctors', mockDoctorsData, { delay, errorRate });
       },
     }),
     getTimetable: builder.query<ITimeTable[], { lpuId: string; doctorId: string }>({
       // query: ({ lpuId, doctorId }) => `${controllerUrl}/lpu/${lpuId}/doctor/${doctorId}/timetable`,
       queryFn: () => {
-        return handleApiResponse('timetable', mockTimetableData, { delay: 3, errorRate });
+        return handleApiResponse('timetable', mockTimetableData, { delay, errorRate });
       },
     }),
     getAppointments: builder.query<IAppointment[], { lpuId: string; doctorId: string }>({
       // query: ({ lpuId, doctorId }) => `${controllerUrl}/lpu/${lpuId}/doctor/${doctorId}/appointments`,
       queryFn: () => {
         return handleApiResponse('appointments', mockAppointmentsData, {
-          delay: 3,
+          delay,
           errorRate,
         });
       },

@@ -15,7 +15,6 @@ import {
 import { CheckBoxIcon } from '@/assets/icons/CheckBoxIcon.tsx';
 import styled from 'styled-components';
 import moment from 'moment/moment';
-import { Card } from '@/components/ui/Cart.tsx';
 import {
   formatPhoneForDisplay,
   formatPhoneForLink,
@@ -71,7 +70,7 @@ export const FinishCard: FC<FinishCardProps> = ({ onFinish, finishData }) => {
   const onCancel = () => {};
 
   return (
-    <Card $vertical className={'finish'} style={{ flex: 1 }}>
+    <div className={'finish'}>
       <Section>
         <Flex $gap={12} style={{ width: '100%' }}>
           <IconWrapper>
@@ -132,6 +131,6 @@ export const FinishCard: FC<FinishCardProps> = ({ onFinish, finishData }) => {
           Отменить
         </NavigationBtn>
       </NavigationContainer>
-    </Card>
+    </div>
   );
 };

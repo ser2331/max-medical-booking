@@ -14,12 +14,14 @@ const Title = styled.div`
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   line-height: ${props => props.theme.typography.fontSize.xxl};
 `;
-const Description = styled(Title)`
-  font-size: ${props => props.theme.typography.fontSize.md};
+const DataLabel = styled(Title)`
+  font-size: ${props => props.theme.typography.fontSize.sm};
+  color: ${props => props.theme.colors.grey2};
   font-weight: ${props => props.theme.typography.fontWeight.normal};
 `;
-const DataInfo = styled(Title)`
+const DataValue = styled(Title)`
   font-size: ${props => props.theme.typography.fontSize.md};
+  font-weight: ${props => props.theme.typography.fontWeight.normal};
 `;
 interface IProps {
   open: boolean;
@@ -28,40 +30,51 @@ interface IProps {
   formData: AppointmentFormData | null;
 }
 export const RecordingConfirmationModal: FC<IProps> = ({ open, onClose, onConfirm, formData }) => {
-  const formatAppointmentDate = (dateStartString: string, dateEndString: string) => {
+  const formatAppointmentDate = (dateStartString?: string) => {
+    if (!dateStartString) return '-';
     const date = moment(dateStartString);
-    const endDate = moment(dateEndString);
     const startTime = date.format('HH:mm');
-    const endTime = endDate.format('HH:mm');
-    return `${date.format('D MMMM YYYY')} ${startTime}-${endTime}`;
+    return `${date.format('D MMMM YYYY')} в ${startTime}`;
   };
+
+  const data = [
+    { label: 'Пациент', value: formData?.firstName },
+    { label: 'Медучреждение', value: formData?.lpu?.lpuFullName },
+    { label: 'Врач', value: `${formData?.doctor?.name}, ${formData?.specialty?.name}` },
+    {
+      label: 'Дата и время записи',
+      value: formatAppointmentDate(formData?.appointment?.visitStart),
+    },
+  ];
 
   return (
     <Modal
       isOpen={open}
       onClose={onClose}
       footer={
-        <>
-          <CustomButton onClick={onClose}>Отменить</CustomButton>
+        <Flex $direction={'column'} $gap={8} style={{ width: '100%' }}>
           <CustomButton variant={'primary'} onClick={onConfirm}>
-            Подтвердить
+            Записаться
           </CustomButton>
-        </>
+          <CustomButton onClick={onClose}>Отменить</CustomButton>
+        </Flex>
       }
     >
       <Flex $direction={'column'} $gap={16} style={{ width: '100%' }} $align={'flex-start'}>
-        <Title>Подтверждение записи</Title>
+        <Title>Пожалуйста, подтвердите запись</Title>
         <Flex $direction={'column'} $gap={8} $align={'flex-start'} style={{ width: '100%' }}>
-          <Description>Пожалуйста, подтвердите запись:</Description>
-          <DataInfo>
-            {formData?.appointment?.visitStart
-              ? formatAppointmentDate(
-                  formData.appointment.visitStart,
-                  formData.appointment.visitEnd,
-                )
-              : 'Дата не указана'}
-          </DataInfo>
-          <DataInfo>{`${formData?.specialty?.name}, ${formData?.doctor?.name}`}</DataInfo>
+          {data.map((d, index) => (
+            <Flex
+              key={index}
+              $direction={'column'}
+              $gap={8}
+              $align={'flex-start'}
+              style={{ width: '100%' }}
+            >
+              <DataLabel>{d.label || '-'}:</DataLabel>
+              <DataValue>{d.value || '-'}</DataValue>
+            </Flex>
+          ))}
         </Flex>
       </Flex>
     </Modal>
