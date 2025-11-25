@@ -5,6 +5,8 @@ import { Locale } from 'date-fns';
 import moment from 'moment';
 import styled from 'styled-components';
 
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
+
 import { media } from '@/assets/style/mixins.ts';
 import { DatePickerArrowLeft } from '@/assets/icons/DatePickerArrowLeft.tsx';
 import { DatePickerArrowRight } from '@/assets/icons/DatePickerArrowRight.tsx';
@@ -215,6 +217,7 @@ export const range = (from: number, to: number) => {
 const FORMAT = 'DD.MM.YYYY';
 
 export const CustomDatePicker = (props: IProps) => {
+  const { hapticFeedback } = useMaxBridgeContext();
   const { onChange, value, outputFormat = FORMAT, availableDates = [], ...restProps } = props;
 
   const maxDate: Date = new Date(new Date().getFullYear() + 50, 11, 31);
@@ -239,12 +242,14 @@ export const CustomDatePicker = (props: IProps) => {
   };
 
   const handleDateChange = (date: Date | null) => {
-    if (date) {
-      const formattedDate = moment(date).format(outputFormat);
-      onChange(formattedDate);
-    } else {
-      onChange(null);
-    }
+    hapticFeedback('impact', 'light').then(() => {
+      if (date) {
+        const formattedDate = moment(date).format(outputFormat);
+        onChange(formattedDate);
+      } else {
+        onChange(null);
+      }
+    });
   };
   const dateValue = useMemo(() => {
     if (!value) return null;

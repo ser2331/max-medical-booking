@@ -3,6 +3,8 @@ import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import moment from 'moment';
 
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
+
 import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
@@ -24,6 +26,7 @@ const NoAppointmentsMessage = styled.div`
 `;
 
 export const Step4: React.FC = () => {
+  const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
   const stepFields = STEPS_CONFIG[3].fields;
   const [appointment] = stepFields;
@@ -85,7 +88,9 @@ export const Step4: React.FC = () => {
   };
 
   const handleAppointmentSelect = (appointment: IAppointment) => {
-    setValue('appointment', appointment, { shouldValidate: true });
+    hapticFeedback('impact', 'light').then(() => {
+      setValue('appointment', appointment, { shouldValidate: true });
+    });
   };
 
   if (isLoading || isFetching) {

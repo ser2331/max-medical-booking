@@ -4,6 +4,9 @@ import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { ILpus } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
+
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 import {
   CheckCardDescription,
@@ -39,11 +42,14 @@ export const LpuCardItem = memo(
     isSelected: boolean;
     onSelect: (lpuId: ILpus) => void;
   }) => {
+    const { hapticFeedback } = useMaxBridgeContext();
     const { register } = useFormContext();
 
     const handleCardClick = useCallback(() => {
-      onSelect(lpu);
-    }, [lpu, onSelect]);
+      hapticFeedback('impact', 'light').then(() => {
+        onSelect(lpu);
+      });
+    }, [lpu, onSelect, hapticFeedback]);
 
     return (
       <LpuCard $gap={12} key={lpu.id} onClick={handleCardClick}>

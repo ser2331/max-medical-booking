@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useGetDoctorsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
@@ -11,6 +12,7 @@ import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
 import { IDoctor } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
 export const Step3: React.FC = () => {
+  const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
   const stepFields = STEPS_CONFIG[2].fields;
   const [doctor] = stepFields;
@@ -30,10 +32,12 @@ export const Step3: React.FC = () => {
   );
 
   const handleDoctorSelect = async (currentDoctor: IDoctor) => {
-    setValue(doctor, currentDoctor, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
+    hapticFeedback('impact', 'light').then(() => {
+      setValue(doctor, currentDoctor, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
     });
   };
 

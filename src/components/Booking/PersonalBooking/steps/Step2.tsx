@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
+
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
@@ -20,6 +22,7 @@ const Wrapper = styled(Flex).attrs({
 `;
 
 export const Step2: React.FC = () => {
+  const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
   const selectedSpecialty = watch('specialty');
   const selectedLpu = watch('lpu');
@@ -36,10 +39,12 @@ export const Step2: React.FC = () => {
   const [specialty] = stepFields;
 
   const handleDoctorSelect = (currentSpecialty: ISpecialty) => {
-    setValue(specialty, currentSpecialty, {
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
+    hapticFeedback('impact', 'light').then(() => {
+      setValue(specialty, currentSpecialty, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
     });
   };
 

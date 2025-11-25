@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { FC, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
 import { Flex, Section } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import { CircleAlertIcon } from '@/assets/icons/CircleAlertIcon.tsx';
-import { useNavigate } from 'react-router-dom';
 
 export const StyledErrorMessage = styled(Section)`
   flex: 1;
@@ -30,12 +32,15 @@ export const ErrorMessage: FC<{
   hiddenBtn?: boolean;
   onTryAgain?: () => void;
 }> = ({ children, hiddenBtn, onTryAgain }) => {
+  const { hapticFeedback } = useMaxBridgeContext();
   const navigate = useNavigate();
   const handleClick = () => {
-    if (onTryAgain) {
-      return onTryAgain();
-    }
-    navigate('/');
+    hapticFeedback('impact', 'light').then(() => {
+      if (onTryAgain) {
+        return onTryAgain();
+      }
+      navigate('/');
+    });
   };
   return (
     <StyledErrorMessage>
