@@ -18,7 +18,7 @@ import {
 const controllerUrl = 'api/v2/shared';
 console.log('controllerUrl', controllerUrl);
 
-const errorRate = 0.1;
+const errorRate = 0;
 const delay = 3000;
 export const bookingDictionaryController = commonApi.injectEndpoints({
   endpoints: builder => ({

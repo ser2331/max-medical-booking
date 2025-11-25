@@ -47,8 +47,7 @@ export const StepperForm = <TFieldValues extends FieldValues>({
         <NavigationBtn
           disabled={!isCurrentStepValid}
           variant="primary"
-          onClick={handleSubmit(onSubmit)}
-          type={'submit'}
+          onClick={!isCurrentStepValid ? handleSubmit(onSubmit) : () => console.log()}
         >
           Подтвердить
         </NavigationBtn>
