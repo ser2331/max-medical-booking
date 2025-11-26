@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 import { UserCard } from '@/components/ui/User/UserCard.tsx';
@@ -10,6 +10,8 @@ import { Checkbox } from '@/components/ui/Checkbox/Checkbox.tsx';
 import authBackground from '@/assets/images/auth/authBack.png';
 import { ImageLoader } from '@/components/ImageLoader.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { useAppDispatch } from '@/store/redux-hooks.ts';
+import { setAgreements } from '@/store/slices/authSlice.ts';
 
 export const PageContainer = styled(Flex)`
   width: 100%;
@@ -75,7 +77,7 @@ const AgreementCheckbox: React.FC<AgreementCheckboxProps> = ({
 };
 
 const AgreementContent: React.FC = () => {
-  const navigator = useNavigate();
+  const dispatch = useAppDispatch();
   const { user, hapticFeedback } = useMaxBridgeContext();
   const [checkedAgreements, setCheckedAgreements] = React.useState<string[]>([]);
 
@@ -91,8 +93,8 @@ const AgreementContent: React.FC = () => {
 
   const handleConfirm = () => {
     hapticFeedback('impact', 'light').then(() => {
-      if (checkedAgreements.length === 2) {
-        navigator('/');
+      if (checkedAgreements.length === 3) {
+        dispatch(setAgreements(true));
       }
     });
   };
@@ -109,6 +111,12 @@ const AgreementContent: React.FC = () => {
       text: 'Соглашаюсь с',
       linkText: 'политикой конфиденциальности',
       linkTo: '/privacy-policy',
+    },
+    {
+      id: 'receiving-notifications',
+      text: 'Я даю',
+      linkText: 'согласие на получение уведомлений',
+      linkTo: '/receiving-notifications',
     },
   ];
 
@@ -138,7 +146,7 @@ const AgreementContent: React.FC = () => {
         </CheckboxesContainer>
 
         <CustomButton
-          disabled={checkedAgreements.length !== 2}
+          disabled={checkedAgreements.length !== 3}
           variant={'primary'}
           onClick={handleConfirm}
         >

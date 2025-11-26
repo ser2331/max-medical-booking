@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 import authBackground from '@/assets/images/auth/authBack.png';
 import authIcon from '@/assets/images/auth/Icon.png';
 import { ImageLoader } from '@/components/ImageLoader.tsx';
+import { setAuthenticated } from '@/store/slices/authSlice.ts';
+import { useAppDispatch } from '@/store/redux-hooks.ts';
 
 export const PageContainer = styled(Flex)`
   width: 100%;
@@ -46,7 +47,11 @@ const Icon = styled.img`
 `;
 
 const AuthContent: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleAuth = () => {
+    dispatch(setAuthenticated(true));
+  };
 
   return (
     <PageContainer>
@@ -57,7 +62,7 @@ const AuthContent: React.FC = () => {
           ГОСУСЛУГИ
         </Subtitle>
 
-        <CustomButton onClick={() => navigate('/agreement')}>
+        <CustomButton onClick={handleAuth}>
           <Icon src={authIcon} alt="Госуслуги" />
           Войти через ГОСУСЛУГИ
         </CustomButton>

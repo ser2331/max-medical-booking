@@ -3,12 +3,16 @@ import { AuthData, RoleContext } from '@/types/widget.ts';
 import { getUrl } from '@/config/env';
 
 interface WidgetState {
+  isAuthenticated: boolean;
+  hasAgreements: boolean;
   sessionId: string | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: WidgetState = {
+  isAuthenticated: false,
+  hasAgreements: false,
   sessionId: null,
   isLoading: false,
   error: null,
@@ -85,6 +89,12 @@ const authSlice = createSlice({
     clearError: state => {
       state.error = null;
     },
+    setAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+    },
+    setAgreements: (state, action: PayloadAction<boolean>) => {
+      state.hasAgreements = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -104,5 +114,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearSession, setSession, clearError } = authSlice.actions;
+export const { clearSession, setSession, clearError, setAgreements, setAuthenticated } =
+  authSlice.actions;
 export default authSlice.reducer;
