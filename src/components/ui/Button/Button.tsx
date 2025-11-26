@@ -314,12 +314,7 @@ export const CustomButton = (props: CustomButtonProps) => {
       >
         {props.loading && (
           <>
-            <AppSpin
-              text=""
-              white={!props.blackLoader}
-              customColor={props.customColorLoader}
-              size={props.sizeLoader}
-            />
+            <AppSpin />
             {!props.onlyLoader && ' '}
           </>
         )}

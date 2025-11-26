@@ -25,7 +25,7 @@ const SpinContainer = styled(Flex)`
   overflow: hidden;
 `;
 
-export const AppSpin = ({}) => {
+export const AppSpin = () => {
   return (
     <SpinContainer className="spin-container">
       <AppLoader size={'small'} />
