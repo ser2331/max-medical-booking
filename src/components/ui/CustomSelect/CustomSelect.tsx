@@ -250,14 +250,27 @@ export const CustomSelect = <T extends SelectValue>(
     newValue: SingleValue<SelectOption>,
     _actionMeta: ActionMeta<SelectOption>,
   ) => {
-    // Используем type assertion здесь
     props.onChange(newValue ? (newValue.value as T) : null);
   };
 
   const customStyles: StylesConfig<SelectOption, false> = {
     menuPortal: (base: CSSObjectWithLabel) => ({
       ...base,
-      zIndex: 3,
+      zIndex: 9999,
+    }),
+    menu: (base: CSSObjectWithLabel) => ({
+      ...base,
+      borderRadius: theme.borderRadius.large,
+      padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+      marginTop: '4px', // Добавляем отступ от селекта
+      boxShadow: theme.shadows.large,
+    }),
+    menuList: (base: CSSObjectWithLabel) => ({
+      ...base,
+      backgroundColor: theme.colors.white,
+      borderRadius: theme.borderRadius.large,
+      maxHeight: '200px', // Ограничиваем высоту
+      padding: 0,
     }),
     control: (base: CSSObjectWithLabel) =>
       ({
@@ -265,7 +278,7 @@ export const CustomSelect = <T extends SelectValue>(
         justifyContent: 'center',
         width: '100%',
         borderRadius: theme.borderRadius.medium,
-        minHeight: 40,
+        minHeight: 44,
         color: theme.colors.black,
         backgroundColor: props.isYearSelect
           ? 'transparent'
@@ -297,6 +310,7 @@ export const CustomSelect = <T extends SelectValue>(
     container: (base: CSSObjectWithLabel) => ({
       ...base,
       width: props.isYearSelect ? '100%' : '',
+      position: 'relative', // Важно для правильного позиционирования
     }),
     indicatorSeparator: () => ({
       display: 'none',
@@ -323,6 +337,8 @@ export const CustomSelect = <T extends SelectValue>(
           backgroundColor: theme.colors.blueLight,
         },
         borderRadius: theme.borderRadius.small,
+        margin: '2px 0',
+        padding: '8px 12px',
       }) as CSSObjectWithLabel,
     multiValue: (base: CSSObjectWithLabel) => ({
       ...base,
@@ -345,6 +361,7 @@ export const CustomSelect = <T extends SelectValue>(
     noOptionsMessage: (base: CSSObjectWithLabel) => ({
       ...base,
       fontSize: theme.typography.fontSize.md,
+      padding: '8px 12px',
     }),
     singleValue: (base: CSSObjectWithLabel) => ({
       ...base,
@@ -354,16 +371,6 @@ export const CustomSelect = <T extends SelectValue>(
       ...base,
       fontSize: theme.typography.fontSize.md,
       whiteSpace: 'nowrap',
-    }),
-    menuList: (base: CSSObjectWithLabel) => ({
-      ...base,
-      backgroundColor: theme.colors.white,
-      borderRadius: theme.borderRadius.large,
-    }),
-    menu: (base: CSSObjectWithLabel) => ({
-      ...base,
-      borderRadius: theme.borderRadius.large,
-      padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     }),
   };
 
@@ -403,7 +410,8 @@ export const CustomSelect = <T extends SelectValue>(
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         menuPlacement="auto"
-        menuPosition={props.isPositionAbsolute ? 'absolute' : 'fixed'}
+        menuPosition="absolute" // Используем absolute вместо fixed
+        menuShouldBlockScroll={true} // Блокируем скролл тела при открытом меню на iOS
       />
 
       {props.showErrorText && props.error && <ErrorText>{getErrorMessage(props.error)}</ErrorText>}

@@ -133,6 +133,7 @@ export const Step5: React.FC = () => {
         value={genderValue}
         onChange={handleChangeGender}
         isClearable={false}
+        isSearchable={false}
         cyName="gender-select"
       />
 
