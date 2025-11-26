@@ -38,13 +38,12 @@ export const useStepValidation = <TFieldValues extends FieldValues>(
   const isCurrentStepValid = useMemo((): boolean => {
     if (currentStepFields.length === 0) return false;
 
-    const hasStepErrors = currentStepFields.some((_field, index) => !!errors[index]);
+    const hasStepErrors = currentStepFields.some(_field => !!errors[_field]);
 
     const allFieldsHaveValues = currentStepFields.every((_field, index) => {
       const value = watchedStepFields?.[index];
       return !!value;
     });
-
     return !hasStepErrors && allFieldsHaveValues;
   }, [currentStepFields, errors, watchedStepFields]);
 

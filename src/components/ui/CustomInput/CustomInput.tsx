@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Flex } from '@/components/ui/StyledComponents.tsx';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import { FieldError, FieldErrorsImpl, Merge, UseFormRegisterReturn } from 'react-hook-form';
 import React from 'react';
 import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { SearchIcon } from '@/assets/icons/SearchIcon.tsx';
@@ -12,10 +12,10 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
-const InputTitle = styled.span<{ $hasError?: boolean }>`
+const InputTitle = styled.span`
   font-size: ${props => props.theme.typography.fontSize.sm};
   margin-bottom: ${props => props.theme.spacing.xsm};
-  color: ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.grey2)};
+  color: ${props => props.theme.colors.grey2};
   font-weight: ${props => props.theme.typography.fontWeight.normal};
 `;
 
@@ -53,7 +53,8 @@ const StyledInput = styled.input<{
   border-radius: ${props => props.theme.borderRadius.medium};
   font-size: ${props => props.theme.typography.fontSize.sm};
   line-height: ${props => props.theme.typography.fontSize.xl};
-  background-color: ${props => (props.$hasError ? '#FF4D4F' : props.theme.colors.white)};
+  background-color: ${props =>
+    props.$hasError ? props.theme.colors.redLight : props.theme.colors.white};
   color: ${props => props.theme.colors.black};
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -84,6 +85,11 @@ const StyledInput = styled.input<{
       right: 0;
       top: 0;
       width: auto;
+    }
+
+    /* Стили для недоступных дат */
+    &:invalid {
+      color: ${props => props.theme.colors.grey3};
     }
   }
 
@@ -144,6 +150,36 @@ const DescriptionText = styled.span`
   font-weight: ${props => props.theme.typography.fontWeight.normal};
 `;
 
+const ErrorText = styled.span`
+  color: ${props => props.theme.colors.red};
+  font-size: ${props => props.theme.typography.fontSize.xs};
+  margin-top: ${props => props.theme.spacing.xs};
+  font-weight: ${props => props.theme.typography.fontWeight.normal};
+`;
+
+// Вспомогательная функция для получения текста ошибки
+const getErrorMessage = (
+  error: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined,
+): string => {
+  if (typeof error === 'string') return error;
+  if (error?.message && typeof error?.message === 'string') return error.message;
+  if (error?.type === 'required') return 'Это поле обязательно для заполнения';
+  if (error?.type === 'pattern') return 'Неверный формат';
+  if (error?.type === 'minLength') return 'Слишком короткое значение';
+  if (error?.type === 'maxLength') return 'Слишком длинное значение';
+  if (error?.type === 'validate') return 'Неверное значение';
+  return 'Ошибка в поле';
+};
+
+// Функция для получения текущей даты в формате YYYY-MM-DD
+const getCurrentDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 interface CustomInputProps {
   value?: string;
   title?: string;
@@ -160,6 +196,9 @@ interface CustomInputProps {
   clearable?: boolean;
   onBlur?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  error?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+  maxDate?: string;
+  minDate?: string;
 }
 
 export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
@@ -172,19 +211,45 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     placeholder,
     onChange,
     type,
+    showErrorText = false,
     register,
     showDateIcon = type === 'date',
     showSearchIcon = type === 'search',
-    clearable = false, // по умолчанию отключаем крестик
+    clearable = false,
     onBlur,
     onKeyDown,
+    error,
+    maxDate,
+    minDate,
   } = props;
+
+  const hasError = !!error;
+  const errorMessage = hasError ? getErrorMessage(error) : '';
+
+  // Для date input устанавливаем максимальную дату как текущую
+  const dateProps =
+    type === 'date'
+      ? {
+          max: maxDate || getCurrentDate(), // По умолчанию запрещаем будущие даты
+          min: minDate, // Можно установить минимальную дату если нужно
+        }
+      : {};
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(event.target.value);
     } else if (register?.onChange) {
       register.onChange(event);
+    }
+  };
+
+  // Обработчик blur
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur();
+    }
+    if (register?.onBlur) {
+      register.onBlur(e);
     }
   };
 
@@ -204,11 +269,13 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
           placeholder={placeholder}
           type={type || 'text'}
           value={value}
+          $hasError={hasError}
           $hasDateIcon={showDateIcon}
           $hasSearch={showSearchIcon}
           $clearable={clearable}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           onKeyDown={onKeyDown}
+          {...dateProps}
           {...register}
           onChange={handleChange}
         />
@@ -224,7 +291,13 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
         )}
       </InputWrapper>
 
-      {description && <DescriptionText>{description}</DescriptionText>}
+      {/* Показываем ошибку если есть и включено отображение ошибок */}
+      {showErrorText && hasError && <ErrorText>{errorMessage}</ErrorText>}
+
+      {/* Показываем описание если нет ошибки или всегда (в зависимости от требований) */}
+      {description && !(showErrorText && hasError) && (
+        <DescriptionText>{description}</DescriptionText>
+      )}
     </InputContainer>
   );
 });

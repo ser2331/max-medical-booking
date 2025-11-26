@@ -11,6 +11,17 @@ import {
   SelectOption,
   SelectValue,
 } from '@/components/ui/CustomSelect/CustomSelect.tsx';
+import {
+  formatPolisNumber,
+  formatPolisSeries,
+  formatSNILS,
+  validateBirthDate,
+  validateEmail,
+  validatePolisNumber,
+  validateSNILS,
+  validationPatterns,
+} from '@/helpers/validateHelpers.ts';
+
 type GenderOption = SelectOption & { value: 'm' | 'f' };
 
 const PageTitle = styled.span`
@@ -27,19 +38,20 @@ const genderOptions: GenderOption[] = [
 ];
 
 export const Step5: React.FC = () => {
-  const { register, setValue, control } = useFormContext();
+  const {
+    register,
+    setValue,
+    control,
+    formState: { errors },
+  } = useFormContext();
   const stepFields = STEPS_CONFIG[0].fields;
   const [lastName, firstName, birthDate, snils, polisN, phoneField, mail] = stepFields;
 
-  const phoneValue = useWatch({
-    control,
-    name: phoneField,
-  });
-
-  const genderValue = useWatch({
-    control,
-    name: 'gender',
-  });
+  const phoneValue = useWatch({ control, name: phoneField });
+  const genderValue = useWatch({ control, name: 'gender' });
+  const snilsValue = useWatch({ control, name: snils });
+  const polisNumberValue = useWatch({ control, name: polisN });
+  const polisSeriesValue = useWatch({ control, name: 'polisS' });
 
   const handlePhoneChange = (value: string) => {
     let formattedValue = value.replace(/\D/g, '');
@@ -66,65 +78,106 @@ export const Step5: React.FC = () => {
       setValue(phoneField, '', { shouldValidate: true });
     }
   };
+
+  const handleSNILSChange = (value: string) => {
+    const formattedValue = formatSNILS(value);
+    setValue(snils, formattedValue, { shouldValidate: true });
+  };
+
+  const handlePolisNumberChange = (value: string) => {
+    const formattedValue = formatPolisNumber(value);
+    setValue(polisN, formattedValue, { shouldValidate: true });
+  };
+
+  const handlePolisSeriesChange = (value: string) => {
+    const formattedValue = formatPolisSeries(value);
+    setValue('polisS', formattedValue, { shouldValidate: true });
+  };
+
   const handleChangeGender = (value: SelectValue | null) => {
     setValue('gender', value, { shouldValidate: true });
   };
 
-  const phonePattern = {
-    value: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
-    message: 'Введите номер в формате +7 (999) 999-99-99',
-  };
-
   return (
     <Flex $direction={'column'} $gap={16}>
-      {/*Title*/}
       <PageTitle>Данные пациента</PageTitle>
+
       {/* Основные поля пациента */}
       <CustomInput
         title="Фамилия"
         placeholder="Иванов"
-        required
-        showErrorText
         register={register(lastName, {
           required: 'Введите фамилию',
           minLength: {
             value: 2,
             message: 'Фамилия должна содержать минимум 2 символа',
           },
+          maxLength: {
+            value: 50,
+            message: 'Фамилия слишком длинная',
+          },
+          pattern: {
+            value: validationPatterns.name,
+            message: 'Фамилия должна содержать только русские буквы, дефисы и пробелы',
+          },
         })}
+        required
+        showErrorText
+        error={errors?.[lastName]?.message}
       />
 
       <CustomInput
         title="Имя"
         placeholder="Иван"
-        required
-        showErrorText
         register={register(firstName, {
           required: 'Введите имя',
           minLength: {
             value: 2,
             message: 'Имя должно содержать минимум 2 символа',
           },
+          maxLength: {
+            value: 50,
+            message: 'Имя слишком длинное',
+          },
+          pattern: {
+            value: validationPatterns.name,
+            message: 'Имя должно содержать только русские буквы, дефисы и пробелы',
+          },
+        })}
+        required
+        showErrorText
+        error={errors?.[firstName]?.message}
+      />
+
+      <CustomInput
+        title="Отчество"
+        placeholder="Иванович"
+        register={register('middleName', {
+          minLength: {
+            value: 2,
+            message: 'Отчество должно содержать минимум 2 символа',
+          },
+          maxLength: {
+            value: 50,
+            message: 'Отчество слишком длинное',
+          },
+          pattern: {
+            value: validationPatterns.name,
+            message: 'Отчество должно содержать только русские буквы, дефисы и пробелы',
+          },
         })}
       />
 
-      <CustomInput title="Отчество" placeholder="Иванович" register={register('middleName')} />
-
       <CustomInput
         title="Дата рождения"
-        required
         type="date"
-        showErrorText
         register={register(birthDate, {
           required: 'Введите дату рождения',
-          validate: value => {
-            if (!value) return true;
-            const birthDate = new Date(value);
-            const today = new Date();
-            const age = today.getFullYear() - birthDate.getFullYear();
-            return (age >= 0 && age <= 120) || 'Введите корректную дату рождения';
-          },
+          validate: validateBirthDate,
         })}
+        required
+        showErrorText
+        error={errors?.[birthDate]?.message}
       />
 
       <CustomSelect
@@ -139,62 +192,78 @@ export const Step5: React.FC = () => {
 
       <CustomInput
         title="СНИЛС"
-        placeholder=""
-        required
-        showErrorText
+        placeholder="XXX-XXX-XXX XX"
+        value={snilsValue || ''}
+        onChange={handleSNILSChange}
         register={register(snils, {
           required: 'Введите СНИЛС',
-          minLength: {
-            value: 2,
-            message: 'СНИЛС должен содержать минимум 2 символа',
-          },
+          validate: validateSNILS,
         })}
-      />
-      <CustomInput
-        title="Номер полиса ОМС"
-        placeholder=""
         required
         showErrorText
+        error={errors?.[snils]?.message}
+      />
+
+      <CustomInput
+        title="Номер полиса ОМС"
+        placeholder="XXXX XXXXXX XXXXXX"
+        value={polisNumberValue || ''}
+        onChange={handlePolisNumberChange}
         register={register(polisN, {
-          required: 'Введите Номер полиса ОМС',
-          minLength: {
-            value: 2,
-            message: 'Номер полиса ОМС должен содержать минимум 2 символа',
+          required: 'Введите номер полиса ОМС',
+          validate: validatePolisNumber,
+        })}
+        required
+        showErrorText
+        error={errors?.[polisN]?.message}
+      />
+
+      <CustomInput
+        title="Серия полиса ОМС"
+        placeholder="XXXXXX"
+        value={polisSeriesValue || ''}
+        onChange={handlePolisSeriesChange}
+        register={register('polisS', {
+          pattern: {
+            value: validationPatterns.polisSeries,
+            message: 'Серия полиса должна содержать 6 цифр',
           },
         })}
       />
-      <CustomInput title="Серия полиса ОМС" register={register('polisS')} />
+
       {/* Контактные данные */}
       <CustomInput
         title="Телефон"
-        required
         placeholder="+7 (999) 999-99-99"
         value={phoneValue || ''}
         onChange={handlePhoneChange}
         register={register(phoneField, {
           required: 'Введите номер телефона',
-          pattern: phonePattern,
+          pattern: {
+            value: validationPatterns.phone,
+            message: 'Введите номер в формате +7 (999) 999-99-99',
+          },
           validate: value => {
             const numbers = value?.replace(/\D/g, '') || '';
             return numbers.length === 11 || 'Номер должен содержать 11 цифр';
           },
         })}
+        required
         showErrorText
+        error={errors?.[phoneField]?.message}
       />
 
       <CustomInput
         title="Электронная почта"
         type="email"
         placeholder="example@mail.ru"
-        required
-        showErrorText
         register={register(mail, {
           required: 'Введите email',
-          pattern: {
-            value: /^\S+@\S+$/i,
-            message: 'Введите корректный email',
-          },
+          validate: validateEmail,
         })}
+        required
+        showErrorText
+        error={errors?.[mail]?.message}
       />
 
       {/* Комментарий */}
@@ -202,7 +271,12 @@ export const Step5: React.FC = () => {
         title="Комментарий"
         placeholder="Дополнительная информация..."
         rows={3}
-        register={register('comments')}
+        register={register('comments', {
+          maxLength: {
+            value: 500,
+            message: 'Комментарий не должен превышать 500 символов',
+          },
+        })}
       />
     </Flex>
   );
