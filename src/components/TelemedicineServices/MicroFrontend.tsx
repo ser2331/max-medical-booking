@@ -355,7 +355,7 @@ export const MicroFrontend = () => {
       {/*  </div>*/}
       {/*)}*/}
 
-      <Container id={containerId} />
+      <Container id={containerId} className={'scroll-container'} />
     </div>
   );
 };

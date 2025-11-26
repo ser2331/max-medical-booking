@@ -3,12 +3,13 @@ import React from 'react';
 const FullLinePath =
   'M10.832 80.6894H66.9799L73.6068 111.249L83.1794 51.4199L89.4384 130.394L103.061 80.6894H171.174';
 
-export const LoaderIcon = React.memo(() => {
+export const LoaderIcon = React.memo(({ size = 'large' }: { size?: 'large' | 'small' }) => {
+  const width = size === 'large' ? '102' : size === 'small' ? '30' : '102';
+  const height = size === 'large' ? '163' : size === 'small' ? '30' : '163';
   return (
     <svg
-      width="102"
-      // width="182"
-      height="163"
+      width={width}
+      height={height}
       viewBox="0 0 182 163"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

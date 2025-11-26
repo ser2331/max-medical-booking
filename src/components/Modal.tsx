@@ -16,7 +16,7 @@ const Overlay = styled(Flex).attrs({ $direction: 'column' })<{ $isOpen: boolean 
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
   transition: all 0.3s ease;
-  padding: ${props => props.theme.spacing.xs};
+  padding: ${props => props.theme.spacing.md};
 `;
 
 const ModalContainer = styled(Flex).attrs({

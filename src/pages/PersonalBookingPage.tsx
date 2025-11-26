@@ -90,7 +90,7 @@ export const PersonalBookingPage: FC = () => {
       showBackButton={true}
       onBack={() => navigate('/')}
     >
-      <StepContent $withPadding={!finishData}>
+      <StepContent $withPadding={!finishData} className={'scroll-container'}>
         <StepContentCard>
           {finishData ? (
             <FinishCard onFinish={() => handleSetFinishData(null)} finishData={finishData} />

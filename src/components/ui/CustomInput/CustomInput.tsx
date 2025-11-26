@@ -195,6 +195,7 @@ interface CustomInputProps {
   showSearchIcon?: boolean;
   clearable?: boolean;
   onBlur?: () => void;
+  onFocus?: () => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   error?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
   maxDate?: string;
@@ -217,6 +218,7 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
     showSearchIcon = type === 'search',
     clearable = false,
     onBlur,
+    onFocus,
     onKeyDown,
     error,
     maxDate,
@@ -252,6 +254,15 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
       register.onBlur(e);
     }
   };
+  // Обработчик handleFocus
+  const handleFocus = (_e: React.FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus();
+    }
+    // if (register?.onFocus) {
+    //   register.onFocus(e);
+    // }
+  };
 
   return (
     <InputContainer>
@@ -274,6 +285,7 @@ export const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
           $hasSearch={showSearchIcon}
           $clearable={clearable}
           onBlur={handleBlur}
+          onFocus={handleFocus}
           onKeyDown={onKeyDown}
           {...dateProps}
           {...register}

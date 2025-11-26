@@ -11,8 +11,8 @@ import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.typ
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { Section } from '@/components/ui/StyledComponents.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
-import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
-import { AppointmentsList } from '@/components/Booking/PersonalBooking/steps/Step4/AppointmentsList.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/AnotherPersonBooking/steps-config.tsx';
+import { AppointmentsList } from '@/components/Booking/AnotherPersonBooking/steps/Step4/AppointmentsList.tsx';
 import { CustomDateInput } from '@/components/ui/CustomDateInput/CustomDateInput.tsx';
 
 const FORMAT = 'DD.MM.YYYY';

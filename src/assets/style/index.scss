@@ -24,8 +24,8 @@ html {
   font-family: 'Open Sans', Arial, Helvetica, sans-serif; // Добавлен Open Sans
   height: 100%;
 
-  scrollbar-width: thin;
-  scrollbar-color: #147dc1 #d7d7d7;
+  //scrollbar-width: thin;
+  //scrollbar-color: #147dc1 #d7d7d7;
 }
 
 body {
@@ -44,7 +44,7 @@ code {
 
 div, a {
   box-sizing: border-box;
-  scrollbar-width: thin;
+  //scrollbar-width: thin;
 }
 
 .main {
@@ -64,29 +64,45 @@ button, div, a, input {
   color: var(--widget-black);
 }
 
+/* Базовые стили */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--widget-white);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--widget-blue);
+  border-radius: 10px;
+  background-clip: content-box;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 ::-webkit-scrollbar-button {
   display: none;
 }
 
-::-webkit-scrollbar-track {
-  background-color: #d7d7d7;
+/* Показывать только при наведении на всю страницу или конкретный контейнер */
+html:hover ::-webkit-scrollbar-thumb,
+html:hover ::-webkit-scrollbar-track,
+.scroll-container:hover::-webkit-scrollbar-thumb,
+.scroll-container:hover::-webkit-scrollbar-track {
+  opacity: 0.7;
 }
 
-::-webkit-scrollbar-track-piece {
-  background-color: #d7d7d7;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--primary);
-}
-
-::-webkit-scrollbar-corner {
-  background-color: var(--primary);
+/* Полностью показывать при активном взаимодействии */
+html:active ::-webkit-scrollbar-thumb,
+html:active ::-webkit-scrollbar-track,
+.scroll-container:active::-webkit-scrollbar-thumb,
+.scroll-container:active::-webkit-scrollbar-track {
+  opacity: 1;
 }
 
 div.form-field__container > div.form-referral__card {

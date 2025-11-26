@@ -14,7 +14,7 @@ import Select, {
 import styled, { useTheme } from 'styled-components';
 
 import { SelectedIcon } from '@/assets/icons/SelectedIcon.tsx';
-import { SelectArrowIcon } from '@/assets/icons/SelectArrowIcon.tsx';
+import { DatePickerArrowLeft } from '@/assets/icons/DatePickerArrowLeft.tsx';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { getErrorMessage } from '@/helpers/heplers.tsx';
@@ -142,7 +142,9 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, false>) =
   return (
     <components.DropdownIndicator {...props}>
       <CustomIndicatorContainer $isFocused={props.selectProps.menuIsOpen}>
-        <SelectArrowIcon color={'var(--widget-blue)'} />
+        <div style={{ transform: 'rotate(-90deg)', width: '18px', height: '18px' }}>
+          <DatePickerArrowLeft color={'var(--widget-grey-3)'} />
+        </div>
       </CustomIndicatorContainer>
     </components.DropdownIndicator>
   );

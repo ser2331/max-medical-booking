@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const DatePickerArrowLeft = React.memo(
-  ({ color = '--widget-black' }: { color?: string }) => {
+  ({ color = 'val(--widget-black)' }: { color?: string }) => {
     return (
       <svg
         width="24"

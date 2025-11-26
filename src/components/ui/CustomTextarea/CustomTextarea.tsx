@@ -18,7 +18,7 @@ const TextAreaTitle = styled.span<{ $hasError?: boolean }>`
 
 const StyledTextArea = styled.textarea<{ $hasError?: boolean }>`
   width: 100%;
-  padding: ${props => props.theme.spacing.md} ${props => props.theme.spacing.lg};
+  padding: ${props => props.theme.spacing.xsm} ${props => props.theme.spacing.sm};
   border: 1px solid
     ${props => (props.$hasError ? props.theme.colors.red : props.theme.colors.grey3)};
   border-radius: ${props => props.theme.borderRadius.medium};

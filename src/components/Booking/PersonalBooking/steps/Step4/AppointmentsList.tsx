@@ -9,15 +9,26 @@ const StyledAppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
   width: 100%;
   gap: ${props => props.theme.spacing.sm};
 `;
-const AppointmentRoom = styled(Flex)<{ $isSelected: boolean }>`
+
+const AppointmentsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 8px;
+  width: 100%;
+`;
+
+const AppointmentRoom = styled(Flex)<{
+  $isSelected: boolean;
+}>`
+  max-width: 100px;
   border-radius: ${props => props.theme.borderRadius.medium};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
-  outline: 1px solid
-    ${props => (props.$isSelected ? props.theme.colors.blue : props.theme.colors.grey3)};
-  background: ${props =>
-    props.$isSelected ? props.theme.colors.blueLight : props.theme.colors.white};
+  outline: 1px solid ${props => (props.$isSelected ? '#BADCF4' : props.theme.colors.grey3)};
+  background: ${props => (props.$isSelected ? '#E3F1FA' : props.theme.colors.white)};
   padding: ${props => `${props.theme.spacing.xs} ${props.theme.spacing.md}`};
   font-size: ${props => props.theme.typography.fontSize.sm};
+  cursor: pointer;
+  transition: all 0.2s ease;
 `;
 
 const Date = styled.h4`
@@ -26,18 +37,22 @@ const Date = styled.h4`
   font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
+
 // Вспомогательные функции с использованием moment
 const formatTime = (dateString: string): string => {
   return moment(dateString).format('HH:mm');
 };
+
 const formatAppointmentTime = (start: string): string => {
   return `${formatTime(start)}`;
 };
+
 interface AppointmentsListProps {
   appointmentsByDate: Record<string, IAppointment[]>;
   onChange: (appointment: IAppointment) => void;
   selectedAppointment: IAppointment;
 }
+
 export const AppointmentsList: FC<AppointmentsListProps> = ({
   appointmentsByDate,
   onChange,
@@ -55,12 +70,7 @@ export const AppointmentsList: FC<AppointmentsListProps> = ({
           $gap={16}
         >
           <Date>{date}</Date>
-          <Flex
-            $align={'flex-start'}
-            $justifyContent={'flex-start'}
-            style={{ width: '100%', flexWrap: 'wrap' }}
-            $gap={8}
-          >
+          <AppointmentsContainer>
             {appointments.map(appointment => (
               <AppointmentRoom
                 $isSelected={selectedAppointment?.id === appointment.id}
@@ -70,7 +80,7 @@ export const AppointmentsList: FC<AppointmentsListProps> = ({
                 {formatAppointmentTime(appointment.visitStart)}
               </AppointmentRoom>
             ))}
-          </Flex>
+          </AppointmentsContainer>
           <Line $marginBottom={0} $marginTop={0} />
         </Flex>
       ))}

@@ -4,6 +4,7 @@ import { CalendarIcon } from '@/assets/icons/CalendarIcon';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { CustomDatePicker } from '@/components/ui/DateTimePicker/DateTimePicker.tsx';
 import moment from 'moment';
+import { CloseIcon } from '@/assets/icons/CloseIcon.tsx';
 
 const DateInputContainer = styled.div`
   display: flex;
@@ -22,18 +23,25 @@ const DatePickerWrapper = styled.div`
   border-radius: ${props => props.theme.borderRadius.xl};
 `;
 
-const CalendarButton = styled.button`
+const Options = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  right: 12px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
+  padding: 4px;
+  gap: 4px;
+`;
+
+const Option = styled.button`
   background: none;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
 
   &:hover {
     opacity: 0.7;
@@ -126,19 +134,6 @@ export const CustomDateInput: FC<CustomDateInputProps> = props => {
     // Для неполных дат не вызываем onChange, ждем полного ввода
   };
 
-  // Обработчик потери фокуса - валидация
-  const handleInputBlur = () => {
-    if (displayValue && displayValue.length === 10 && !isValidDate(displayValue)) {
-      // Если введена невалидная дата, очищаем поле
-      setDisplayValue('');
-      onChange?.('');
-    } else if (displayValue && displayValue.length < 10) {
-      // Если введена неполная дата, очищаем поле
-      setDisplayValue('');
-      onChange?.('');
-    }
-  };
-
   // Обработчик для DatePicker
   const handleDatePickerChange = (dateValue: Date | string | null) => {
     let resultDate = '';
@@ -180,7 +175,28 @@ export const CustomDateInput: FC<CustomDateInputProps> = props => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  // Добавьте состояние для отслеживания фокуса
+  const [isFocused, setIsFocused] = useState(false);
 
+  // Обработчики фокуса
+  const handleInputFocus = () => {
+    setIsFocused(true);
+  };
+
+  // Обработчик потери фокуса - валидация
+  const handleInputBlur = () => {
+    setIsFocused(false);
+
+    if (displayValue && displayValue.length === 10 && !isValidDate(displayValue)) {
+      // Если введена невалидная дата, очищаем поле
+      setDisplayValue('');
+      onChange?.('');
+    } else if (displayValue && displayValue.length < 10) {
+      // Если введена неполная дата, очищаем поле
+      setDisplayValue('');
+      onChange?.('');
+    }
+  };
   return (
     <DateInputContainer ref={containerRef}>
       <div style={{ position: 'relative' }}>
@@ -189,7 +205,8 @@ export const CustomDateInput: FC<CustomDateInputProps> = props => {
           value={displayValue}
           placeholder={placeholder}
           onChange={handleCustomInputChange}
-          onBlur={handleInputBlur}
+          onFocus={handleInputFocus} // Добавляем обработчик фокуса
+          onBlur={handleInputBlur} // Обновляем обработчик blur
           onKeyDown={handleKeyDown}
           clearable={!disabled && !!displayValue}
           disabled={disabled}
@@ -197,13 +214,30 @@ export const CustomDateInput: FC<CustomDateInputProps> = props => {
         />
 
         {showDateIcon && !disabled && (
-          <CalendarButton
-            type="button"
-            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-            disabled={disabled}
-          >
-            <CalendarIcon color={disabled ? 'var(--grey4)' : 'var(--widget-blue)'} />
-          </CalendarButton>
+          <Options>
+            {value && (
+              <Option type="button" onClick={() => handleCustomInputChange('')} disabled={disabled}>
+                <CloseIcon size={8} />
+              </Option>
+            )}
+
+            <Option
+              type="button"
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              disabled={disabled}
+            >
+              {/*<CalendarIcon color={disabled ? 'var(--grey4)' : 'var(--widget-blue)'} />*/}
+              <CalendarIcon
+                color={
+                  disabled
+                    ? 'var(--widget-grey-3)'
+                    : isFocused || isDatePickerOpen
+                      ? 'var(--widget-blue)'
+                      : 'var(--widget-grey-3)'
+                }
+              />
+            </Option>
+          </Options>
         )}
       </div>
 

@@ -22,6 +22,8 @@ const ScrollableContent = styled.div<{ $main: boolean }>`
   justify-content: flex-start;
   margin-top: ${props => props.theme.spacing.md};
   border-radius: ${props => props.theme.borderRadius.large};
+  box-shadow: ${props =>
+    `${props.theme.shadows.small}, ${props.theme.shadows.medium}, ${props.theme.shadows.large}, ${props.theme.shadows.xlarge}`};
 `;
 
 interface PageLayoutProps {
@@ -33,6 +35,7 @@ interface PageLayoutProps {
   showLanguageSwitcher?: boolean;
   onBack?: () => void;
   onClose?: () => void;
+  isWidget?: boolean;
 }
 
 export const PageLayout: React.FC<PageLayoutProps> = ({
@@ -56,6 +59,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
           onClose={onClose}
         />
       )}
+
       <ScrollableContent $main={!title}>{children}</ScrollableContent>
     </LayoutContainer>
   );

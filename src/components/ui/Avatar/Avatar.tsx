@@ -13,7 +13,7 @@ const AvatarContainer = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eeeeee;
+  background: ${props => props.theme.colors.blueLight};
   color: ${props => props.theme.colors.black};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
   overflow: hidden;
@@ -119,8 +119,8 @@ export const Avatar: React.FC<AvatarProps> = ({
       onClick={onClick}
       role={onClick ? 'button' : 'img'}
       aria-label={alt}
-      $iconWidth={iconProps?.width}
-      $iconHeight={iconProps?.height}
+      $iconWidth={!src || imageError || IconComponent ? iconProps?.width : undefined}
+      $iconHeight={!src || imageError || IconComponent ? iconProps?.height : undefined}
     >
       {/* Приоритет: иконка > изображение > fallback */}
       {IconComponent ? (

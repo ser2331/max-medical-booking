@@ -15,14 +15,27 @@ const StepWrapper = styled(Flex).attrs({ $gap: connectorGap })`
   z-index: 1;
 `;
 
-const StyledConnector = styled.div<{ $isCompleted: boolean }>`
+const StyledConnector = styled.div<{ $status: 'empty' | 'half' | 'full' }>`
   flex: 1;
-  height: 0;
-  border: 2px solid
-    ${props => (props.$isCompleted ? props.theme.colors.blue : props.theme.colors.grey1)};
+  height: 2px;
+  background: ${props => props.theme.colors.grey1};
   border-radius: 8px;
   margin: 0 8px;
-  transition: border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: ${props =>
+      props.$status === 'full' ? '100%' : props.$status === 'half' ? '50%' : '0%'};
+    background: ${props => props.theme.colors.blue};
+    transition: width 0.3s ease;
+    border-radius: 6px;
+  }
 `;
 
 const StepDot = styled(Flex)<{
@@ -33,19 +46,18 @@ const StepDot = styled(Flex)<{
   height: 32px;
   border-radius: 50%;
   background: ${props => {
-    if (props.$isActive) return props.theme.colors.blueLight;
-    if (props.$isCompleted) return props.theme.colors.blue;
+    if (props.$isCompleted) return props.theme.colors.blueDark;
     return props.theme.colors.white;
   }};
   border: 1px solid
     ${props => {
-      if (props.$isCompleted) return props.theme.colors.blue;
-      if (props.$isActive) return props.theme.colors.blue;
+      if (props.$isCompleted) return props.theme.colors.blueDark;
+      if (props.$isActive) return props.theme.colors.blueDark;
       return props.theme.colors.grey3;
     }};
   color: ${props => {
     if (props.$isCompleted) return props.theme.colors.white;
-    if (props.$isActive) return props.theme.colors.blue;
+    if (props.$isActive) return props.theme.colors.blueDark;
     return props.theme.colors.grey2;
   }};
   font-size: ${props => props.theme.typography.fontSize.md};
@@ -68,6 +80,7 @@ export const StepperDots: FC<IStepperDotsProps> = ({ steps }) => {
       {steps.map((step, index) => {
         const isActive = index === currentStep;
         const isCompleted = index < currentStep;
+        const connectorStatus = isCompleted ? 'full' : isActive ? 'half' : 'empty';
 
         return (
           <StepWrapper
@@ -78,7 +91,7 @@ export const StepperDots: FC<IStepperDotsProps> = ({ steps }) => {
               {isCompleted ? <CheckIcon /> : index + 1}
             </StepDot>
 
-            {index < steps.length - 1 && <StyledConnector $isCompleted={isCompleted} />}
+            {index < steps.length - 1 && <StyledConnector $status={connectorStatus} />}
           </StepWrapper>
         );
       })}

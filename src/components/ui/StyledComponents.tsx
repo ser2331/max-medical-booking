@@ -61,7 +61,7 @@ export const CheckCardDescription = styled(CheckCardName)`
 export const ContactLink = styled.a`
   color: ${props => props.theme.colors.grey2};
   font-weight: ${props => props.theme.typography.fontWeight.normal};
-  font-size: ${props => props.theme.typography.fontSize.md};
+  font-size: ${props => props.theme.typography.fontSize.sm};
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -83,7 +83,7 @@ export const NavigationContainer = styled(Flex)<{ $vertical?: boolean }>`
   background: ${props => props.theme.colors.white};
   gap: ${props => props.theme.spacing.xsm};
   border-radius: 0 0
-    ${props => `${props.theme.borderRadius.small} ${props.theme.borderRadius.small}`};
+    ${props => `${props.theme.borderRadius.large} ${props.theme.borderRadius.large}`};
   flex-direction: ${props => (props.$vertical ? 'column' : 'row-reverse')};
   background-color: ${props => props.theme.colors.white};
 `;
@@ -106,4 +106,5 @@ export const StepContent = styled.div<{ $withPadding: boolean }>`
   flex: 1;
   overflow: auto;
   padding-bottom: ${props => (props.$withPadding ? '56px' : 0)};
+  border-radius: ${props => props.theme.borderRadius.large};
 `;

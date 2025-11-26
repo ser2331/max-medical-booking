@@ -15,11 +15,11 @@ import {
   mockTimetableData,
 } from '@/api/services/lpus-controller/lpus-controller.data.ts';
 
-const controllerUrl = 'https://r42-test.portal.n3zdrav.ru/api/v2';
+const controllerUrl = '/api/v2';
 console.log('controllerUrl', controllerUrl);
 
 const errorRate = 0;
-const delay = 3000;
+const delay = 1000;
 interface UserData {
   lastName: string;
   firstName: string;

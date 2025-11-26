@@ -1,16 +1,16 @@
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { RootState } from './store';
+// import type { RootState } from './store';
 import Config from '@/config/ajax-config.ts';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: Config().BASE_URL,
-  prepareHeaders: (headers, { getState }) => {
-    const { auth } = getState() as RootState;
+  prepareHeaders: (headers /*, { getState }*/) => {
+    // const { auth } = getState() as RootState;
 
-    if (auth.sessionId) {
-      headers.set('authorization', 'Bearer ' + auth.sessionId);
-    }
+    // if (auth.sessionId) {
+    //   headers.set('authorization', 'Bearer ' + auth.sessionId);
+    // }
     return headers;
   },
 });

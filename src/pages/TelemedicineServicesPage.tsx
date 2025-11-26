@@ -33,7 +33,7 @@ export const TelemedicineServicesPage: React.FC = () => {
   }
 
   return (
-    <PageLayout title={'Телемедицинские услуги'} onBack={handleBack}>
+    <PageLayout title={'Телемедицинские услуги'} onBack={handleBack} isWidget>
       <MicroFrontend />
     </PageLayout>
   );

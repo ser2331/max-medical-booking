@@ -183,7 +183,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
     .reverse(); // Новые записи сверху
 
   return (
-    <Panel>
+    <Panel className="scroll-container">
       <Header>
         <strong>{title}</strong>
         <ButtonGroup>

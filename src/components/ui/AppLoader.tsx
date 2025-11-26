@@ -16,9 +16,11 @@ const StyledLoader = styled('div')`
   }
 `;
 
-const LoaderWrapper = styled('div')`
-  width: 120px;
-  height: 120px;
+const LoaderWrapper = styled('div')<{ $size?: 'large' | 'small' }>`
+  width: ${props =>
+    props.$size === 'large' ? '120px' : props.$size === 'small' ? '40px' : '120px'};
+  height: ${props =>
+    props.$size === 'large' ? '120px' : props.$size === 'small' ? '40px' : '120px'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,11 +37,11 @@ const LoaderWrapper = styled('div')`
   }
 `;
 
-export const AppLoader = () => {
+export const AppLoader = ({ size }: { size?: 'large' | 'small' }) => {
   return (
     <StyledLoader>
-      <LoaderWrapper>
-        <LoaderIcon />
+      <LoaderWrapper $size={size}>
+        <LoaderIcon size={size} />
       </LoaderWrapper>
       <div className="tm-slider-text">Загрузка...</div>
     </StyledLoader>

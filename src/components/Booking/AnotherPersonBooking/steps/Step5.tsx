@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import styled from 'styled-components';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
@@ -24,14 +23,6 @@ import {
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
 
 type GenderOption = SelectOption & { value: '1' | '0' };
-
-const PageTitle = styled.span`
-  width: 100%;
-  font-size: ${props => props.theme.typography.fontSize.md};
-  font-weight: ${props => props.theme.typography.fontWeight.semibold};
-  color: ${props => props.theme.colors.black};
-  text-align: left;
-`;
 
 const genderOptions: GenderOption[] = [
   { label: 'Мужской', value: '1' },
@@ -127,8 +118,6 @@ export const Step5: React.FC = () => {
 
   return (
     <Flex $direction={'column'} $gap={16}>
-      <PageTitle>Данные пациента</PageTitle>
-
       {/* Основные поля пациента */}
       <CustomInput
         title="Фамилия"
@@ -209,6 +198,7 @@ export const Step5: React.FC = () => {
 
       <CustomSelect
         title="Пол"
+        placeholder={'Выберите пол'}
         options={genderOptions}
         value={genderValue}
         onChange={handleChangeGender}

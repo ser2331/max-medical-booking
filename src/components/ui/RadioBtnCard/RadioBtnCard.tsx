@@ -6,7 +6,7 @@ import { CheckCardDescription, Flex, StatValue } from '@/components/ui/StyledCom
 import { RadioButton } from '@/components/ui/RadioButton/RadioButton.tsx';
 
 export const CheckCardName = styled.div`
-  font-size: ${props => props.theme.typography.fontSize.md};
+  font-size: ${props => props.theme.typography.fontSize.sm};
   font-weight: ${props => props.theme.typography.fontWeight.semibold};
 `;
 export const Wrapper = styled(Flex).attrs({

@@ -62,7 +62,6 @@ export const Step1: React.FC = () => {
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
   }, []);
-  console.log('LOADING', isLoading);
   if (isLoading || isFetching) {
     return <AppSpin />;
   }
