@@ -15,14 +15,38 @@ import {
   mockTimetableData,
 } from '@/api/services/lpus-controller/lpus-controller.data.ts';
 
-const controllerUrl = 'api/v2/shared';
+const controllerUrl = 'https://r42-test.portal.n3zdrav.ru/api/v2';
 console.log('controllerUrl', controllerUrl);
 
 const errorRate = 0;
 const delay = 3000;
+interface UserData {
+  lastName: string;
+  firstName: string;
+  middleName: string;
+  birthDate: string;
+  gender: string;
+  snils: string;
+  polisN: string;
+  polisS: string;
+  phoneField: string;
+  mail: string;
+  comments: string;
+}
 export const bookingDictionaryController = commonApi.injectEndpoints({
   endpoints: builder => ({
-    getLpus: builder.query<ILpus[], { districtId: string }>({
+    getLpusByUser: builder.query<ILpus[], UserData>({
+      query: userData => {
+        return {
+          url: `${controllerUrl}/oms/attachments/lpus`,
+          params: userData,
+        };
+      },
+      // queryFn: () => {
+      //   return handleApiResponse('lpus', mockLpusData, { delay, errorRate });
+      // },
+    }),
+    getLpusByDistrict: builder.query<ILpus[], { districtId: string }>({
       // query: ({ districtId }) =>
       // `${controllerUrl}/district/${districtId}/lpus`,
       queryFn: () => {
@@ -60,7 +84,8 @@ export const bookingDictionaryController = commonApi.injectEndpoints({
 });
 
 export const {
-  useGetLpusQuery,
+  useGetLpusByDistrictQuery,
+  useGetLpusByUserQuery,
   useGetSpecialtiesQuery,
   useGetDoctorsQuery,
   useGetTimetableQuery,

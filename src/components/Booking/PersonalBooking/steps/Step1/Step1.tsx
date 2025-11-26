@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetLpusByDistrictQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 
 import { useDebounce } from '@/hooks/useDebounce.ts';
 
@@ -21,7 +21,7 @@ export const Step1: React.FC = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetLpusQuery({ districtId: '' });
+  } = useGetLpusByDistrictQuery({ districtId: '' });
   const stepFields = STEPS_CONFIG[0].fields;
   const [searchText, setSearchText] = useState('');
   const [lpuField] = stepFields;

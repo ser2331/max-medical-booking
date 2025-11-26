@@ -9,6 +9,7 @@ import {
   ILpus,
   ISpecialty,
 } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { Step5 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
 export interface AppointmentFormData {
   lpu: ILpus | null;
   specialty: ISpecialty | null;
@@ -33,6 +34,21 @@ export interface StepConfig {
 }
 
 export const STEPS_CONFIG: StepConfig[] = [
+  {
+    id: 'pacientData',
+    title: 'Данные пациента',
+    component: Step5,
+    fields: [
+      'lastName',
+      'firstName',
+      'birthDate',
+      'snils',
+      'polisN',
+      'phone',
+      'mail' /*, 'consentAgreement'*/,
+    ],
+    required: true,
+  },
   {
     id: 'medicalOrganization',
     title: 'Выбор медучреждения',

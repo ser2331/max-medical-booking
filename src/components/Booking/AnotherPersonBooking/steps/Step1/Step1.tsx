@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useGetLpusQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetLpusByUserQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
 
 import { useDebounce } from '@/hooks/useDebounce.ts';
 
@@ -14,14 +14,33 @@ import { LpuCardItem } from '@/components/Booking/PersonalBooking/steps/Step1/Lp
 import { ILpus } from '@/api/services/lpus-controller/lpus-controller.types.ts';
 
 export const Step1: React.FC = () => {
-  const { register, watch, setValue } = useFormContext();
+  const { register, watch, setValue, getValues } = useFormContext();
+  const getSpecificValues = () => {
+    const allValues = getValues();
+    return {
+      lastName: allValues.lastName,
+      firstName: allValues.firstName,
+      middleName: allValues.middleName,
+      birthDate: allValues.birthDate,
+      gender: allValues.gender,
+      snils: allValues.snils,
+      polisN: allValues.polisN,
+      polisS: allValues.polisS,
+      phoneField: allValues.phoneField,
+      mail: allValues.mail,
+      comments: allValues.comments,
+    };
+  };
+
+  const specificValues = getSpecificValues();
+  console.log('VALUE', specificValues);
   const {
     data: lpusData = [],
     error,
     isLoading,
     isFetching,
     refetch,
-  } = useGetLpusQuery({ districtId: '' });
+  } = useGetLpusByUserQuery(specificValues);
   const stepFields = STEPS_CONFIG[0].fields;
   const [searchText, setSearchText] = useState('');
   const [lpuField] = stepFields;
