@@ -1,4 +1,5 @@
 import React from 'react';
+import { UserDataParams } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const getErrorMessage = (error: { type: string }): string => {
   if (error?.type === 'required') {
@@ -38,4 +39,36 @@ export const handleEmailClick = (event: React.MouseEvent, email?: string) => {
   event.stopPropagation();
   const mailtoLink = `mailto:${email}`;
   window.open(mailtoLink, '_self');
+};
+
+export const cleanObject = <T extends Record<string, any>>(obj: T): T => {
+  const cleaned = { ...obj };
+
+  for (const key in cleaned) {
+    if (cleaned[key] === '' || cleaned[key] === null || cleaned[key] === undefined) {
+      delete cleaned[key];
+    }
+  }
+
+  return cleaned;
+};
+
+export const getLpuParams = (getValues: () => any): UserDataParams => {
+  const allValues = getValues();
+  const birthDate = allValues.birthDate ? new Date(allValues.birthDate).toISOString() : '';
+
+  return cleanObject({
+    lastName: allValues.lastName || '',
+    firstName: allValues.firstName || '',
+    middleName: allValues.middleName || '',
+    birthDate: birthDate,
+    polisN: allValues.polisN ? allValues.polisN.replace(/\s/g, '') : '',
+
+    gender: allValues.gender || '',
+    snils: allValues.snils || '',
+    polisS: allValues.polisS || '',
+    phoneField: allValues.phoneField || '',
+    mail: allValues.mail || '',
+    comments: allValues.comments || '',
+  });
 };

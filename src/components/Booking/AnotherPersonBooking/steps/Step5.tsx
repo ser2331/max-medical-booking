@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { Flex } from '@/components/ui/StyledComponents.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
@@ -37,12 +38,13 @@ export const Step5: React.FC = () => {
     control,
     formState: { errors },
   } = useFormContext();
-  const stepFields = STEPS_CONFIG[0].fields;
-  const [lastName, firstName, birthDate, snils, polisN, phoneField, mail] = stepFields;
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+  const stepFields = STEPS_CONFIG[currentStep].fields;
+  const [lastName, firstName, birthDate, polisN] = stepFields;
 
-  const phoneValue = useWatch({ control, name: phoneField });
+  const phoneValue = useWatch({ control, name: 'phoneField' });
   const genderValue = useWatch({ control, name: 'gender' });
-  const snilsValue = useWatch({ control, name: snils });
+  const snilsValue = useWatch({ control, name: 'snils' });
   const polisNumberValue = useWatch({ control, name: polisN });
   const polisSeriesValue = useWatch({ control, name: 'polisS' });
 
@@ -66,15 +68,15 @@ export const Step5: React.FC = () => {
         result += `-${formattedValue.substring(9, 11)}`;
       }
 
-      setValue(phoneField, result, { shouldValidate: true });
+      setValue('phoneField', result, { shouldValidate: true });
     } else {
-      setValue(phoneField, '', { shouldValidate: true });
+      setValue('phoneField', '', { shouldValidate: true });
     }
   };
 
   const handleSNILSChange = (value: string) => {
     const formattedValue = formatSNILS(value);
-    setValue(snils, formattedValue, { shouldValidate: true });
+    setValue('snils', formattedValue, { shouldValidate: true });
   };
 
   const handlePolisNumberChange = (value: string) => {
@@ -198,13 +200,13 @@ export const Step5: React.FC = () => {
         placeholder="XXX-XXX-XXX XX"
         value={snilsValue || ''}
         onChange={handleSNILSChange}
-        register={register(snils, {
+        register={register('snils', {
           required: 'Введите СНИЛС',
           validate: validateSNILS,
         })}
-        required
-        showErrorText
-        error={errors?.[snils]?.message}
+        // required
+        // showErrorText
+        // error={errors?.['snils']?.message}
       />
 
       <CustomInput
@@ -240,7 +242,7 @@ export const Step5: React.FC = () => {
         placeholder="+7 (999) 999-99-99"
         value={phoneValue || ''}
         onChange={handlePhoneChange}
-        register={register(phoneField, {
+        register={register('phoneField', {
           required: 'Введите номер телефона',
           pattern: {
             value: validationPatterns.phone,
@@ -251,22 +253,22 @@ export const Step5: React.FC = () => {
             return numbers.length === 11 || 'Номер должен содержать 11 цифр';
           },
         })}
-        required
-        showErrorText
-        error={errors?.[phoneField]?.message}
+        // required
+        // showErrorText
+        // error={errors?.['phoneField']?.message}
       />
 
       <CustomInput
         title="Электронная почта"
         type="email"
         placeholder="example@mail.ru"
-        register={register(mail, {
+        register={register('mail', {
           required: 'Введите email',
           validate: validateEmail,
         })}
-        required
-        showErrorText
-        error={errors?.[mail]?.message}
+        // required
+        // showErrorText
+        // error={errors?.['mail']?.message}
       />
 
       {/* Комментарий */}

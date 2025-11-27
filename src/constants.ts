@@ -21,7 +21,7 @@ export const testUser = {
   birthDate: '1991-08-28',
   gender: '1',
   snils: '706-778-899 63',
-  polisN: '7941983111982141',
+  polisN: '7941983111972141',
   polisS: '123456',
   phoneField: '+7 (905) 252-43-08',
   mail: 'i.titov.kem@mail.ru',

@@ -6,6 +6,7 @@ import {
   ILpus,
   ISpecialty,
   ITimeTable,
+  UserDataParams,
 } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 import {
   mockLpusData,
@@ -17,35 +18,36 @@ console.log('controllerUrl', controllerUrl);
 
 const errorRate = 0;
 const delay = 1000;
-interface UserData {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  birthDate: string;
-  gender: string;
-  snils: string;
-  polisN: string;
-  polisS: string;
-  phoneField: string;
-  mail: string;
-  comments: string;
-}
+
 export const bookingDictionaryController = commonApi.injectEndpoints({
   endpoints: builder => ({
-    getLpusByUser: builder.query<ILpus[], UserData>({
+    getLpusByUser: builder.query<ILpus[], UserDataParams>({
       query: userData => {
+        // Проверяем минимально необходимые поля для запроса
+        const requiredFields = ['polisN', 'lastName', 'firstName', 'birthDate'];
+        const missingFields = requiredFields.filter(
+          field => !userData[field as keyof UserDataParams],
+        );
+
+        if (missingFields.length > 0) {
+          // Создаем ошибку в формате, который понимает RTK Query
+          const error = new Error(
+            `Обязательные параметры отсутствуют: ${missingFields.join(', ')}`,
+          );
+          (error as any).status = 400;
+          (error as any).data = {
+            message: error.message,
+            errorCode: 'VALIDATION_ERROR',
+          };
+          throw error;
+        }
+
         return {
           url: `${controllerUrl}/oms/attachment/lpus`,
-          params: {
-            ...userData,
-            birthDate: new Date(userData.birthDate).toISOString().split('.')[0],
-          },
+          params: userData,
         };
       },
       transformResponse: (resp: IResponse<ILpus>) => handleApiResponse<ILpus>(resp),
-      // queryFn: () => {
-      //   return handleApiMockResponse('lpus', mockLpusData, { delay, errorRate });
-      // },
     }),
     getLpusByDistrict: builder.query<ILpus[], { districtId: string }>({
       // query: ({ districtId }) =>

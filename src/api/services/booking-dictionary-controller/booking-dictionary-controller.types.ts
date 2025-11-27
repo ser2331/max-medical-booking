@@ -54,3 +54,18 @@ export interface ITimeTable {
   visitStart: string;
   visitEnd: string;
 }
+
+export interface UserDataParams {
+  lastName: string;
+  firstName: string;
+  middleName?: string;
+  birthDate: string;
+  polisN: string;
+
+  gender?: string;
+  snils?: string;
+  polisS?: string;
+  phoneField?: string;
+  mail?: string;
+  comments?: string;
+}

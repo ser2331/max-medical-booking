@@ -14,6 +14,7 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/AnotherPersonBooking/steps-config.tsx';
 import { AppointmentsList } from '@/components/Booking/AnotherPersonBooking/steps/Step4/AppointmentsList.tsx';
 import { CustomDateInput } from '@/components/ui/CustomDateInput/CustomDateInput.tsx';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 const FORMAT = 'DD.MM.YYYY';
 const NoAppointmentsMessage = styled.div`
@@ -28,7 +29,8 @@ const NoAppointmentsMessage = styled.div`
 export const Step4: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
-  const stepFields = STEPS_CONFIG[3].fields;
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [appointment] = stepFields;
 
   const selectedLpu = watch('lpu');

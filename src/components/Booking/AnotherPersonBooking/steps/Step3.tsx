@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { useGetDoctorsQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
@@ -7,14 +8,15 @@ import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
-import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
+import { STEPS_CONFIG } from '@/components/Booking/AnotherPersonBooking/steps-config.tsx';
 import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
 import { IDoctor } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const Step3: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
-  const stepFields = STEPS_CONFIG[2].fields;
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [doctor] = stepFields;
   const selectedDoctor = watch('doctor');
   const selectedLpu = watch('lpu');

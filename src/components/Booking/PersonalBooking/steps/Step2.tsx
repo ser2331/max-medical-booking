@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useGetSpecialtiesQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
@@ -24,6 +25,7 @@ const Wrapper = styled(Flex).attrs({
 export const Step2: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
+  const { step: currentStep } = useAppSelector(state => state.stepper);
   const selectedSpecialty = watch('specialty');
   const selectedLpu = watch('lpu');
 
@@ -33,9 +35,11 @@ export const Step2: React.FC = () => {
     isLoading,
     isFetching,
     refetch,
-  } = useGetSpecialtiesQuery({ lpuId: selectedLpu }, { skip: !selectedLpu });
+  } = useGetSpecialtiesQuery({ lpuId: selectedLpu?.id }, { skip: !selectedLpu?.id });
+  console.log('specialties', specialties);
+  console.log('selectedLpu', selectedLpu);
 
-  const stepFields = STEPS_CONFIG[1].fields;
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [specialty] = stepFields;
 
   const handleDoctorSelect = (currentSpecialty: ISpecialty) => {
@@ -59,14 +63,16 @@ export const Step2: React.FC = () => {
   return (
     <Wrapper>
       {specialties?.map(specialty => (
-        <Wrapper key={specialty.id}>
+        <Wrapper key={specialty.id + specialty.ferId}>
           <RadioBtnCard
             id={specialty.id}
             name={specialty.name}
             availableTop={{ label: 'Доступно врачей', value: specialty.countFreeParticipant }}
             availableBottom={{ label: 'Свободно талонов', value: specialty.countFreeTicket }}
             onClick={() => handleDoctorSelect(specialty)}
-            checked={specialty.id === selectedSpecialty?.id}
+            checked={
+              specialty.id === selectedSpecialty?.id && specialty.ferId === selectedSpecialty?.ferId
+            }
             register={register('specialty', { required: 'Выберите специальность врача' })}
           />
           <Line $marginBottom={0} $marginTop={0} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { useGetDoctorsQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
@@ -14,7 +15,8 @@ import { IDoctor } from '@/api/services/booking-dictionary-controller/booking-di
 export const Step3: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
-  const stepFields = STEPS_CONFIG[2].fields;
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [doctor] = stepFields;
   const selectedDoctor = watch('doctor');
   const selectedLpu = watch('lpu');

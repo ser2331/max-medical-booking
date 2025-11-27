@@ -10,17 +10,20 @@ const StyledAppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
   gap: ${props => props.theme.spacing.sm};
 `;
 
-const AppointmentsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-  gap: 8px;
+const AppointmentsContainer = styled(Flex)`
   width: 100%;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
 `;
 
 const AppointmentRoom = styled(Flex)<{
   $isSelected: boolean;
 }>`
+  min-width: 64px;
   max-width: 100px;
+  flex: 1 1 auto;
   border-radius: ${props => props.theme.borderRadius.medium};
   font-weight: ${props => props.theme.typography.fontWeight.medium};
   outline: 1px solid ${props => (props.$isSelected ? '#BADCF4' : props.theme.colors.grey3)};

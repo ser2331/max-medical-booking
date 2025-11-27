@@ -9,7 +9,6 @@ import {
   ILpus,
   ISpecialty,
 } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
-import { Step5 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
 // import { Step5 } from '@/components/Booking/PersonalBooking/steps/Step5.tsx';
 export interface AppointmentFormData {
   lpu: ILpus | null;
@@ -21,10 +20,11 @@ export interface AppointmentFormData {
   firstName: string;
   middleName?: string;
   birthDate: string;
-  snils: string;
-  polisN: string;
-  phone: string;
-  mail: string;
+
+  snils?: string;
+  polisN?: string;
+  phone?: string;
+  mail?: string;
 }
 
 export interface StepConfig {
@@ -36,21 +36,18 @@ export interface StepConfig {
 }
 
 export const STEPS_CONFIG: StepConfig[] = [
-  {
-    id: 'pacientData',
-    title: 'Данные пациента',
-    component: Step5,
-    fields: [
-      'lastName',
-      'firstName',
-      'birthDate',
-      'snils',
-      'polisN',
-      'phone',
-      'mail' /*, 'consentAgreement'*/,
-    ],
-    required: true,
-  },
+  // {
+  //   id: 'pacientData',
+  //   title: 'Данные пациента',
+  //   component: Step5,
+  //   fields: [
+  //     'lastName',
+  //     'firstName',
+  //     'birthDate',
+  //     'polisN',
+  //   ],
+  //   required: true,
+  // },
   {
     id: 'medicalOrganization',
     title: 'Выбор медучреждения',

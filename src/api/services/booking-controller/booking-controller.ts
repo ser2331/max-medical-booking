@@ -4,32 +4,15 @@ const controllerUrl = '/api/v2';
 console.log('controllerUrl', controllerUrl);
 
 interface UserData {
-  // esiaId: string;
   lpuId: number;
-  // patientId: number;
-  appointmentId: number;
-  // referralId: number;
-  visitDate: string;
-  ipmpiCardId: number;
-  recipientEmail: string;
-  patientLastName: string;
-  patientFirstName: string;
-  patientMiddleName: string;
-  patientBirthdate: string;
-  // num: string;
-  room: string;
-  address: string;
-  // userFullName: string;
-  userSnils: string;
-  // userBirthDate: string,
+  appointmentId: string;
+  patientId: string;
 }
 
 interface CancelData {
-  esiaId: string;
-  appointmentId: string;
   lpuId: number;
+  appointmentId: string;
   patientId: string;
-  appointmentType: number;
 }
 
 interface Response {

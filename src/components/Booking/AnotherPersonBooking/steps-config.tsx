@@ -19,15 +19,7 @@ export const STEPS_CONFIG: StepConfig[] = [
     id: 'pacientData',
     title: 'Данные пациента',
     component: Step1,
-    fields: [
-      'lastName',
-      'firstName',
-      'birthDate',
-      'snils',
-      'polisN',
-      'phone',
-      'mail' /*, 'consentAgreement'*/,
-    ],
+    fields: ['lastName', 'firstName', 'birthDate', 'polisN'],
     required: true,
   },
   {
@@ -81,21 +73,4 @@ export const getDefaultValues = (): AppointmentFormData => {
   });
 
   return defaultValues as AppointmentFormData;
-};
-
-// Хелперы для работы со steps
-export const getStepFields = (stepIndex: number): (keyof AppointmentFormData)[] => {
-  return STEPS_CONFIG[stepIndex]?.fields || [];
-};
-
-export const getFieldsUpToStep = (stepIndex: number): (keyof AppointmentFormData)[] => {
-  const fields: (keyof AppointmentFormData)[] = [];
-  for (let i = 0; i <= stepIndex; i++) {
-    fields.push(...getStepFields(i));
-  }
-  return fields;
-};
-
-export const getStepByField = (field: keyof AppointmentFormData): number => {
-  return STEPS_CONFIG.findIndex(step => step.fields.includes(field));
 };

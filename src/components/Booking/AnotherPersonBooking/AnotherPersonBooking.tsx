@@ -16,16 +16,13 @@ export const AnotherPersonBooking: FC<{ onFinish: (formData: AppointmentFormData
   const [formData, setFormData] = useState<AppointmentFormData | null>(null);
 
   const handleSubmit = (data: AppointmentFormData) => {
-    console.log('data', data);
     hapticFeedback('selection', 'medium').then(() => {
       setFormData(data);
     });
   };
 
-  const handleStepChange = (currentStep: number, previousStep: number) => {
-    hapticFeedback('selection', 'medium').then(() => {
-      console.log(`Переход с шага ${previousStep} на шаг ${currentStep}`);
-    });
+  const handleStepChange = (_currentStep: number, _previousStep: number) => {
+    hapticFeedback('selection', 'medium').then(() => {});
   };
 
   const handleComplete = () => {

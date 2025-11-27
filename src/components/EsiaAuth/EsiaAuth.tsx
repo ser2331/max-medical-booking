@@ -46,36 +46,12 @@ const Icon = styled.img`
   width: 20px;
   height: 20px;
 `;
-const ALLOWED_DOMAINS = ['esia-portal1.test.gosuslugi.ru', 'esia.gosuslugi.ru', 'gosuslugi.ru'];
-const validateAndRedirect = (url: string) => {
-  try {
-    const urlObj = new URL(url);
-
-    // Проверяем, что домен в белом списке
-    const isDomainAllowed = ALLOWED_DOMAINS.some(
-      domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain),
-    );
-
-    // Проверяем протокол (только HTTPS)
-    const isHttps = urlObj.protocol === 'https:';
-
-    if (isDomainAllowed && isHttps) {
-      // Безопасный переход
-      window.location.href = url;
-    } else {
-      console.error('Недопустимый URL для перенаправления');
-    }
-  } catch (error) {
-    console.error('Некорректный URL:', error);
-  }
-};
 
 const AuthContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleAuth = () => {
-    const esiaUrl = 'https://esia-portal1.test.gosuslugi.ru/login/';
-    validateAndRedirect(esiaUrl);
+    window.location.href = `${import.meta.env.VITE_BASE_PATH}/oidc/esia-login`;
   };
 
   // Демо-режим (для разработки)

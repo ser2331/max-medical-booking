@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
-import { useGetLpusByDistrictQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
+import { useGetLpusByUserQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 
 import { useDebounce } from '@/hooks/useDebounce.ts';
 
@@ -12,19 +13,25 @@ import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { LpuCardItem } from '@/components/Booking/PersonalBooking/steps/Step1/LpuCardItem.tsx';
 import { ILpus } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
+import { getLpuParams } from '@/helpers/heplers.tsx';
 
 export const Step1: React.FC = () => {
-  const { register, watch, setValue } = useFormContext();
+  const { register, watch, setValue, getValues } = useFormContext();
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+
+  const queryParams = useMemo(() => getLpuParams(getValues), [getValues]);
+
   const {
     data: lpusData = [],
     error,
     isLoading,
     isFetching,
     refetch,
-  } = useGetLpusByDistrictQuery({ districtId: '' });
-  const stepFields = STEPS_CONFIG[0].fields;
-  const [searchText, setSearchText] = useState('');
+  } = useGetLpusByUserQuery(queryParams);
+
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [lpuField] = stepFields;
+  const [searchText, setSearchText] = useState('');
   const selectedLpu = watch('lpu');
   const debouncedSearchText = useDebounce(searchText, 300);
 
@@ -40,8 +47,7 @@ export const Step1: React.FC = () => {
       .filter(
         lpu =>
           lpu.lpuFullName.toLowerCase().includes(searchLower) ||
-          lpu.districtName.toLowerCase().includes(searchLower) ||
-          lpu.address.toLowerCase().includes(searchLower),
+          lpu.districtName.toLowerCase().includes(searchLower),
       )
       .sort();
   }, [lpusData, debouncedSearchText]);
@@ -62,10 +68,21 @@ export const Step1: React.FC = () => {
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
   }, []);
+
   if (isLoading || isFetching) {
     return <AppSpin />;
   }
-
+  console.log('lpusData', lpusData);
+  console.log('error', error);
+  if (!error && !lpusData.length) {
+    return (
+      <ErrorMessage onTryAgain={() => refetch()}>
+        Не удалось получить информацию о прикреплении по полису ОМС к медицинским организациям.
+        Убедитесь, что данные полиса введены корректно и повторите попытку. Если данные введены
+        корректно, обратитесь в регистратуру медорганизации
+      </ErrorMessage>
+    );
+  }
   if (error) {
     return (
       <ErrorMessage onTryAgain={() => refetch()}>

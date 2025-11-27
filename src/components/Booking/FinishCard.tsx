@@ -23,6 +23,10 @@ import {
 } from '@/helpers/heplers.tsx';
 import { useCancelAppointmentMutation } from '@/api/services/booking-controller/booking-controller.ts';
 
+const FinishCardContainer = styled('div')`
+  flex: 1;
+  padding-bottom: 120px;
+`;
 const Title = styled.span`
   width: 100%;
   font-size: ${props => props.theme.typography.fontSize.md};
@@ -70,18 +74,21 @@ export const FinishCard: FC<FinishCardProps> = ({ onFinish, finishData }) => {
     onFinish();
   };
   const onCancel = () => {
-    //TODO CANCEL
-    onCancelAppointment({
-      esiaId: '',
-      appointmentId: finishData?.appointment?.id?.toString() || '',
-      lpuId: finishData?.lpu?.id || 0,
-      patientId: '',
-      appointmentType: 0,
-    });
+    if (finishData?.lpu?.id && finishData?.lpu?.id && finishData?.appointment?.id) {
+      onCancelAppointment({
+        lpuId: finishData?.lpu?.id,
+        patientId: finishData?.lpu?.id.toString(),
+        appointmentId: finishData.appointment.id,
+      })
+        .unwrap()
+        .then(() => {
+          finish();
+        });
+    }
   };
 
   return (
-    <div className={'finish'}>
+    <FinishCardContainer className={'finish'}>
       <Section>
         <Flex $gap={12} style={{ width: '100%' }}>
           <IconWrapper>
@@ -142,6 +149,6 @@ export const FinishCard: FC<FinishCardProps> = ({ onFinish, finishData }) => {
           Отменить
         </NavigationBtn>
       </NavigationContainer>
-    </div>
+    </FinishCardContainer>
   );
 };
