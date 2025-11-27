@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import moment from 'moment';
+import { useAppSelector } from '@/store/redux-hooks.ts';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
@@ -28,7 +29,8 @@ const NoAppointmentsMessage = styled.div`
 export const Step4: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();
   const { register, watch, setValue } = useFormContext();
-  const stepFields = STEPS_CONFIG[3].fields;
+  const { step: currentStep } = useAppSelector(state => state.stepper);
+  const stepFields = STEPS_CONFIG[currentStep].fields;
   const [appointment] = stepFields;
 
   const selectedLpu = watch('lpu');
