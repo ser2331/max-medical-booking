@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_BASE_PATH,
+  base: '/max-medical-booking/',
 
   server: {
     host: '0.0.0.0',
