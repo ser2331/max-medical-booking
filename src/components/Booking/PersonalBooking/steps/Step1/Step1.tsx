@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useGetLpusByDistrictQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetLpusByDistrictQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 
 import { useDebounce } from '@/hooks/useDebounce.ts';
 
@@ -11,7 +11,7 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { LpuCardItem } from '@/components/Booking/PersonalBooking/steps/Step1/LpuCardItem.tsx';
-import { ILpus } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { ILpus } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const Step1: React.FC = () => {
   const { register, watch, setValue } = useFormContext();

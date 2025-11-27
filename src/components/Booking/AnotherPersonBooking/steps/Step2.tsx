@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useGetSpecialtiesQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetSpecialtiesQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
@@ -10,7 +10,7 @@ import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import styled from 'styled-components';
 import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
-import { ISpecialty } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { ISpecialty } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 const Wrapper = styled(Flex).attrs({
   $direction: 'column',

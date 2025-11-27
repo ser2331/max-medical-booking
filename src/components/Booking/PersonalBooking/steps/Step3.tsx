@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useGetDoctorsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetDoctorsQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
@@ -9,7 +9,7 @@ import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { RadioBtnCard } from '@/components/ui/RadioBtnCard/RadioBtnCard.tsx';
-import { IDoctor } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { IDoctor } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const Step3: React.FC = () => {
   const { hapticFeedback } = useMaxBridgeContext();

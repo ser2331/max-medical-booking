@@ -12,7 +12,7 @@ import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 export const AnotherPersonBooking: FC<{ onFinish: (formData: AppointmentFormData) => void }> = ({
   onFinish,
 }) => {
-  const { user, hapticFeedback } = useMaxBridgeContext();
+  const { hapticFeedback } = useMaxBridgeContext();
   const [formData, setFormData] = useState<AppointmentFormData | null>(null);
 
   const handleSubmit = (data: AppointmentFormData) => {
@@ -36,8 +36,7 @@ export const AnotherPersonBooking: FC<{ onFinish: (formData: AppointmentFormData
     }
   };
   const defaultValues: AppointmentFormData = getDefaultValues();
-  defaultValues.firstName = user?.first_name || '';
-  defaultValues.lastName = user?.last_name || '';
+
   return (
     <>
       <Stepper<AppointmentFormData>

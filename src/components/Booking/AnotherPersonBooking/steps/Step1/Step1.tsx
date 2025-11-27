@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useGetLpusByUserQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
+import { useGetLpusByUserQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
 
 import { useDebounce } from '@/hooks/useDebounce.ts';
 
@@ -11,7 +11,7 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage/ErrorMessage.tsx';
 import { STEPS_CONFIG } from '@/components/Booking/PersonalBooking/steps-config.tsx';
 import { CustomInput } from '@/components/ui/CustomInput/CustomInput.tsx';
 import { LpuCardItem } from '@/components/Booking/PersonalBooking/steps/Step1/LpuCardItem.tsx';
-import { ILpus } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { ILpus } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const Step1: React.FC = () => {
   const { register, watch, setValue, getValues } = useFormContext();
@@ -33,7 +33,6 @@ export const Step1: React.FC = () => {
   };
 
   const specificValues = getSpecificValues();
-  console.log('VALUE', specificValues);
   const {
     data: lpusData = [],
     error,
@@ -41,6 +40,7 @@ export const Step1: React.FC = () => {
     isFetching,
     refetch,
   } = useGetLpusByUserQuery(specificValues);
+
   const stepFields = STEPS_CONFIG[0].fields;
   const [searchText, setSearchText] = useState('');
   const [lpuField] = stepFields;
@@ -84,7 +84,17 @@ export const Step1: React.FC = () => {
   if (isLoading || isFetching) {
     return <AppSpin />;
   }
-
+  console.log('lpusData', lpusData);
+  console.log('error', error);
+  if (!error && !lpusData.length) {
+    return (
+      <ErrorMessage onTryAgain={() => refetch()}>
+        Не удалось получить информацию о прикреплении по полису ОМС к медицинским организациям.
+        Убедитесь, что данные полиса введены корректно и повторите попытку. Если данные введены
+        корректно, обратитесь в регистратуру медорганизации
+      </ErrorMessage>
+    );
+  }
   if (error) {
     return (
       <ErrorMessage onTryAgain={() => refetch()}>

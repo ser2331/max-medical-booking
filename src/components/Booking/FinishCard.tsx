@@ -21,6 +21,7 @@ import {
   handleEmailClick,
   handlePhoneClick,
 } from '@/helpers/heplers.tsx';
+import { useCancelAppointmentMutation } from '@/api/services/booking-controller/booking-controller.ts';
 
 const Title = styled.span`
   width: 100%;
@@ -61,13 +62,23 @@ const formatAppointmentDate = (dateStartString: string) => {
 export const FinishCard: FC<FinishCardProps> = ({ onFinish, finishData }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [onCancelAppointment] = useCancelAppointmentMutation();
   const finish = () => {
     navigate('/');
     dispatch(onChangeStep(0));
     dispatch(onChangeBookingType(false));
     onFinish();
   };
-  const onCancel = () => {};
+  const onCancel = () => {
+    //TODO CANCEL
+    onCancelAppointment({
+      esiaId: '',
+      appointmentId: finishData?.appointment?.id?.toString() || '',
+      lpuId: finishData?.lpu?.id || 0,
+      patientId: '',
+      appointmentType: 0,
+    });
+  };
 
   return (
     <div className={'finish'}>

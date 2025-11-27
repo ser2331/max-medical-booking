@@ -3,7 +3,7 @@ import { memo, useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { ILpus } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { ILpus } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 

@@ -3,7 +3,7 @@ import moment from 'moment/moment';
 import styled from 'styled-components';
 
 import { Flex, Line } from '@/components/ui/StyledComponents.tsx';
-import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { IAppointment } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 const StyledAppointmentsList = styled(Flex).attrs({ $direction: 'column' })`
   width: 100%;

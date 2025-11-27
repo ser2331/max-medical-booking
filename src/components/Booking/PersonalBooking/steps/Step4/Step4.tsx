@@ -5,8 +5,8 @@ import moment from 'moment';
 
 import { useMaxBridgeContext } from '@/providers/MaxBridgeProvider.tsx';
 
-import { useGetAppointmentsQuery } from '@/api/services/lpus-controller/lpus-controller.ts';
-import { IAppointment } from '@/api/services/lpus-controller/lpus-controller.types.ts';
+import { useGetAppointmentsQuery } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.ts';
+import { IAppointment } from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 import { AppSpin } from '@/components/ui/AppSpin.tsx';
 import { Section } from '@/components/ui/StyledComponents.tsx';

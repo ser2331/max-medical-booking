@@ -2,7 +2,7 @@ import {
   IDoctor,
   ISpecialty,
   ITimeTable,
-} from '@/api/services/lpus-controller/lpus-controller.types.ts';
+} from '@/api/services/booking-dictionary-controller/booking-dictionary-controller.types.ts';
 
 export const mockLpusData = [
   {

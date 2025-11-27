@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { PageHeader } from './PageHeader/PageHeader.tsx';
-const LayoutContainer = styled.div`
+const LayoutContainer = styled.div<{ $isWidget: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -10,20 +10,26 @@ const LayoutContainer = styled.div`
   bottom: 0;
   display: flex;
   flex-direction: column;
-  padding: ${props => props.theme.spacing.md};
+  padding: ${props => (props.$isWidget ? 0 : props.theme.spacing.md)};
 `;
 
-const ScrollableContent = styled.div<{ $main: boolean }>`
+const ScrollableContent = styled.div<{ $main: boolean; $isWidget: boolean }>`
   flex: 1;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-top: ${props => props.theme.spacing.md};
+  margin-top: ${props => (props.$isWidget ? 0 : props.theme.spacing.md)};
   border-radius: ${props => props.theme.borderRadius.large};
   box-shadow: ${props =>
-    `${props.theme.shadows.small}, ${props.theme.shadows.medium}, ${props.theme.shadows.large}, ${props.theme.shadows.xlarge}`};
+    props.$isWidget
+      ? 'none'
+      : `${props.theme.shadows.small}, ${props.theme.shadows.medium}, ${props.theme.shadows.large}, ${props.theme.shadows.xlarge}`};
+
+  main {
+    padding: ${props => (props.$isWidget ? props.theme.spacing.md : 0)};
+  }
 `;
 
 interface PageLayoutProps {
@@ -46,9 +52,10 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   showCloseButton = true,
   onBack,
   onClose,
+  isWidget,
 }) => {
   return (
-    <LayoutContainer>
+    <LayoutContainer $isWidget={!!isWidget}>
       {!!title && (
         <PageHeader
           title={title}
@@ -60,7 +67,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         />
       )}
 
-      <ScrollableContent $main={!title}>{children}</ScrollableContent>
+      <ScrollableContent $isWidget={!!isWidget} $main={!title}>
+        {children}
+      </ScrollableContent>
     </LayoutContainer>
   );
 };

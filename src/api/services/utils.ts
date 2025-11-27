@@ -59,7 +59,7 @@ export const mockQueryFn = <T>(
 };
 
 // Хелпер для обработки API ответов
-export const handleApiResponse = async <T>(
+export const handleApiMockResponse = async <T>(
   endpoint: string,
   mockData: T[],
   options?: { delay?: number; errorRate?: number },
@@ -85,4 +85,21 @@ export const handleApiResponse = async <T>(
     }
     return { error };
   }
+};
+
+export interface IResponse<T> {
+  result: T[];
+  success: boolean;
+  errorCode: number;
+  message: string | null;
+  stackTrace: string | null;
+}
+
+// Хелпер для обработки реальных API ответов
+export const handleApiResponse = <T>(response: IResponse<T>): T[] => {
+  if (!response.success) {
+    throw new Error(response.message || `API Error: ${response.errorCode}`);
+  }
+
+  return response.result;
 };

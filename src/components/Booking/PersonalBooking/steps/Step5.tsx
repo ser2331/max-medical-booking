@@ -101,8 +101,8 @@ export const Step5: React.FC = () => {
       [snils]: '706-778-899 63',
       [polisN]: '7941983111972141',
       polisS: '123456',
-      [phoneField]: '+7 (999) 123-45-67',
-      [mail]: 'ivan.titov@example.ru',
+      [phoneField]: '+7 (905) 252-43-08',
+      [mail]: 'i.titov.kem@mail.ru',
       comments: 'Тестовый пациент для демонстрации',
     };
 
@@ -296,7 +296,9 @@ export const Step5: React.FC = () => {
         })}
       />
 
-      <CustomButton onClick={handleAutoSubmit}>АВТОЗАПОЛНЕНИЕ</CustomButton>
+      <div style={{ marginBottom: '16px' }}>
+        <CustomButton onClick={handleAutoSubmit}>АВТОЗАПОЛНЕНИЕ</CustomButton>
+      </div>
     </Flex>
   );
 };

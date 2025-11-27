@@ -21,6 +21,7 @@ import {
   validationPatterns,
 } from '@/helpers/validateHelpers.ts';
 import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { testUser } from '@/constants.ts';
 
 type GenderOption = SelectOption & { value: '1' | '0' };
 
@@ -91,21 +92,6 @@ export const Step5: React.FC = () => {
   };
 
   const handleAutoSubmit = () => {
-    const testUser = {
-      // Основные поля из stepFields
-      [lastName]: 'Титов',
-      [firstName]: 'Иван',
-      middleName: 'Романович',
-      [birthDate]: '1991-08-28',
-      gender: '1',
-      [snils]: '706-778-899 63',
-      [polisN]: '7941983111972141',
-      polisS: '123456',
-      [phoneField]: '+7 (999) 123-45-67',
-      [mail]: 'ivan.titov@example.ru',
-      comments: 'Тестовый пациент для демонстрации',
-    };
-
     // Заполняем все поля разом
     Object.entries(testUser).forEach(([fieldName, value]) => {
       setValue(fieldName, value, {
@@ -296,7 +282,9 @@ export const Step5: React.FC = () => {
         })}
       />
 
-      <CustomButton onClick={handleAutoSubmit}>АВТОЗАПОЛНЕНИЕ</CustomButton>
+      <div style={{ marginBottom: '16px' }}>
+        <CustomButton onClick={handleAutoSubmit}>АВТОЗАПОЛНЕНИЕ</CustomButton>
+      </div>
     </Flex>
   );
 };

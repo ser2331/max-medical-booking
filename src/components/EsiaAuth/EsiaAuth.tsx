@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Flex } from '@/components/ui/StyledComponents.tsx';
-import { CustomButton } from '@/components/ui/Button/Button.tsx';
-import authBackground from '@/assets/images/auth/authBack.png';
-import authIcon from '@/assets/images/auth/Icon.png';
-import { ImageLoader } from '@/components/ImageLoader.tsx';
 import { setAuthenticated } from '@/store/slices/authSlice.ts';
 import { useAppDispatch } from '@/store/redux-hooks.ts';
+
+import { Flex } from '@/components/ui/StyledComponents.tsx';
+import { CustomButton } from '@/components/ui/Button/Button.tsx';
+import { ImageLoader } from '@/components/ImageLoader.tsx';
+import authBackground from '@/assets/images/auth/authBack.png';
+import authIcon from '@/assets/images/auth/Icon.png';
 
 export const PageContainer = styled(Flex)`
   width: 100%;
@@ -45,11 +46,40 @@ const Icon = styled.img`
   width: 20px;
   height: 20px;
 `;
+const ALLOWED_DOMAINS = ['esia-portal1.test.gosuslugi.ru', 'esia.gosuslugi.ru', 'gosuslugi.ru'];
+const validateAndRedirect = (url: string) => {
+  try {
+    const urlObj = new URL(url);
+
+    // Проверяем, что домен в белом списке
+    const isDomainAllowed = ALLOWED_DOMAINS.some(
+      domain => urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain),
+    );
+
+    // Проверяем протокол (только HTTPS)
+    const isHttps = urlObj.protocol === 'https:';
+
+    if (isDomainAllowed && isHttps) {
+      // Безопасный переход
+      window.location.href = url;
+    } else {
+      console.error('Недопустимый URL для перенаправления');
+    }
+  } catch (error) {
+    console.error('Некорректный URL:', error);
+  }
+};
 
 const AuthContent: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleAuth = () => {
+    const esiaUrl = 'https://esia-portal1.test.gosuslugi.ru/login/';
+    validateAndRedirect(esiaUrl);
+  };
+
+  // Демо-режим (для разработки)
+  const handleDemoAuth = () => {
     dispatch(setAuthenticated(true));
   };
 
@@ -62,10 +92,17 @@ const AuthContent: React.FC = () => {
           ГОСУСЛУГИ
         </Subtitle>
 
-        <CustomButton onClick={handleAuth}>
-          <Icon src={authIcon} alt="Госуслуги" />
-          Войти через ГОСУСЛУГИ
-        </CustomButton>
+        <Flex $direction="column" $gap={16}>
+          <CustomButton onClick={handleAuth}>
+            <Icon src={authIcon} alt="Госуслуги" />
+            Войти через ГОСУСЛУГИ
+          </CustomButton>
+
+          {/* Кнопка для демо-режима (можно убрать в продакшене) */}
+          {import.meta.env.VITE_MODE === 'development' && (
+            <CustomButton onClick={handleDemoAuth}>Демо-вход (только для разработки)</CustomButton>
+          )}
+        </Flex>
       </PageContent>
     </PageContainer>
   );
